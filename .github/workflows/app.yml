@@ -3,9 +3,9 @@ name: App
 on:
   push:
     branches: [main]
-    paths: ["app/**", ".github/workflows/app.yml"]
+    paths: ["app/**", ".github/workflows/app.yml", ".github/scripts/**"]
   pull_request:
-    paths: ["app/**", ".github/workflows/app.yml"]
+    paths: ["app/**", ".github/workflows/app.yml", ".github/scripts/**"]
 
 jobs:
   test:
@@ -25,6 +25,25 @@ jobs:
         continue-on-error: true
         run: dart format --output=none --set-exit-if-changed lib test
       - name: Analyze
-        run: flutter analyze
+        id: analyze
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          flutter analyze 2>&1 | tee analyze.txt
+      - name: Report analyze result
+        if: steps.analyze.outcome == 'failure'
+        run: bash ../.github/scripts/annotate.sh analyze.txt "flutter analyze"
       - name: Tests with coverage
-        run: flutter test --coverage
+        id: tests
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          flutter test --coverage --reporter expanded 2>&1 | tee test.txt
+      - name: Report test result
+        if: steps.tests.outcome == 'failure'
+        run: bash ../.github/scripts/annotate.sh test.txt "flutter test"
+      - name: Fail if analyze or tests failed
+        if: steps.analyze.outcome == 'failure' || steps.tests.outcome == 'failure'
+        run: |
+          echo "analyze=${{ steps.analyze.outcome }} tests=${{ steps.tests.outcome }}"
+          exit 1
