@@ -1,0 +1,24 @@
+[project]
+name = "tamra-api"
+version = "0.1.0"
+requires-python = ">=3.12"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = ["*/migrations/*"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "DJ", "SIM"]
+ignore = ["E501"]  # line length is handled by the formatter
+
+[tool.ruff.lint.isort]
+known-first-party = ["config", "core", "accounts"]
+
+[tool.coverage.run]
+source = ["."]
+omit = ["*/migrations/*", "*/tests/*", "manage.py", "config/*"]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true

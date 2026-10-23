@@ -1,0 +1,51 @@
+name: Autofix
+
+# Formats code on every pull request and pushes the result back to the branch.
+# Qwen works in a chat and cannot run formatters; this keeps the style consistent.
+
+on:
+  pull_request:
+    paths: ["api/**", "app/**"]
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    # Only for branches in this repository (not forks).
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Python format
+        run: |
+          pip install ruff
+          cd api
+          ruff check --fix --exit-zero .
+          ruff format .
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Dart format
+        run: |
+          cd app
+          flutter pub get
+          dart fix --apply || true
+          dart format lib test
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A api app
+          if git diff --cached --quiet; then
+            echo "Already formatted"
+          else
+            git commit -m "style: autoformat"
+            git push
+          fi

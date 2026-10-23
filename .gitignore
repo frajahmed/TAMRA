@@ -1,0 +1,44 @@
+# Secrets
+.env
+*.env
+!.env.example
+*.keystore
+*.jks
+*.p12
+*.mobileprovision
+key.properties
+GoogleService-Info.plist
+google-services.json
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+db.sqlite3
+staticfiles/
+
+# Flutter / Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+coverage/
+*.iml
+app/ios/Pods/
+app/ios/.symlinks/
+app/ios/Flutter/Flutter.framework
+app/ios/Flutter/Generated.xcconfig
+app/android/.gradle/
+app/android/local.properties
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

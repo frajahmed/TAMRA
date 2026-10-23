@@ -1,0 +1,49 @@
+name: Bootstrap Flutter platforms
+
+# Run ONCE by hand: GitHub → Actions → "Bootstrap Flutter platforms" → Run workflow.
+# Creates app/android and app/ios with the current stable Flutter,
+# applies automatic lint fixes and formatting, commits to main,
+# then runs analyze and tests so you see the result in the log.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Generate platform folders
+        run: |
+          flutter create --org com.tamra --project-name tamra_app --platforms android,ios .
+          rm -f test/widget_test.dart
+      - name: Install, fix, format
+        run: |
+          flutter pub get
+          dart fix --apply
+          dart format lib test
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A .
+          if git diff --cached --quiet; then
+            echo "Nothing to commit"
+          else
+            git commit -m "chore(app): generate android/ios platform folders and format code"
+            git push
+          fi
+      - name: Analyze
+        run: flutter analyze
+      - name: Tests
+        run: flutter test
