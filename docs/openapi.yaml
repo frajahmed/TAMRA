@@ -81,6 +81,34 @@ paths:
               schema:
                 $ref: '#/components/schemas/TokenRefresh'
           description: ''
+  /api/v1/auth/register/:
+    post:
+      operationId: auth_register_create
+      description: Create an account and return JWT tokens (the user is logged in
+        directly).
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+        required: true
+      security:
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Register'
+          description: ''
   /api/v1/health/:
     get:
       operationId: health_retrieve
@@ -96,8 +124,193 @@ paths:
               schema:
                 $ref: '#/components/schemas/Health'
           description: ''
+  /api/v1/me/consents/:
+    get:
+      operationId: me_consents_list
+      tags:
+      - me
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Consent'
+          description: ''
+    post:
+      operationId: me_consents_create
+      tags:
+      - me
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsentRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ConsentRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ConsentRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Consent'
+          description: ''
+  /api/v1/me/consents/{consent_type}/withdraw/:
+    post:
+      operationId: me_consents_withdraw_create
+      parameters:
+      - in: path
+        name: consent_type
+        schema:
+          type: string
+        required: true
+      tags:
+      - me
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WithdrawResult'
+          description: ''
+  /api/v1/me/profile/:
+    get:
+      operationId: me_profile_retrieve
+      description: The logged-in user's profile. Created on first access.
+      tags:
+      - me
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+          description: ''
+    patch:
+      operationId: me_profile_partial_update
+      description: The logged-in user's profile. Created on first access.
+      tags:
+      - me
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProfileRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProfileRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProfileRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+          description: ''
 components:
   schemas:
+    ActivityLevelEnum:
+      enum:
+      - sedentary
+      - light
+      - moderate
+      - active
+      - very_active
+      type: string
+      description: |-
+        * `sedentary` - Sedentary
+        * `light` - Light
+        * `moderate` - Moderate
+        * `active` - Active
+        * `very_active` - Very Active
+    BlankEnum:
+      enum:
+      - ''
+    CarbUnitEnum:
+      enum:
+      - g
+      - ke
+      - be
+      type: string
+      description: |-
+        * `g` - Gram
+        * `ke` - Ke
+        * `be` - Be
+    Consent:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        type:
+          $ref: '#/components/schemas/TypeEnum'
+        version:
+          type: string
+          maxLength: 20
+        given_at:
+          type: string
+          format: date-time
+          readOnly: true
+        withdrawn_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+      required:
+      - given_at
+      - id
+      - type
+      - version
+      - withdrawn_at
+    ConsentRequest:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/TypeEnum'
+        version:
+          type: string
+          minLength: 1
+          maxLength: 20
+      required:
+      - type
+      - version
+    EnergyUnitEnum:
+      enum:
+      - kcal
+      - kj
+      type: string
+      description: |-
+        * `kcal` - Kcal
+        * `kj` - Kj
+    GoalEnum:
+      enum:
+      - lose
+      - maintain
+      - gain
+      type: string
+      description: |-
+        * `lose` - Lose
+        * `maintain` - Maintain
+        * `gain` - Gain
     Health:
       type: object
       properties:
@@ -105,6 +318,167 @@ components:
           type: string
       required:
       - status
+    LanguageEnum:
+      enum:
+      - de
+      - en
+      - fr
+      - it
+      - ar
+      type: string
+      description: |-
+        * `de` - De
+        * `en` - En
+        * `fr` - Fr
+        * `it` - It
+        * `ar` - Ar
+    PatchedProfileRequest:
+      type: object
+      properties:
+        sex:
+          oneOf:
+          - $ref: '#/components/schemas/SexEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        birth_year:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          nullable: true
+        height_cm:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,1})?$
+          nullable: true
+        weight_kg:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,1})?$
+          nullable: true
+        activity_level:
+          $ref: '#/components/schemas/ActivityLevelEnum'
+        goal:
+          $ref: '#/components/schemas/GoalEnum'
+        weight_unit:
+          $ref: '#/components/schemas/WeightUnitEnum'
+        energy_unit:
+          $ref: '#/components/schemas/EnergyUnitEnum'
+        carb_unit:
+          $ref: '#/components/schemas/CarbUnitEnum'
+        language:
+          $ref: '#/components/schemas/LanguageEnum'
+    Profile:
+      type: object
+      properties:
+        sex:
+          oneOf:
+          - $ref: '#/components/schemas/SexEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+        birth_year:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 0
+          format: int64
+          nullable: true
+        height_cm:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,1})?$
+          nullable: true
+        weight_kg:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,1})?$
+          nullable: true
+        activity_level:
+          $ref: '#/components/schemas/ActivityLevelEnum'
+        goal:
+          $ref: '#/components/schemas/GoalEnum'
+        kcal_target:
+          type: integer
+          readOnly: true
+          nullable: true
+        protein_g:
+          type: integer
+          readOnly: true
+          nullable: true
+        carbs_g:
+          type: integer
+          readOnly: true
+          nullable: true
+        fat_g:
+          type: integer
+          readOnly: true
+          nullable: true
+        weight_unit:
+          $ref: '#/components/schemas/WeightUnitEnum'
+        energy_unit:
+          $ref: '#/components/schemas/EnergyUnitEnum'
+        carb_unit:
+          $ref: '#/components/schemas/CarbUnitEnum'
+        language:
+          $ref: '#/components/schemas/LanguageEnum'
+        is_complete:
+          type: boolean
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - carbs_g
+      - fat_g
+      - is_complete
+      - kcal_target
+      - protein_g
+      - updated_at
+    Register:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - email
+      - id
+      - refresh
+    RegisterRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          minLength: 1
+          title: Email address
+          maxLength: 254
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - email
+      - password
+    SexEnum:
+      enum:
+      - female
+      - male
+      type: string
+      description: |-
+        * `female` - Female
+        * `male` - Male
     TokenBlacklistRequest:
       type: object
       properties:
@@ -159,3 +533,35 @@ components:
           minLength: 1
       required:
       - refresh
+    TypeEnum:
+      enum:
+      - health_data
+      - terms
+      - privacy
+      - analytics
+      type: string
+      description: |-
+        * `health_data` - Health Data
+        * `terms` - Terms
+        * `privacy` - Privacy
+        * `analytics` - Analytics
+    WeightUnitEnum:
+      enum:
+      - kg
+      - lb
+      type: string
+      description: |-
+        * `kg` - Kg
+        * `lb` - Lb
+    WithdrawResult:
+      type: object
+      properties:
+        withdrawn:
+          type: integer
+      required:
+      - withdrawn
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

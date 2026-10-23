@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     # Local
     "core",
     "accounts",
+    "profiles",
 ]
 
 MIDDLEWARE = [
@@ -134,8 +135,14 @@ REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_CLASSES": [
         "rest_framework.throttling.AnonRateThrottle",
         "rest_framework.throttling.UserRateThrottle",
+        "rest_framework.throttling.ScopedRateThrottle",
     ],
-    "DEFAULT_THROTTLE_RATES": {"anon": "60/min", "user": "300/min"},
+    "DEFAULT_THROTTLE_RATES": {
+        "anon": "60/min",
+        "user": "300/min",
+        "register": "10/hour",
+        "barcode": "30/min",
+    },
 }
 
 SIMPLE_JWT = {

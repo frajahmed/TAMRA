@@ -6,9 +6,9 @@ Tickets marked **[Claude]** are done by Claude, not by Qwen.
 | Sprint | Ticket | Title | Area | Status |
 | --- | --- | --- | --- | --- |
 | 0 | – | Foundation (repo, API, app, CI) | all | done (Claude) |
-| 1 | T-10 | Register endpoint | api | open |
-| 1 | T-11 | Profile endpoint and calorie target | api | open |
-| 1 | T-12 | Consents (health data) | api | open |
+| 1 | T-10 | Register endpoint | api | done (Claude) |
+| 1 | T-11 | Profile endpoint and calorie target | api | done (Claude) |
+| 1 | T-12 | Consents (health data) | api | done (Claude) |
 | 1 | T-13 | App: login, register, token handling | app | open |
 | 1 | T-14 | App: consent and onboarding | app | open |
 | 2 | T-20 | Food model | api | open |
