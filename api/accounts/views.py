@@ -1,5 +1,16 @@
-from rest_framework import generics, permissions
+import json
 
+from django.http import HttpResponse
+from django.utils.translation import gettext as _
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema, inline_serializer
+from rest_framework import generics, permissions, serializers, status
+from rest_framework.exceptions import ValidationError
+from rest_framework.request import Request
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from .data import delete_account, export_user_data
 from .serializers import RegisterSerializer
 
 
@@ -10,3 +21,32 @@ class RegisterView(generics.CreateAPIView):
     authentication_classes: list = []
     permission_classes = [permissions.AllowAny]
     throttle_scope = "register"
+
+
+class ExportView(APIView):
+    """Download all personal data as a JSON file (GDPR Art. 15 and 20)."""
+
+    throttle_scope = "export"
+
+    @extend_schema(responses={(200, "application/json"): OpenApiTypes.OBJECT})
+    def get(self, request: Request) -> HttpResponse:
+        body = json.dumps(export_user_data(request.user), ensure_ascii=False, indent=2)
+        response = HttpResponse(body, content_type="application/json; charset=utf-8")
+        response["Content-Disposition"] = 'attachment; filename="tamra-export.json"'
+        response["Cache-Control"] = "no-store"
+        return response
+
+
+class DeleteAccountView(APIView):
+    """Delete the account and all data. The password must be entered again."""
+
+    @extend_schema(
+        request=inline_serializer("DeleteAccount", {"password": serializers.CharField()}),
+        responses={204: None},
+    )
+    def delete(self, request: Request) -> Response:
+        password = request.data.get("password", "")
+        if not password or not request.user.check_password(password):
+            raise ValidationError({"password": [_("The password is not correct.")]})
+        delete_account(request.user)
+        return Response(status=status.HTTP_204_NO_CONTENT)

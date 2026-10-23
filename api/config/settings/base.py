@@ -137,6 +137,7 @@ REST_FRAMEWORK = {
         "user": "300/min",
         "register": "10/hour",
         "barcode": "30/min",
+        "export": "5/hour",
     },
 }
 

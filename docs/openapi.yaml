@@ -399,6 +399,17 @@ paths:
               schema:
                 $ref: '#/components/schemas/Health'
           description: ''
+  /api/v1/me/:
+    delete:
+      operationId: me_destroy
+      description: Delete the account and all data. The password must be entered again.
+      tags:
+      - me
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
   /api/v1/me/consents/:
     get:
       operationId: me_consents_list
@@ -459,6 +470,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/WithdrawResult'
+          description: ''
+  /api/v1/me/export/:
+    get:
+      operationId: me_export_retrieve
+      description: Download all personal data as a JSON file (GDPR Art. 15 and 20).
+      tags:
+      - me
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
           description: ''
   /api/v1/me/profile/:
     get:

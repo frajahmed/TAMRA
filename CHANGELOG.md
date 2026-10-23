@@ -8,6 +8,8 @@ Alle wichtigen Änderungen an TAMRA. Format: [Keep a Changelog](https://keepacha
 - API braucht jetzt PostgreSQL (lokal über `docker compose up`); SQLite wird nicht mehr unterstützt.
 
 ### Added
+- DSGVO (Claude): Datenexport als JSON inkl. gelöschter Einträge, Konto endgültig löschen mit
+  Passwort, Sperren aller Tokens (T-43, API-Teil). 112 Tests, 99 %.
 - Sprint 3 API (Claude): Tagebuch mit Nährwert-Snapshot pro Eintrag, Tageszusammenfassung
   mit Zielen, Mahlzeit/Tag kopieren, eigene IDs für Offline-Nutzung (T-30, T-32). 106 Tests, 99 %.
 - Sprint 2 API (Claude, nach Prüfung eines Qwen-Entwurfs):
