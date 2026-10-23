@@ -11,9 +11,9 @@ Tickets marked **[Claude]** are done by Claude, not by Qwen.
 | 1 | T-12 | Consents (health data) | api | done (Claude) |
 | 1 | T-13 | App: login, register, token handling | app | done (Claude) |
 | 1 | T-14 | App: consent and onboarding | app | done (Claude) |
-| 2 | T-20 | Food model | api | open |
-| 2 | T-21 | Open Food Facts mapping and import | api | open |
-| 2 | T-22 | Food search, barcode lookup, custom food | api | open |
+| 2 | T-20 | Food model | api | done (Claude, reviewed Qwen draft) |
+| 2 | T-21 | Open Food Facts mapping and import | api | done (Claude, reviewed Qwen draft) |
+| 2 | T-22 | Food search, barcode lookup, custom food | api | done (Claude, reviewed Qwen draft) |
 | 2 | T-23 | App: food search | app | open |
 | 2 | T-24 | App: barcode scanner | app | open |
 | 3 | T-30 | Diary entries and day summary | api | open |

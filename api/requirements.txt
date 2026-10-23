@@ -7,3 +7,4 @@ celery>=5.4,<6.0
 redis>=5.0,<7.0
 gunicorn>=23.0
 sentry-sdk>=2.0,<3.0
+requests>=2.32,<3.0

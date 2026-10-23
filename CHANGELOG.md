@@ -4,7 +4,14 @@ Alle wichtigen Änderungen an TAMRA. Format: [Keep a Changelog](https://keepacha
 
 ## [Unreleased]
 
+### Changed
+- API braucht jetzt PostgreSQL (lokal über `docker compose up`); SQLite wird nicht mehr unterstützt.
+
 ### Added
+- Sprint 2 API (Claude, nach Prüfung eines Qwen-Entwurfs):
+  - Lebensmittel-Modell mit Nährwerten pro 100 g, Volltext- und Teilwortsuche (PostgreSQL),
+    Barcode-Abfrage mit Open Food Facts, eigene Lebensmittel, Import-Befehl für OFF-Dumps
+    (T-20, T-21, T-22). 84 Tests gegen PostgreSQL, 98 % Abdeckung.
 - Sprint 1 (Claude):
   - API: Registrierung, Profil mit Kalorien- und Makrozielen (gleiche Formel wie die App),
     Einwilligungen nach DSGVO Art. 9 (T-10, T-11, T-12), 43 Tests, 97 % Abdeckung.

@@ -40,6 +40,14 @@ Full version: Claude doc "TAMRA – Architektur & Projektsteuerung (Mobile)".
 | GET | /api/v1/stats/summary/ | T-42 |
 | GET, DELETE | /api/v1/me/export/ · /api/v1/me/ | T-43 |
 
+## Food search (T-22)
+- PostgreSQL only (SQLite is no longer supported): extensions `pg_trgm`, generated column `search_vector`.
+- Filter: every word must appear in name or brand (`icontains`, trigram GIN index) – finds German compounds ("saft" → "Apfelsaft").
+- Order: own custom foods, then foods sold in `?country=`, then full-text rank (name weight A, brand B, prefix match), then name.
+- Visibility: shared foods (Open Food Facts, TAMRA) plus the user's own custom foods; never other users' custom foods.
+- Barcode: own custom food → local database → Open Food Facts API (5 s timeout, User-Agent) → 404.
+- Import: `python manage.py import_off_jsonl <dump.jsonl.gz> --countries de,fr,it,be` (streaming, no full load).
+
 ## Error format
 `{"code": "validation_error", "message": "Invalid input.", "fields": {"email": ["..."]}}` – for every error.
 
