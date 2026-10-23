@@ -1,32 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tamra_app/app/app.dart';
-import 'package:tamra_app/app/locale_provider.dart';
+import 'package:tamra_app/core/auth/auth_controller.dart';
 import 'package:tamra_app/features/debug/presentation/debug_screen.dart';
 
-class _FixedLocale extends LocaleNotifier {
-  _FixedLocale(this.locale);
-
-  final Locale locale;
-
-  @override
-  Locale? build() => locale;
-}
-
-Widget _app(Locale locale, {bool serverOk = true}) {
-  return ProviderScope(
-    overrides: [
-      localeProvider.overrideWith(() => _FixedLocale(locale)),
-      healthProvider.overrideWith((ref) async => serverOk),
-    ],
-    child: const TamraApp(),
-  );
-}
+import '../helpers/fakes.dart';
 
 void main() {
   testWidgets('home screen shows German texts, left-to-right', (tester) async {
-    await tester.pumpWidget(_app(const Locale('de')));
+    await tester.pumpWidget(testApp(locale: const Locale('de')));
     await tester.pumpAndSettle();
 
     expect(find.text('Willkommen bei TAMRA'), findsOneWidget);
@@ -35,7 +16,7 @@ void main() {
   });
 
   testWidgets('Arabic switches the layout to right-to-left', (tester) async {
-    await tester.pumpWidget(_app(const Locale('ar')));
+    await tester.pumpWidget(testApp(locale: const Locale('ar')));
     await tester.pumpAndSettle();
 
     expect(find.text('مرحبًا بك في تمرة'), findsOneWidget);
@@ -43,8 +24,38 @@ void main() {
     expect(direction, TextDirection.rtl);
   });
 
+  testWidgets('logged out users see the login screen', (tester) async {
+    await tester.pumpWidget(testApp(auth: const AuthState.loggedOut()));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('login-email')), findsOneWidget);
+  });
+
+  testWidgets('new users must give consent first', (tester) async {
+    await tester.pumpWidget(
+      testApp(
+        auth: const AuthState(status: AuthStatus.loggedIn, needsConsent: true, needsProfile: true),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('consent-checkbox')), findsOneWidget);
+  });
+
+  testWidgets('logout returns to the login screen', (tester) async {
+    await tester.pumpWidget(testApp());
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('logout')));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('login-email')), findsOneWidget);
+  });
+
   testWidgets('debug screen shows the server status', (tester) async {
-    await tester.pumpWidget(_app(const Locale('en')));
+    await tester.pumpWidget(
+      testApp(overrides: [healthProvider.overrideWith((ref) async => true)]),
+    );
     await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(const Key('open-debug')));
@@ -54,7 +65,9 @@ void main() {
   });
 
   testWidgets('debug screen shows an error when the server is down', (tester) async {
-    await tester.pumpWidget(_app(const Locale('en'), serverOk: false));
+    await tester.pumpWidget(
+      testApp(overrides: [healthProvider.overrideWith((ref) async => false)]),
+    );
     await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(const Key('open-debug')));

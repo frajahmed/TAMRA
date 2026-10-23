@@ -47,6 +47,13 @@ class AppStrings {
     return value ?? key;
   }
 
+  /// Replaces {name} placeholders.
+  String _fill(String key, Map<String, Object> values) {
+    var result = text(key);
+    values.forEach((name, value) => result = result.replaceAll('{$name}', '$value'));
+    return result;
+  }
+
   String get appName => text('appName');
   String get homeTitle => text('homeTitle');
   String get homeSubtitle => text('homeSubtitle');
@@ -55,6 +62,55 @@ class AppStrings {
   String get serverOk => text('serverOk');
   String get serverError => text('serverError');
   String get loading => text('loading');
+
+  // Auth
+  String get login => text('login');
+  String get register => text('register');
+  String get email => text('email');
+  String get password => text('password');
+  String get noAccount => text('noAccount');
+  String get haveAccount => text('haveAccount');
+  String get logout => text('logout');
+  String get genericError => text('genericError');
+  String get emailInvalid => text('emailInvalid');
+  String get passwordTooShort => text('passwordTooShort');
+  String get fieldRequired => text('fieldRequired');
+
+  // Consent and onboarding
+  String get consentTitle => text('consentTitle');
+  String get consentText => text('consentText');
+  String get consentCheckbox => text('consentCheckbox');
+  String get continueButton => text('continueButton');
+  String get onboardingTitle => text('onboardingTitle');
+  String stepOf(int current, int total) =>
+      _fill('stepOf', {'current': current, 'total': total});
+  String get goalQuestion => text('goalQuestion');
+  String get goalLose => text('goalLose');
+  String get goalMaintain => text('goalMaintain');
+  String get goalGain => text('goalGain');
+  String get sexQuestion => text('sexQuestion');
+  String get sexFemale => text('sexFemale');
+  String get sexMale => text('sexMale');
+  String get birthYearQuestion => text('birthYearQuestion');
+  String get heightQuestion => text('heightQuestion');
+  String get weightQuestion => text('weightQuestion');
+  String get activityQuestion => text('activityQuestion');
+  String get activitySedentary => text('activitySedentary');
+  String get activityLight => text('activityLight');
+  String get activityModerate => text('activityModerate');
+  String get activityActive => text('activityActive');
+  String get activityVeryActive => text('activityVeryActive');
+  String get next => text('next');
+  String get back => text('back');
+  String get save => text('save');
+  String invalidRange(num min, num max) => _fill('invalidRange', {'min': min, 'max': max});
+  String get resultTitle => text('resultTitle');
+  String resultKcal(int kcal) => _fill('resultKcal', {'kcal': kcal});
+  String get resultFormula => text('resultFormula');
+  String get protein => text('protein');
+  String get carbs => text('carbs');
+  String get fat => text('fat');
+  String get startButton => text('startButton');
 }
 
 class _AppStringsDelegate extends LocalizationsDelegate<AppStrings> {

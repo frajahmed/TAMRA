@@ -1,7 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../auth/auth_controller.dart';
+import '../auth/token_storage.dart';
 import '../config.dart';
+import 'auth_interceptor.dart';
 
 /// Error in the API's uniform format: {"code", "message", "fields"}.
 class ApiError implements Exception {
@@ -35,8 +38,29 @@ class ApiError implements Exception {
     );
   }
 
+  bool get isNetworkError => code == 'network_error';
+
+  /// The first message of every field error, for showing under a form.
+  List<String> get fieldMessages => [
+        for (final value in fields.values)
+          if (value is List && value.isNotEmpty) value.first.toString() else value.toString(),
+      ];
+
   @override
   String toString() => 'ApiError($code, $statusCode): $message';
+}
+
+/// Access and refresh token pair.
+class AuthTokens {
+  const AuthTokens({required this.access, required this.refresh});
+
+  final String access;
+  final String refresh;
+
+  factory AuthTokens.fromJson(Map<String, dynamic> json) => AuthTokens(
+        access: json['access'] as String,
+        refresh: json['refresh'] as String,
+      );
 }
 
 /// The only place where the app talks HTTP to the TAMRA API.
@@ -46,27 +70,95 @@ class ApiClient {
 
   final Dio _dio;
 
-  /// GET /api/v1/health/ → true when the server answers {"status": "ok"}.
-  Future<bool> health() async {
+  Future<T> _call<T>(Future<T> Function() request) async {
     try {
-      final response = await _dio.get<Map<String, dynamic>>('/api/v1/health/');
-      return response.data?['status'] == 'ok';
+      return await request();
     } on DioException catch (error) {
       throw ApiError.fromDio(error);
     }
   }
+
+  Map<String, dynamic> _map(Response<Map<String, dynamic>> response) =>
+      response.data ?? const <String, dynamic>{};
+
+  /// GET /api/v1/health/ → true when the server answers {"status": "ok"}.
+  Future<bool> health() => _call(() async {
+        final response = await _dio.get<Map<String, dynamic>>('/api/v1/health/');
+        return response.data?['status'] == 'ok';
+      });
+
+  // --- Auth -----------------------------------------------------------------
+
+  Future<AuthTokens> register(String email, String password) => _call(() async {
+        final response = await _dio.post<Map<String, dynamic>>(
+          '/api/v1/auth/register/',
+          data: {'email': email, 'password': password},
+        );
+        return AuthTokens.fromJson(_map(response));
+      });
+
+  Future<AuthTokens> login(String email, String password) => _call(() async {
+        final response = await _dio.post<Map<String, dynamic>>(
+          '/api/v1/auth/login/',
+          data: {'email': email, 'password': password},
+        );
+        return AuthTokens.fromJson(_map(response));
+      });
+
+  Future<void> logout(String refreshToken) => _call(() async {
+        await _dio.post<dynamic>('/api/v1/auth/logout/', data: {'refresh': refreshToken});
+      });
+
+  // --- Profile and consents ---------------------------------------------------
+
+  Future<Map<String, dynamic>> getProfile() => _call(() async {
+        final response = await _dio.get<Map<String, dynamic>>('/api/v1/me/profile/');
+        return _map(response);
+      });
+
+  Future<Map<String, dynamic>> updateProfile(Map<String, dynamic> changes) =>
+      _call(() async {
+        final response = await _dio.patch<Map<String, dynamic>>(
+          '/api/v1/me/profile/',
+          data: changes,
+        );
+        return _map(response);
+      });
+
+  Future<List<Map<String, dynamic>>> listConsents() => _call(() async {
+        final response = await _dio.get<List<dynamic>>('/api/v1/me/consents/');
+        return [
+          for (final item in response.data ?? const <dynamic>[])
+            if (item is Map<String, dynamic>) item,
+        ];
+      });
+
+  Future<void> giveConsent(String type, String version) => _call(() async {
+        await _dio.post<dynamic>(
+          '/api/v1/me/consents/',
+          data: {'type': type, 'version': version},
+        );
+      });
 }
 
-final dioProvider = Provider<Dio>((ref) {
-  return Dio(
-    BaseOptions(
+BaseOptions _baseOptions() => BaseOptions(
       baseUrl: AppConfig.apiBaseUrl,
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 15),
       contentType: Headers.jsonContentType,
       responseType: ResponseType.json,
+    );
+
+final dioProvider = Provider<Dio>((ref) {
+  final dio = Dio(_baseOptions());
+  dio.interceptors.add(
+    AuthInterceptor(
+      storage: ref.watch(tokenStorageProvider),
+      plainDio: Dio(_baseOptions()),
+      onSessionExpired: () => ref.read(authControllerProvider.notifier).sessionExpired(),
     ),
   );
+  return dio;
 });
 
 final apiClientProvider = Provider<ApiClient>((ref) {

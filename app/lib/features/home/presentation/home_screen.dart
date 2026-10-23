@@ -1,21 +1,33 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/router.dart';
+import '../../../core/auth/auth_controller.dart';
 import '../../../l10n/app_strings.dart';
 
-/// Placeholder start screen. Replaced by the diary in T-30.
-class HomeScreen extends StatelessWidget {
+/// Placeholder start screen. Replaced by the diary in T-31.
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final strings = AppStrings.of(context);
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
-      appBar: AppBar(title: Text(strings.appName)),
+      appBar: AppBar(
+        title: Text(strings.appName),
+        actions: [
+          IconButton(
+            key: const Key('logout'),
+            tooltip: strings.logout,
+            icon: const Icon(Icons.logout),
+            onPressed: () => ref.read(authControllerProvider.notifier).logout(),
+          ),
+        ],
+      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsetsDirectional.all(24),

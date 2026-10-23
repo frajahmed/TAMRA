@@ -5,6 +5,11 @@ Alle wichtigen Änderungen an TAMRA. Format: [Keep a Changelog](https://keepacha
 ## [Unreleased]
 
 ### Added
+- Sprint 1 (Claude):
+  - API: Registrierung, Profil mit Kalorien- und Makrozielen (gleiche Formel wie die App),
+    Einwilligungen nach DSGVO Art. 9 (T-10, T-11, T-12), 43 Tests, 97 % Abdeckung.
+  - App: Login, Registrierung, sichere Token-Speicherung mit automatischer Erneuerung,
+    Weiterleitung je nach Status, Einwilligung, Onboarding mit Ergebnis (T-13, T-14), Tests.
 - Sprint 0 (Fundament, von Claude erstellt):
   - `api/`: Django 5 + DRF, Settings für dev/test/prod, eigenes User-Modell (E-Mail-Login, UUID),
     Basis-Modelle mit UUID, Zeitstempeln und weichem Löschen, `IsOwner`-Permission,

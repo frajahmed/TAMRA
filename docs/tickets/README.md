@@ -9,8 +9,8 @@ Tickets marked **[Claude]** are done by Claude, not by Qwen.
 | 1 | T-10 | Register endpoint | api | done (Claude) |
 | 1 | T-11 | Profile endpoint and calorie target | api | done (Claude) |
 | 1 | T-12 | Consents (health data) | api | done (Claude) |
-| 1 | T-13 | App: login, register, token handling | app | open |
-| 1 | T-14 | App: consent and onboarding | app | open |
+| 1 | T-13 | App: login, register, token handling | app | done (Claude) |
+| 1 | T-14 | App: consent and onboarding | app | done (Claude) |
 | 2 | T-20 | Food model | api | open |
 | 2 | T-21 | Open Food Facts mapping and import | api | open |
 | 2 | T-22 | Food search, barcode lookup, custom food | api | open |
