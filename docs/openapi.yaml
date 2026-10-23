@@ -109,6 +109,173 @@ paths:
               schema:
                 $ref: '#/components/schemas/Register'
           description: ''
+  /api/v1/diary/:
+    get:
+      operationId: diary_list
+      parameters:
+      - in: query
+        name: date
+        schema:
+          type: string
+          format: date
+        description: The user's local day (YYYY-MM-DD)
+        required: true
+      tags:
+      - diary
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DiaryEntry'
+          description: ''
+    post:
+      operationId: diary_create
+      tags:
+      - diary
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DiaryEntryRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DiaryEntryRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DiaryEntryRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiaryEntry'
+          description: ''
+  /api/v1/diary/{id}/:
+    get:
+      operationId: diary_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - diary
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiaryEntry'
+          description: ''
+    patch:
+      operationId: diary_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - diary
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedDiaryEntryRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedDiaryEntryRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedDiaryEntryRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiaryEntry'
+          description: ''
+    delete:
+      operationId: diary_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - diary
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/diary/copy/:
+    post:
+      operationId: diary_copy_create
+      description: Copy all entries of a day (or one meal) to another day, with fresh
+        nutrient values.
+      tags:
+      - diary
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DiaryCopyRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DiaryCopyRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DiaryCopyRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiaryCopyResult'
+          description: ''
+  /api/v1/diary/summary/:
+    get:
+      operationId: diary_summary_retrieve
+      parameters:
+      - in: query
+        name: date
+        schema:
+          type: string
+          format: date
+        description: The user's local day (YYYY-MM-DD)
+        required: true
+      tags:
+      - diary
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiarySummary'
+          description: ''
   /api/v1/foods/:
     get:
       operationId: foods_list
@@ -556,6 +723,162 @@ components:
       required:
       - kcal
       - name
+    DiaryCopyRequest:
+      type: object
+      properties:
+        from_date:
+          type: string
+          format: date
+        to_date:
+          type: string
+          format: date
+        meal:
+          $ref: '#/components/schemas/MealEnum'
+      required:
+      - from_date
+      - to_date
+    DiaryCopyResult:
+      type: object
+      properties:
+        copied:
+          type: integer
+      required:
+      - copied
+    DiaryEntry:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        date:
+          type: string
+          format: date
+          description: The user's local day
+        meal:
+          $ref: '#/components/schemas/MealEnum'
+        food:
+          type: string
+          format: uuid
+        food_detail:
+          allOf:
+          - $ref: '#/components/schemas/FoodSummary'
+          readOnly: true
+        amount_g:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,5}(?:\.\d{0,2})?$
+        unit_label:
+          type: string
+          maxLength: 50
+        kcal:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+          readOnly: true
+        protein:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+          readOnly: true
+        carbs:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+          readOnly: true
+        sugar:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+          readOnly: true
+        fat:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+          readOnly: true
+        fiber:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+          readOnly: true
+        salt:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,2})?$
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - amount_g
+      - carbs
+      - created_at
+      - date
+      - fat
+      - fiber
+      - food
+      - food_detail
+      - kcal
+      - meal
+      - protein
+      - salt
+      - sugar
+      - updated_at
+    DiaryEntryRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        date:
+          type: string
+          format: date
+          description: The user's local day
+        meal:
+          $ref: '#/components/schemas/MealEnum'
+        food:
+          type: string
+          format: uuid
+        amount_g:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,5}(?:\.\d{0,2})?$
+        unit_label:
+          type: string
+          maxLength: 50
+      required:
+      - amount_g
+      - date
+      - food
+      - meal
+    DiarySummary:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        totals:
+          type: object
+          additionalProperties:
+            type: string
+        meals:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties: {}
+        targets:
+          type: object
+          additionalProperties: {}
+          nullable: true
+      required:
+      - date
+      - meals
+      - targets
+      - totals
     EnergyUnitEnum:
       enum:
       - kcal
@@ -653,6 +976,35 @@ components:
       - name
       - source
       - updated_at
+    FoodSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          maxLength: 255
+        brand:
+          type: string
+          maxLength: 255
+      required:
+      - name
+    FoodSummaryRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        brand:
+          type: string
+          maxLength: 255
+      required:
+      - name
     GoalEnum:
       enum:
       - lose
@@ -684,6 +1036,18 @@ components:
         * `fr` - Fr
         * `it` - It
         * `ar` - Ar
+    MealEnum:
+      enum:
+      - breakfast
+      - lunch
+      - dinner
+      - snack
+      type: string
+      description: |-
+        * `breakfast` - Breakfast
+        * `lunch` - Lunch
+        * `dinner` - Dinner
+        * `snack` - Snack
     PaginatedFoodList:
       type: object
       required:
@@ -707,6 +1071,28 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Food'
+    PatchedDiaryEntryRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        date:
+          type: string
+          format: date
+          description: The user's local day
+        meal:
+          $ref: '#/components/schemas/MealEnum'
+        food:
+          type: string
+          format: uuid
+        amount_g:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,5}(?:\.\d{0,2})?$
+        unit_label:
+          type: string
+          maxLength: 50
     PatchedProfileRequest:
       type: object
       properties:
