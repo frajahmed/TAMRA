@@ -2,15 +2,15 @@ import '../../../core/nutrition/nutrition.dart';
 
 /// Converts DRF decimals ("170.0"), ints and doubles to double.
 double? _toDouble(Object? value) => switch (value) {
-      num number => number.toDouble(),
-      String text => double.tryParse(text),
+      final num number => number.toDouble(),
+      final String text => double.tryParse(text),
       _ => null,
     };
 
 int? _toInt(Object? value) => switch (value) {
-      int number => number,
-      num number => number.round(),
-      String text => int.tryParse(text),
+      final int number => number,
+      final num number => number.round(),
+      final String text => int.tryParse(text),
       _ => null,
     };
 
