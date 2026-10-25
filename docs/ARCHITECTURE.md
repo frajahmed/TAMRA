@@ -39,6 +39,7 @@ Full version: Claude doc "TAMRA – Architektur & Projektsteuerung (Mobile)".
 | CRUD | /api/v1/weight/ · /api/v1/water/ | T-40 |
 | GET | /api/v1/stats/summary/ | T-42 |
 | GET, DELETE | /api/v1/me/export/ · /api/v1/me/ | T-43 |
+| GET, POST | /api/v1/me/trial/ | security |
 
 ## Food search (T-22)
 - PostgreSQL only (SQLite is no longer supported): extensions `pg_trgm`, generated column `search_vector`.
@@ -52,4 +53,4 @@ Full version: Claude doc "TAMRA – Architektur & Projektsteuerung (Mobile)".
 `{"code": "validation_error", "message": "Invalid input.", "fields": {"email": ["..."]}}` – for every error.
 
 ## Medical boundary
-No insulin dose calculation. Carb counting (g / KE 10 g / BE 12 g) and logging only.
+No medical claims, no diagnosis, no treatment advice. Security: see `docs/SECURITY.md`.

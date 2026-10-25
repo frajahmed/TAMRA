@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "profiles",
     "foods",
     "diary",
+    "billing",
 ]
 
 MIDDLEWARE = [
@@ -92,9 +93,21 @@ DATABASES = {
 
 AUTH_USER_MODEL = "accounts.User"
 
+# Passwords: one-way hash with a random salt per user (stored inside the hash).
+# Argon2id (OWASP recommendation, memory-hard) for new hashes; PBKDF2 stays as fallback,
+# so older hashes still work and are upgraded to Argon2 automatically at the next login.
+PASSWORD_HASHERS = [
+    "django.contrib.auth.hashers.Argon2PasswordHasher",
+    "django.contrib.auth.hashers.PBKDF2PasswordHasher",
+    "django.contrib.auth.hashers.ScryptPasswordHasher",
+]
+
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+    {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        "OPTIONS": {"min_length": 10},
+    },
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
@@ -138,6 +151,8 @@ REST_FRAMEWORK = {
         "register": "10/hour",
         "barcode": "30/min",
         "export": "5/hour",
+        "login": "10/min",
+        "trial": "20/hour",
     },
 }
 
@@ -162,6 +177,11 @@ SPECTACULAR_SETTINGS = {
 CELERY_BROKER_URL = env("REDIS_URL", "redis://localhost:6379/0")
 CELERY_RESULT_BACKEND = CELERY_BROKER_URL
 CELERY_TIMEZONE = TIME_ZONE
+
+# Free-trial abuse protection: secret key for HMAC hashes of emails and device ids.
+# Must be set in production and never change (otherwise old claims are not recognised).
+TRIAL_HASH_KEY = env("TRIAL_HASH_KEY", "dev-only-trial-hash-key-change-me")
+TRIAL_CLAIM_RETENTION_DAYS = 730
 
 # Open Food Facts (used from phase 1, sprint 2)
 OFF_USER_AGENT = env("OFF_USER_AGENT", "TAMRA/0.1 (contact@example.com)")

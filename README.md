@@ -2,7 +2,7 @@
 
 TAMRA (arabisch تمرة, „die Dattel“) ist ein fairer Kalorien-, Makro- und Fasten-Tracker
 für iOS und Android: Barcode-Scan und Fasten gratis, keine Werbung im Tagebuch,
-5 Sprachen (DE, EN, FR, IT, AR mit Rechts-nach-links), Diabetes-Modus mit KE/BE-Zählung.
+5 Sprachen (DE, EN, FR, IT, AR mit Rechts-nach-links). Sicherheit: siehe `docs/SECURITY.md`.
 
 | Ordner | Inhalt |
 | --- | --- |

@@ -89,7 +89,6 @@ docs/                        ARCHITECTURE.md, openapi.yaml, tickets/
 
 ## 5. Medical and privacy boundary
 
-- TAMRA never calculates or suggests an insulin dose. Carb counting (g, KE, BE) and logging only.
 - No health claims in texts ("cures", "treats", "guaranteed weight loss").
 - Calorie targets never below the safe minimum in `dailyCalorieTarget`.
 - No secrets in code. Use environment variables / `--dart-define`.

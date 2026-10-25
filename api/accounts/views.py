@@ -8,7 +8,9 @@ from rest_framework import generics, permissions, serializers, status
 from rest_framework.exceptions import ValidationError
 from rest_framework.request import Request
 from rest_framework.response import Response
+from rest_framework.throttling import ScopedRateThrottle
 from rest_framework.views import APIView
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .data import delete_account, export_user_data
 from .serializers import RegisterSerializer
@@ -20,7 +22,15 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
     authentication_classes: list = []
     permission_classes = [permissions.AllowAny]
+    throttle_classes = [ScopedRateThrottle]
     throttle_scope = "register"
+
+
+class LoginView(TokenObtainPairView):
+    """Email + password → JWT. Limited per IP address against password guessing."""
+
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "login"
 
 
 class ExportView(APIView):

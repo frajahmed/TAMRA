@@ -105,7 +105,7 @@ class _AuthFormState extends State<AuthForm> {
               validator: (value) {
                 final text = value ?? '';
                 if (text.isEmpty) return strings.fieldRequired;
-                if (widget.checkPasswordLength && text.length < 8) {
+                if (widget.checkPasswordLength && text.length < 10) {
                   return strings.passwordTooShort;
                 }
                 return null;

@@ -26,5 +26,7 @@ Tickets marked **[Claude]** are done by Claude, not by Qwen.
 | 4 | T-43 | Settings, data export, delete account | api + app | api done (Claude), app open |
 | 4 | T-44 | Accessibility, RTL and store texts **[Claude]** | app | open |
 
-Later (phase 2): KE/BE diabetes mode, fasting, reminders, recipes, subscription (RevenueCat),
-Apple/Google sign-in, Sentry in the app, store release pipeline.
+Later (phase 2): fasting, reminders, recipes, subscription (RevenueCat),
+Apple/Google sign-in, Sentry in the app, store release pipeline,
+two-factor login, leaked-password check (see docs/SECURITY.md).
+Dropped: diabetes mode (decision 2026-10-25).

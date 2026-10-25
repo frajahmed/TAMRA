@@ -23,7 +23,7 @@ const Map<String, Map<String, String>> translations = {
     'logout': 'Log out',
     'genericError': 'Something went wrong. Please try again.',
     'emailInvalid': 'Please enter a valid email address.',
-    'passwordTooShort': 'The password needs at least 8 characters.',
+    'passwordTooShort': 'The password needs at least 10 characters.',
     'fieldRequired': 'This field is required.',
     'consentTitle': 'Your data, your choice',
     'consentText':
@@ -82,7 +82,7 @@ const Map<String, Map<String, String>> translations = {
     'logout': 'Abmelden',
     'genericError': 'Etwas ist schiefgelaufen. Bitte versuche es erneut.',
     'emailInvalid': 'Bitte gib eine gültige E-Mail-Adresse ein.',
-    'passwordTooShort': 'Das Passwort braucht mindestens 8 Zeichen.',
+    'passwordTooShort': 'Das Passwort braucht mindestens 10 Zeichen.',
     'fieldRequired': 'Dieses Feld ist erforderlich.',
     'consentTitle': 'Deine Daten, deine Entscheidung',
     'consentText':
@@ -143,7 +143,7 @@ const Map<String, Map<String, String>> translations = {
     'logout': 'Se déconnecter',
     'genericError': "Une erreur s'est produite. Merci de réessayer.",
     'emailInvalid': 'Merci de saisir une adresse e-mail valide.',
-    'passwordTooShort': 'Le mot de passe doit contenir au moins 8 caractères.',
+    'passwordTooShort': 'Le mot de passe doit contenir au moins 10 caractères.',
     'fieldRequired': 'Ce champ est obligatoire.',
     'consentTitle': 'Tes données, ton choix',
     'consentText':
@@ -204,7 +204,7 @@ const Map<String, Map<String, String>> translations = {
     'logout': 'Esci',
     'genericError': 'Qualcosa è andato storto. Riprova.',
     'emailInvalid': 'Inserisci un indirizzo e-mail valido.',
-    'passwordTooShort': 'La password deve avere almeno 8 caratteri.',
+    'passwordTooShort': 'La password deve avere almeno 10 caratteri.',
     'fieldRequired': 'Questo campo è obbligatorio.',
     'consentTitle': 'I tuoi dati, la tua scelta',
     'consentText':
@@ -264,7 +264,7 @@ const Map<String, Map<String, String>> translations = {
     'logout': 'تسجيل الخروج',
     'genericError': 'حدث خطأ ما. يرجى المحاولة مرة أخرى.',
     'emailInvalid': 'يرجى إدخال بريد إلكتروني صالح.',
-    'passwordTooShort': 'يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.',
+    'passwordTooShort': 'يجب أن تتكون كلمة المرور من 10 أحرف على الأقل.',
     'fieldRequired': 'هذا الحقل مطلوب.',
     'consentTitle': 'بياناتك، قرارك',
     'consentText':

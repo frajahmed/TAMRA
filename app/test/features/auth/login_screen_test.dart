@@ -55,7 +55,7 @@ void main() {
     expect(find.text('No active account found with the given credentials'), findsOneWidget);
   });
 
-  testWidgets('register needs 8 characters and then leads to consent', (tester) async {
+  testWidgets('register needs 10 characters and then leads to consent', (tester) async {
     final controller = FakeAuthController(const AuthState.loggedOut());
     await tester.pumpWidget(testApp(controller: controller));
     await tester.pumpAndSettle();
@@ -67,7 +67,7 @@ void main() {
     await tester.enterText(find.byKey(const Key('register-password')), 'short');
     await tester.tap(find.byKey(const Key('register-submit')));
     await tester.pumpAndSettle();
-    expect(find.text('The password needs at least 8 characters.'), findsOneWidget);
+    expect(find.text('The password needs at least 10 characters.'), findsOneWidget);
     expect(controller.calls, isEmpty);
 
     await tester.enterText(find.byKey(const Key('register-password')), 'long-enough-1');

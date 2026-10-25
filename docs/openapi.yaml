@@ -7,9 +7,8 @@ paths:
   /api/v1/auth/login/:
     post:
       operationId: auth_login_create
-      description: |-
-        Takes a set of user credentials and returns an access and refresh JSON web
-        token pair to prove the authentication of those credentials.
+      description: Email + password → JWT. Limited per IP address against password
+        guessing.
       tags:
       - auth
       requestBody:
@@ -526,6 +525,60 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Profile'
+          description: ''
+  /api/v1/me/trial/:
+    get:
+      operationId: me_trial_retrieve
+      description: |-
+        GET: may this user start a free trial? POST: start it (marks it as used).
+
+        The app sends a stable device id (iOS identifierForVendor, Android ANDROID_ID),
+        which is only stored as a keyed hash.
+      tags:
+      - me
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrialResult'
+          description: ''
+    post:
+      operationId: me_trial_create
+      description: |-
+        GET: may this user start a free trial? POST: start it (marks it as used).
+
+        The app sends a stable device id (iOS identifierForVendor, Android ANDROID_ID),
+        which is only stored as a keyed hash.
+      tags:
+      - me
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrialRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TrialRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TrialRequestRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrialResult'
+          description: ''
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrialResult'
           description: ''
 components:
   schemas:
@@ -1329,6 +1382,22 @@ components:
           minLength: 1
       required:
       - refresh
+    TrialRequestRequest:
+      type: object
+      properties:
+        device_id:
+          type: string
+          maxLength: 200
+    TrialResult:
+      type: object
+      properties:
+        eligible:
+          type: boolean
+        reason:
+          type: string
+      required:
+      - eligible
+      - reason
     TypeEnum:
       enum:
       - health_data

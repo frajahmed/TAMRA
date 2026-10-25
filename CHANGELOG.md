@@ -5,9 +5,15 @@ Alle wichtigen Änderungen an TAMRA. Format: [Keep a Changelog](https://keepacha
 ## [Unreleased]
 
 ### Changed
+- Diabetes-Modus aus der Planung gestrichen (Entscheidung 25.10.2026).
+- Mindestlänge für Passwörter von 8 auf 10 Zeichen (API und App).
 - API braucht jetzt PostgreSQL (lokal über `docker compose up`); SQLite wird nicht mehr unterstützt.
 
 ### Added
+- Sicherheit (Claude): Passwörter mit Argon2id (Salt pro Nutzer, automatisches Upgrade alter
+  Hashes), Mindestlänge 10, Login-Begrenzung gegen Passwort-Raten, Schutz gegen
+  Testabo-Missbrauch (HMAC-Hash von E-Mail und Gerät, überlebt Konto-Löschung), `docs/SECURITY.md`.
+  131 Tests, 99 %.
 - DSGVO (Claude): Datenexport als JSON inkl. gelöschter Einträge, Konto endgültig löschen mit
   Passwort, Sperren aller Tokens (T-43, API-Teil). 112 Tests, 99 %.
 - Sprint 3 API (Claude): Tagebuch mit Nährwert-Snapshot pro Eintrag, Tageszusammenfassung
