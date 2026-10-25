@@ -66,6 +66,7 @@ docs/                        ARCHITECTURE.md, openapi.yaml, tickets/
 - Tests: `rest_framework.test.APITestCase`. Test 200/201/204/400/401/403/404 where relevant,
   and ALWAYS that user A cannot see or change data of user B (expect 404).
 - Code style: ruff (line length 100), type hints on functions.
+- Every public class, method and function gets a docstring (checked by ruff D101–D103 in CI).
 - Never log or print health data (weight, food, kcal, glucose, insulin) or tokens.
 
 ## 4. App rules (Flutter)
@@ -82,20 +83,33 @@ docs/                        ARCHITECTURE.md, openapi.yaml, tickets/
   Never `EdgeInsets.only(left: ...)` or `Alignment.centerLeft`.
 - Units: store metric and kcal; convert only for display with `Units` from
   `lib/core/nutrition/nutrition.dart`. Nutrition math only via that file.
+- Every public class, function, method and provider gets a `///` doc comment
+  (checked in CI by `.github/scripts/check_dart_docs.py`).
 - Widgets: small, `const` where possible, `super.key`. Give important widgets a `Key('...')`
   so tests can find them.
 - Tests: `flutter_test`. Unit tests for logic, widget tests for every screen
   (override providers with `ProviderScope(overrides: [...])`, no real network).
 
-## 5. Medical and privacy boundary
+## 5. Clean code (object-oriented, commented)
+
+- One class = one job: models hold data and rules about themselves, serializers validate,
+  views only connect request → logic → response, services/repositories hold the rest.
+- Share behaviour through base classes and interfaces (`OwnedModel`, `IsOwner`, `BarcodeSource`),
+  not by copying code. Depend on interfaces so tests can swap in fakes.
+- Doc comments say WHAT a class/function does and WHY (rules, limits, side effects),
+  never repeat the code line by line. Comments inside functions only where the reason is not obvious.
+- Names in English, full words (`weight_kg`, not `wkg`); units in the name (`_kg`, `_ml`, `_g`).
+- No dead code, no commented-out code, no `print`.
+
+## 6. Medical and privacy boundary
 
 - No health claims in texts ("cures", "treats", "guaranteed weight loss").
 - Calorie targets never below the safe minimum in `dailyCalorieTarget`.
 - No secrets in code. Use environment variables / `--dart-define`.
 
-## 6. Checks (run by GitHub automatically on every pull request)
+## 7. Checks (run by GitHub automatically on every pull request)
 
 API: `ruff check .`, `ruff format --check .`, `python manage.py makemigrations --check`,
 `coverage run manage.py test` (≥ 80 %), OpenAPI validation.
-App: `dart format --set-exit-if-changed lib test`, `flutter analyze`, `flutter test`.
+App: `dart format --set-exit-if-changed lib test`, doc-comment check, `flutter analyze`, `flutter test`.
 If a check fails, the owner sends you the log. Fix only what the log says.

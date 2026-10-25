@@ -14,4 +14,5 @@ class DiaryEntryAdmin(admin.ModelAdmin):
     raw_id_fields = ("user", "food")
 
     def has_change_permission(self, request, obj=None) -> bool:
+        """Diary entries are read-only in the admin (they are the user's data)."""
         return False

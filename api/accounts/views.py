@@ -40,6 +40,7 @@ class ExportView(APIView):
 
     @extend_schema(responses={(200, "application/json"): OpenApiTypes.OBJECT})
     def get(self, request: Request) -> HttpResponse:
+        """Download all personal data as a JSON file (GDPR Art. 15 and 20)."""
         body = json.dumps(export_user_data(request.user), ensure_ascii=False, indent=2)
         response = HttpResponse(body, content_type="application/json; charset=utf-8")
         response["Content-Disposition"] = 'attachment; filename="tamra-export.json"'
@@ -55,6 +56,7 @@ class DeleteAccountView(APIView):
         responses={204: None},
     )
     def delete(self, request: Request) -> Response:
+        """Delete the account and all personal data for real after checking the password (Art. 17)."""
         password = request.data.get("password", "")
         if not password or not request.user.check_password(password):
             raise ValidationError({"password": [_("The password is not correct.")]})

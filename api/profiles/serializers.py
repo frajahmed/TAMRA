@@ -6,6 +6,8 @@ from .models import Consent, Profile
 
 
 class ProfileSerializer(serializers.ModelSerializer):
+    """The profile; targets are calculated by the server and read-only."""
+
     is_complete = serializers.BooleanField(read_only=True)
     height_cm = serializers.DecimalField(
         max_digits=5,
@@ -42,6 +44,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         read_only_fields = ["kcal_target", "protein_g", "carbs_g", "fat_g", "updated_at"]
 
     def validate_birth_year(self, value: int | None) -> int | None:
+        """Birth year must give an age between 16 and 100."""
         if value is None:
             return value
         year = timezone.now().year
@@ -53,6 +56,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         return value
 
     def update(self, instance: Profile, validated_data: dict) -> Profile:
+        """Save the changes and recalculate the targets."""
         for field, value in validated_data.items():
             setattr(instance, field, value)
         instance.recalculate_targets()
@@ -61,6 +65,8 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class ConsentSerializer(serializers.ModelSerializer):
+    """A consent with version and timestamps; the user is set by the server."""
+
     class Meta:
         model = Consent
         fields = ["id", "type", "version", "given_at", "withdrawn_at"]

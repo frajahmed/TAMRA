@@ -88,4 +88,5 @@ class _CameraPreviewState extends State<_CameraPreview> {
   }
 }
 
+/// The camera scanner; widget tests override it with a fake.
 final barcodeSourceProvider = Provider<BarcodeSource>((ref) => const MobileBarcodeSource());

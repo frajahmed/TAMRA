@@ -32,6 +32,7 @@ def _is_sensitive(key: str) -> bool:
 
 
 def scrub(value: Any) -> Any:
+    """Replace health data and secrets in an error report with a placeholder."""
     if isinstance(value, dict):
         return {
             key: FILTERED if isinstance(key, str) and _is_sensitive(key) else scrub(item)
@@ -43,6 +44,7 @@ def scrub(value: Any) -> Any:
 
 
 def before_send(event: dict, hint: dict) -> dict:
+    """Sentry hook: scrub every event before it leaves the server."""
     event = scrub(event)
     request = event.get("request")
     if isinstance(request, dict):

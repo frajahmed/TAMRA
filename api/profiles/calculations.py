@@ -35,6 +35,7 @@ def daily_calorie_target(
     activity_level: str,
     goal: str,
 ) -> int:
+    """Daily calorie target: Mifflin-St Jeor x activity, adjusted for the goal, never below a safe minimum."""
     bmr = basal_metabolic_rate(sex, weight_kg, height_cm, age_years)
     adjusted = bmr * ACTIVITY_FACTORS[activity_level] + GOAL_ADJUSTMENT[goal]
     floor = max(bmr, MINIMUM_KCAL[sex])

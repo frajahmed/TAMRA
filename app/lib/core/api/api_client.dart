@@ -38,6 +38,7 @@ class ApiError implements Exception {
     );
   }
 
+  /// True when the server was not reached (offline, timeout), not for API errors.
   bool get isNetworkError => code == 'network_error';
 
   /// The first message of every field error, for showing under a form.
@@ -89,6 +90,7 @@ class ApiClient {
 
   // --- Auth -----------------------------------------------------------------
 
+  /// POST /auth/register/ → tokens of the new account.
   Future<AuthTokens> register(String email, String password) => _call(() async {
         final response = await _dio.post<Map<String, dynamic>>(
           '/api/v1/auth/register/',
@@ -97,6 +99,7 @@ class ApiClient {
         return AuthTokens.fromJson(_map(response));
       });
 
+  /// POST /auth/login/ → access and refresh token.
   Future<AuthTokens> login(String email, String password) => _call(() async {
         final response = await _dio.post<Map<String, dynamic>>(
           '/api/v1/auth/login/',
@@ -105,17 +108,20 @@ class ApiClient {
         return AuthTokens.fromJson(_map(response));
       });
 
+  /// POST /auth/logout/ → the refresh token is blacklisted on the server.
   Future<void> logout(String refreshToken) => _call(() async {
         await _dio.post<dynamic>('/api/v1/auth/logout/', data: {'refresh': refreshToken});
       });
 
   // --- Profile and consents ---------------------------------------------------
 
+  /// GET /me/profile/ → body data, targets and settings.
   Future<Map<String, dynamic>> getProfile() => _call(() async {
         final response = await _dio.get<Map<String, dynamic>>('/api/v1/me/profile/');
         return _map(response);
       });
 
+  /// PATCH /me/profile/ → the saved profile with recalculated targets.
   Future<Map<String, dynamic>> updateProfile(Map<String, dynamic> changes) =>
       _call(() async {
         final response = await _dio.patch<Map<String, dynamic>>(
@@ -125,6 +131,7 @@ class ApiClient {
         return _map(response);
       });
 
+  /// GET /me/consents/ → all consents of the user.
   Future<List<Map<String, dynamic>>> listConsents() => _call(() async {
         final response = await _dio.get<List<dynamic>>('/api/v1/me/consents/');
         return [
@@ -133,6 +140,7 @@ class ApiClient {
         ];
       });
 
+  /// POST /me/consents/ → stores a consent of [type] in [version].
   Future<void> giveConsent(String type, String version) => _call(() async {
         await _dio.post<dynamic>(
           '/api/v1/me/consents/',
@@ -165,6 +173,7 @@ class ApiClient {
         ];
       });
 
+  /// GET /foods/barcode/<code>/ → the food; [ApiError] with status 404 when unknown.
   Future<Map<String, dynamic>> foodByBarcode(String barcode) => _call(() async {
         final response = await _dio.get<Map<String, dynamic>>(
           '/api/v1/foods/barcode/${Uri.encodeComponent(barcode)}/',
@@ -172,6 +181,7 @@ class ApiClient {
         return _map(response);
       });
 
+  /// GET /foods/<id>/ → one food.
   Future<Map<String, dynamic>> foodById(String id) => _call(() async {
         final response = await _dio.get<Map<String, dynamic>>(
           '/api/v1/foods/${Uri.encodeComponent(id)}/',
@@ -179,6 +189,7 @@ class ApiClient {
         return _map(response);
       });
 
+  /// POST /foods/ → creates an own food and returns it.
   Future<Map<String, dynamic>> createFood(Map<String, dynamic> data) => _call(() async {
         final response = await _dio.post<Map<String, dynamic>>('/api/v1/foods/', data: data);
         return _map(response);
@@ -193,6 +204,7 @@ BaseOptions _baseOptions() => BaseOptions(
       responseType: ResponseType.json,
     );
 
+/// HTTP client with base URL, timeouts and automatic token refresh ([AuthInterceptor]).
 final dioProvider = Provider<Dio>((ref) {
   final dio = Dio(_baseOptions());
   dio.interceptors.add(
@@ -205,6 +217,7 @@ final dioProvider = Provider<Dio>((ref) {
   return dio;
 });
 
+/// The [ApiClient] used by all repositories.
 final apiClientProvider = Provider<ApiClient>((ref) {
   return ApiClient(ref.watch(dioProvider));
 });

@@ -5,6 +5,8 @@ from .models import Food
 
 @admin.register(Food)
 class FoodAdmin(admin.ModelAdmin):
+    """Search and inspect foods (Open Food Facts, TAMRA and user foods)."""
+
     list_display = ("name", "brand", "barcode", "source", "kcal", "updated_at")
     list_filter = ("source",)
     search_fields = ("name", "brand", "barcode")

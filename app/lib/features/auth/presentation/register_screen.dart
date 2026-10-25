@@ -7,6 +7,7 @@ import '../../../core/auth/auth_controller.dart';
 import '../../../l10n/app_strings.dart';
 import 'auth_form.dart';
 
+/// Create an account (password at least 10 characters); then consent and onboarding follow.
 class RegisterScreen extends ConsumerWidget {
   const RegisterScreen({super.key});
 

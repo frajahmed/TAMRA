@@ -24,6 +24,8 @@ jobs:
       - name: Format (fixed automatically by the Autofix workflow)
         continue-on-error: true
         run: dart format --output=none --set-exit-if-changed lib test
+      - name: Doc comments on every public class, function and method
+        run: python3 ../.github/scripts/check_dart_docs.py lib
       - name: Analyze
         id: analyze
         continue-on-error: true

@@ -9,8 +9,15 @@ target-version = "py312"
 extend-exclude = ["*/migrations/*"]
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "B", "UP", "DJ", "SIM"]
+select = ["E", "F", "I", "B", "UP", "DJ", "SIM", "D101", "D102", "D103"]
 ignore = ["E501"]  # line length is handled by the formatter
+
+[tool.ruff.lint.per-file-ignores]
+# Every public class, method and function needs a docstring (what and why), except tests,
+# settings and the Django entry point.
+"*/tests/*" = ["D101", "D102", "D103"]
+"config/*" = ["D101", "D102", "D103"]
+"manage.py" = ["D103"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["config", "core", "accounts"]

@@ -80,6 +80,7 @@ class CustomFoodInput {
   final double salt;
   final double? servingSizeG;
 
+  /// Body for POST /api/v1/foods/; empty optional fields are left out.
   Map<String, dynamic> toJson() => {
         'name': name,
         'brand': brand,

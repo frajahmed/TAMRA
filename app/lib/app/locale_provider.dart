@@ -6,9 +6,11 @@ class LocaleNotifier extends Notifier<Locale?> {
   @override
   Locale? build() => null;
 
+  /// Switches the app language (null = device language).
   void setLocale(Locale? locale) => state = locale;
 }
 
+/// The chosen app language; null means "use the device language".
 final localeProvider = NotifierProvider<LocaleNotifier, Locale?>(
   LocaleNotifier.new,
 );

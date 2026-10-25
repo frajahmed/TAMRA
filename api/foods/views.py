@@ -51,6 +51,7 @@ class FoodListCreateView(generics.ListCreateAPIView):
     """GET: search foods by name or brand. POST: create a custom food."""
 
     def get_serializer_class(self):
+        """POST uses the stricter serializer for own foods."""
         return CustomFoodSerializer if self.request.method == "POST" else FoodSerializer
 
     @extend_schema(
@@ -62,9 +63,11 @@ class FoodListCreateView(generics.ListCreateAPIView):
         ]
     )
     def get(self, request: Request, *args, **kwargs) -> Response:
+        """Search foods by name or brand (?q=, optional ?country=)."""
         return super().get(request, *args, **kwargs)
 
     def get_queryset(self) -> QuerySet[Food]:
+        """Matching foods: own foods first, then the country, then the best text match."""
         text = self.request.query_params.get("q", "").strip()
         tokens = search_tokens(text)
         if len("".join(tokens)) < 2:
@@ -96,13 +99,17 @@ class FoodListCreateView(generics.ListCreateAPIView):
         return queryset.order_by("-own", "-in_country", "-rank", "name")
 
     def perform_create(self, serializer: CustomFoodSerializer) -> None:
+        """Own foods belong to the user and get the source 'user'."""
         serializer.save(source=Food.Source.USER, created_by=self.request.user)
 
 
 class FoodDetailView(generics.RetrieveAPIView):
+    """One food by id (shared foods and the user's own foods)."""
+
     serializer_class = FoodSerializer
 
     def get_queryset(self) -> QuerySet[Food]:
+        """Shared foods plus the user's own foods, never other users' foods."""
         return visible_foods(self.request.user)
 
 
@@ -113,6 +120,7 @@ class FoodBarcodeView(APIView):
 
     @extend_schema(responses=FoodSerializer)
     def get(self, request: Request, barcode: str) -> Response:
+        """Find a food by barcode: own food, local database, then Open Food Facts."""
         if not BARCODE_RE.match(barcode):
             raise ValidationError({"barcode": [_("A barcode has 8 to 14 digits.")]})
 

@@ -7,6 +7,8 @@ from rest_framework.views import APIView
 
 
 class HealthSerializer(serializers.Serializer):
+    """Answer of the health check."""
+
     status = serializers.CharField()
 
 
@@ -18,14 +20,17 @@ class HealthView(APIView):
 
     @extend_schema(responses=HealthSerializer)
     def get(self, request: Request) -> Response:
+        """Report that the API is running (used by Docker and monitoring)."""
         return Response({"status": "ok"})
 
 
 def not_found(request, exception=None) -> JsonResponse:
+    """JSON 404 in the uniform error format (instead of Django's HTML page)."""
     return JsonResponse({"code": "not_found", "message": "Not found.", "fields": {}}, status=404)
 
 
 def server_error(request) -> JsonResponse:
+    """JSON 500 in the uniform error format, without internal details."""
     return JsonResponse(
         {"code": "server_error", "message": "Internal server error.", "fields": {}}, status=500
     )

@@ -50,6 +50,8 @@ DISPOSABLE_DOMAINS = {
 
 @dataclass(frozen=True)
 class TrialCheck:
+    """Result of a trial check: may the user start a trial, and if not, why."""
+
     eligible: bool
     reason: str = ""  # "", "disposable_email", "already_used"
 
@@ -75,6 +77,7 @@ def identity_hash(kind: str, value: str) -> str:
 
 
 def is_disposable(email: str) -> bool:
+    """True for throw-away email domains, which never get a trial."""
     domain = normalize_email(email).rpartition("@")[2]
     extra = set(getattr(settings, "DISPOSABLE_EMAIL_DOMAINS", ()))
     return domain in DISPOSABLE_DOMAINS | extra
@@ -88,6 +91,7 @@ def _hashes(email: str, device_id: str | None) -> dict[str, str]:
 
 
 def check_trial(email: str, device_id: str | None = None) -> TrialCheck:
+    """Check whether this email (and device) may still start a free trial; changes nothing."""
     if is_disposable(email):
         return TrialCheck(False, "disposable_email")
     hashes = _hashes(email, device_id).values()

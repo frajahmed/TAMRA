@@ -14,6 +14,8 @@ TrialResult = inline_serializer(
 
 
 class TrialRequestSerializer(serializers.Serializer):
+    """Body of POST /me/trial/: the optional device id of the phone."""
+
     device_id = serializers.CharField(max_length=200, required=False, allow_blank=True)
 
 
@@ -34,11 +36,13 @@ class TrialView(APIView):
 
     @extend_schema(responses=TrialResult)
     def get(self, request: Request) -> Response:
+        """Tell the app whether the logged-in user may start a free trial."""
         result = check_trial(request.user.email, self._device_id(request, request.query_params))
         return Response({"eligible": result.eligible, "reason": result.reason})
 
     @extend_schema(request=TrialRequestSerializer, responses={201: TrialResult, 409: TrialResult})
     def post(self, request: Request) -> Response:
+        """Start the free trial once per email and device (409 when already used)."""
         result = claim_trial(request.user.email, self._device_id(request, request.data))
         code = status.HTTP_201_CREATED if result.eligible else status.HTTP_409_CONFLICT
         return Response({"eligible": result.eligible, "reason": result.reason}, status=code)

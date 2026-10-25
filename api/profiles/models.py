@@ -8,6 +8,8 @@ from .calculations import daily_calorie_target, macro_targets
 
 
 class Profile(TimeStampedModel):
+    """Body data, goal, calculated targets and settings of one user."""
+
     class Sex(models.TextChoices):
         FEMALE = "female"
         MALE = "male"
@@ -71,6 +73,7 @@ class Profile(TimeStampedModel):
 
     @property
     def is_complete(self) -> bool:
+        """True when all data for the calorie calculation is present."""
         return bool(self.sex and self.birth_year and self.height_cm and self.weight_kg)
 
     def recalculate_targets(self) -> None:

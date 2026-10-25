@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../api/api_client.dart';
 import 'token_storage.dart';
 
+/// Whether the user is logged in; `unknown` while stored tokens are checked at start.
 enum AuthStatus { unknown, loggedOut, loggedIn }
 
 /// Login state plus what is still missing before the user can use the app.
@@ -22,8 +23,10 @@ class AuthState {
   final bool needsConsent;
   final bool needsProfile;
 
+  /// True when tokens are present and valid.
   bool get isLoggedIn => status == AuthStatus.loggedIn;
 
+  /// Same login status with changed consent/profile flags.
   AuthState copyWith({bool? needsConsent, bool? needsProfile}) => AuthState(
         status: status,
         needsConsent: needsConsent ?? this.needsConsent,
@@ -48,6 +51,8 @@ class AuthState {
 /// Current version of the health-data consent text (see translations: consentText).
 const healthConsentVersion = '2026-10';
 
+/// Logs the user in and out and decides which entry screen is needed
+/// (consent, onboarding or the app). Tokens are kept in [TokenStorage].
 class AuthController extends Notifier<AuthState> {
   @override
   AuthState build() {
@@ -82,6 +87,7 @@ class AuthController extends Notifier<AuthState> {
     await _loadSession();
   }
 
+  /// Logs out on the server (refresh token blacklisted) and deletes the stored tokens.
   Future<void> logout() async {
     final refresh = await _storage.readRefresh();
     if (refresh != null) {
@@ -98,8 +104,10 @@ class AuthController extends Notifier<AuthState> {
   /// Called by the AuthInterceptor when the refresh token is no longer valid.
   void sessionExpired() => state = const AuthState.loggedOut();
 
+  /// Called after the health-data consent was saved.
   void markConsentGiven() => state = state.copyWith(needsConsent: false);
 
+  /// Called after onboarding saved a complete profile.
   void markProfileComplete() => state = state.copyWith(needsProfile: false);
 
   Future<void> _loadSession() async {
@@ -126,6 +134,7 @@ class AuthController extends Notifier<AuthState> {
   }
 }
 
+/// The login state of the app.
 final authControllerProvider = NotifierProvider<AuthController, AuthState>(
   AuthController.new,
 );

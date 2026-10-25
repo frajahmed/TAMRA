@@ -9,4 +9,5 @@ class IsOwner(permissions.BasePermission):
     """
 
     def has_object_permission(self, request, view, obj) -> bool:
+        """Allow access only to the owner of the object."""
         return getattr(obj, "owner", None) == request.user

@@ -12,4 +12,5 @@ class TrialClaimAdmin(admin.ModelAdmin):
     readonly_fields = ("kind", "identity_hash", "created_at")
 
     def has_add_permission(self, request) -> bool:
+        """Trial claims are created by the API only, never by hand."""
         return False

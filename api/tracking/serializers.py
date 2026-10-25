@@ -5,6 +5,8 @@ from tracking.models import WaterLog, WeightLog
 
 
 class WeightLogSerializer(serializers.ModelSerializer):
+    """One weight per day in kg (30-300)."""
+
     class Meta:
         model = WeightLog
         fields = ["id", "date", "weight_kg", "created_at", "updated_at"]
@@ -24,6 +26,8 @@ class WeightLogSerializer(serializers.ModelSerializer):
 
 
 class WaterLogSerializer(serializers.ModelSerializer):
+    """One water entry in ml (1-5000); many per day."""
+
     class Meta:
         model = WaterLog
         fields = ["id", "date", "amount_ml", "created_at", "updated_at"]
@@ -31,5 +35,7 @@ class WaterLogSerializer(serializers.ModelSerializer):
 
 
 class WaterSummarySerializer(serializers.Serializer):
+    """Water total of one day."""
+
     date = serializers.DateField()
     total_ml = serializers.IntegerField()

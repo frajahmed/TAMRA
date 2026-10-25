@@ -24,6 +24,7 @@ class AppStrings {
 
   static const LocalizationsDelegate<AppStrings> delegate = _AppStringsDelegate();
 
+  /// The texts for the current language of [context].
   static AppStrings of(BuildContext context) {
     final strings = Localizations.of<AppStrings>(context, AppStrings);
     assert(strings != null, 'AppStrings not found. Is AppStrings.delegate registered?');
@@ -39,6 +40,7 @@ class AppStrings {
     return fallbackLocale;
   }
 
+  /// Text of [key] in the current language, English as fallback.
   @visibleForTesting
   String text(String key) {
     final value = translations[locale.languageCode]?[key] ??
@@ -82,6 +84,7 @@ class AppStrings {
   String get consentCheckbox => text('consentCheckbox');
   String get continueButton => text('continueButton');
   String get onboardingTitle => text('onboardingTitle');
+  /// "Step 2 of 6" in the onboarding.
   String stepOf(int current, int total) =>
       _fill('stepOf', {'current': current, 'total': total});
   String get goalQuestion => text('goalQuestion');

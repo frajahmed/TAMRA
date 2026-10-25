@@ -87,6 +87,7 @@ class OnboardingAnswers {
         ActivityLevel.veryActive => 'very_active',
       };
 
+  /// Body for PATCH /api/v1/me/profile/ in the API's field names.
   Map<String, dynamic> toJson() => {
         'goal': goal.name,
         'sex': sex.name,

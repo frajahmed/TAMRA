@@ -3,9 +3,16 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 /// Stores the JWT tokens. Never log or print the values.
 abstract class TokenStorage {
+  /// The short-lived access token, or null when logged out.
   Future<String?> readAccess();
+
+  /// The refresh token (30 days), or null when logged out.
   Future<String?> readRefresh();
+
+  /// Stores both tokens after login, registration or refresh.
   Future<void> save({required String access, required String refresh});
+
+  /// Deletes both tokens (logout, session expired).
   Future<void> clear();
 }
 
@@ -64,4 +71,5 @@ class MemoryTokenStorage implements TokenStorage {
   }
 }
 
+/// Where tokens are stored: the phone's secure storage (Keychain / Keystore).
 final tokenStorageProvider = Provider<TokenStorage>((ref) => SecureTokenStorage());

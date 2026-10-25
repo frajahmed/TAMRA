@@ -10,6 +10,8 @@ Alle wichtigen Änderungen an TAMRA. Format: [Keep a Changelog](https://keepacha
 - API braucht jetzt PostgreSQL (lokal über `docker compose up`); SQLite wird nicht mehr unterstützt.
 
 ### Added
+- Sauberer Code: jede öffentliche Klasse, Methode und Funktion hat einen Doc-Kommentar (API und App);
+  CI prüft das automatisch (ruff D101–D103, `.github/scripts/check_dart_docs.py`); Regeln in `QWEN.md` §5.
 - API: Gewicht und Wasser (T-40, Qwen; Review Claude): ein Gewicht pro Tag, Profilgewicht und
   Kalorienziel werden mitgeführt, Export und Konto-Löschung enthalten die neuen Daten.
 - Planung Sprint 5 (`docs/tickets/sprint-5.md`): Sport und Schritte aus Apple Health / Health Connect

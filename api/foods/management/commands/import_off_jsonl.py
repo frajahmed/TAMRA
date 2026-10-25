@@ -15,14 +15,18 @@ from foods.off import country_codes, map_off_product, upsert_food
 
 
 class Command(BaseCommand):
+    """Import an Open Food Facts JSONL dump (streamed, never loaded completely)."""
+
     help = "Import foods from an Open Food Facts JSONL dump."
 
     def add_arguments(self, parser) -> None:
+        """Path of the dump, countries to keep and an optional limit."""
         parser.add_argument("path", type=Path)
         parser.add_argument("--countries", default="de,fr,it,be", help="ISO codes, comma-separated")
         parser.add_argument("--limit", type=int, default=0, help="stop after N imported foods")
 
     def handle(self, *args, path: Path, countries: str, limit: int, **options) -> None:
+        """Read the dump line by line and insert or update the foods."""
         if not path.exists():
             raise CommandError(f"File not found: {path}")
         wanted = {code.strip().lower() for code in countries.split(",") if code.strip()}

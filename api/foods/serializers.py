@@ -7,6 +7,8 @@ from .models import NUTRIENT_FIELDS, Food
 
 
 class FoodSerializer(serializers.ModelSerializer):
+    """A food with its nutrients per 100 g."""
+
     is_custom = serializers.SerializerMethodField()
 
     class Meta:
@@ -28,6 +30,7 @@ class FoodSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "source", "countries", "image_url", "updated_at"]
 
     def get_is_custom(self, food: Food) -> bool:
+        """True when the logged-in user created this food."""
         request = self.context.get("request")
         return bool(request and food.created_by_id == getattr(request.user, "id", None))
 
@@ -56,11 +59,13 @@ class CustomFoodSerializer(FoodSerializer):
         }
 
     def validate_barcode(self, value: str | None) -> str | None:
+        """A barcode is 8 to 14 digits; empty means none."""
         if value and (not value.isdigit() or not 8 <= len(value) <= 14):
             raise serializers.ValidationError(_("A barcode has 8 to 14 digits."))
         return value or None
 
     def validate(self, attrs: dict) -> dict:
+        """Protein, carbs and fat together cannot be more than 100 g per 100 g."""
         grams = sum(attrs.get(field, Decimal(0)) for field in ("protein", "carbs", "fat"))
         if grams > 100:
             raise serializers.ValidationError(

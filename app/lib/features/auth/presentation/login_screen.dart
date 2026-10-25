@@ -7,6 +7,7 @@ import '../../../core/auth/auth_controller.dart';
 import '../../../l10n/app_strings.dart';
 import 'auth_form.dart';
 
+/// Login with email and password; links to registration.
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
 

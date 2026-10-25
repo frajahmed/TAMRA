@@ -7,12 +7,16 @@ from .models import User
 
 
 class TamraUserCreationForm(BaseUserCreationForm):
+    """Admin form for new users: email instead of a username."""
+
     class Meta:
         model = User
         fields = ("email",)
 
 
 class TamraUserChangeForm(UserChangeForm):
+    """Admin form for editing users: email instead of a username."""
+
     class Meta:
         model = User
         fields = "__all__"
@@ -20,6 +24,8 @@ class TamraUserChangeForm(UserChangeForm):
 
 @admin.register(User)
 class UserAdmin(DjangoUserAdmin):
+    """User admin for the email-based user model (no username field)."""
+
     form = TamraUserChangeForm
     add_form = TamraUserCreationForm
     ordering = ("email",)

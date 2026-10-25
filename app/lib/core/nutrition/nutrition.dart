@@ -73,12 +73,15 @@ class NutrientAmounts {
         salt: salt + other.salt,
       );
 
+  /// Total of several amounts (e.g. all entries of a day).
   static NutrientAmounts sum(Iterable<NutrientAmounts> items) =>
       items.fold(const NutrientAmounts(), (total, item) => total + item);
 }
 
+/// Body type used by the Mifflin-St Jeor formula.
 enum Sex { female, male }
 
+/// Activity in daily life (without sport) with its PAL factor.
 enum ActivityLevel {
   sedentary(1.2),
   light(1.375),
@@ -90,6 +93,7 @@ enum ActivityLevel {
   final double factor;
 }
 
+/// The user's goal; changes the daily calorie target.
 enum WeightGoal { lose, maintain, gain }
 
 /// Basal metabolic rate (kcal/day) by Mifflin-St Jeor.
@@ -150,10 +154,16 @@ abstract final class Units {
   static const double _kjPerKcal = 4.184;
   static const double _mgDlPerMmolL = 18.0;
 
+  /// Kilograms to pounds.
   static double kgToLb(double kg) => kg / _kgPerLb;
+  /// Pounds to kilograms (stored value).
   static double lbToKg(double lb) => lb * _kgPerLb;
+  /// Kilocalories to kilojoules (EU labels show both).
   static double kcalToKj(double kcal) => kcal * _kjPerKcal;
+  /// Kilojoules to kilocalories (stored value).
   static double kjToKcal(double kj) => kj / _kjPerKcal;
+  /// Blood glucose mg/dL to mmol/L (display only, no medical use).
   static double mgDlToMmolL(double mgDl) => mgDl / _mgDlPerMmolL;
+  /// Blood glucose mmol/L to mg/dL (display only, no medical use).
   static double mmolLToMgDl(double mmolL) => mmolL * _mgDlPerMmolL;
 }

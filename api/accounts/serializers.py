@@ -8,6 +8,8 @@ User = get_user_model()
 
 
 class RegisterSerializer(serializers.ModelSerializer):
+    """Registration: email and password in, JWT tokens out."""
+
     password = serializers.CharField(write_only=True, trim_whitespace=False)
     access = serializers.CharField(read_only=True)
     refresh = serializers.CharField(read_only=True)
@@ -19,12 +21,14 @@ class RegisterSerializer(serializers.ModelSerializer):
         extra_kwargs = {"email": {"validators": []}}  # uniqueness checked case-insensitively below
 
     def validate_email(self, value: str) -> str:
+        """Email must be unique, case-insensitive (a@x.de and A@x.de are the same user)."""
         email = value.strip().lower()
         if User.objects.filter(email__iexact=email).exists():
             raise serializers.ValidationError(_("An account with this email already exists."))
         return email
 
     def validate(self, attrs: dict) -> dict:
+        """Check the password with Django's validators (length, common, similar to email)."""
         candidate = User(email=attrs.get("email", ""))
         try:
             validate_password(attrs["password"], user=candidate)
@@ -33,11 +37,13 @@ class RegisterSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data: dict):
+        """Create the user with a hashed password (Argon2id)."""
         return User.objects.create_user(
             email=validated_data["email"], password=validated_data["password"]
         )
 
     def to_representation(self, instance) -> dict:
+        """Answer with tokens so the app is logged in right after registration."""
         refresh = RefreshToken.for_user(instance)
         return {
             "id": str(instance.id),

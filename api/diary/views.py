@@ -23,6 +23,7 @@ DATE_PARAM = OpenApiParameter(
 
 
 def required_date(request: Request, name: str = "date") -> date:
+    """Read a required ?date=YYYY-MM-DD parameter or answer 400."""
     raw = request.query_params.get(name, "")
     try:
         return date.fromisoformat(raw)
@@ -31,6 +32,7 @@ def required_date(request: Request, name: str = "date") -> date:
 
 
 def meal_order() -> Case:
+    """Sort expression: breakfast, lunch, dinner, snack."""
     return Case(
         *[When(meal=meal, then=Value(index)) for index, meal in enumerate(DiaryEntry.MEAL_ORDER)],
         output_field=IntegerField(),
@@ -38,6 +40,7 @@ def meal_order() -> Case:
 
 
 def own_entries(user) -> QuerySet[DiaryEntry]:
+    """The logged-in user's diary entries with their food (one query)."""
     return DiaryEntry.objects.filter(user=user).select_related("food")
 
 
@@ -47,38 +50,50 @@ def as_decimal_text(value: Decimal | None) -> str:
 
 
 def totals(queryset: QuerySet[DiaryEntry]) -> dict[str, str]:
+    """Sum of every nutrient of the entries, as decimal text."""
     sums = queryset.aggregate(**{field: Sum(field) for field in SNAPSHOT_FIELDS})
     return {field: as_decimal_text(sums[field]) for field in SNAPSHOT_FIELDS}
 
 
 class DiaryListCreateView(generics.ListCreateAPIView):
+    """GET: entries of one day. POST: add an entry."""
+
     serializer_class = DiaryEntrySerializer
     pagination_class = None
 
     @extend_schema(parameters=[DATE_PARAM])
     def get(self, request: Request, *args, **kwargs) -> Response:
+        """Entries of ?date=, sorted by meal."""
         return super().get(request, *args, **kwargs)
 
     def get_queryset(self) -> QuerySet[DiaryEntry]:
+        """Only the user's entries of the requested day."""
         day = required_date(self.request)
         return own_entries(self.request.user).filter(date=day).order_by(meal_order(), "created_at")
 
     def perform_create(self, serializer: DiaryEntrySerializer) -> None:
+        """The entry always belongs to the logged-in user."""
         serializer.save(user=self.request.user)
 
 
 class DiaryDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Read, change or delete one diary entry."""
+
     serializer_class = DiaryEntrySerializer
     http_method_names = ["get", "patch", "delete", "options", "head"]
 
     def get_queryset(self) -> QuerySet[DiaryEntry]:
+        """Only the user's own entries (others answer 404)."""
         return own_entries(self.request.user)
 
     def perform_destroy(self, instance: DiaryEntry) -> None:
+        """Soft delete, so the sync can tell other devices."""
         instance.soft_delete()
 
 
 class DiarySummaryView(APIView):
+    """Totals of one day: overall and per meal."""
+
     @extend_schema(
         parameters=[DATE_PARAM],
         responses=inline_serializer(
@@ -92,6 +107,7 @@ class DiarySummaryView(APIView):
         ),
     )
     def get(self, request: Request) -> Response:
+        """Totals of ?date= overall and per meal (meals without entries are 0) plus the targets."""
         day = required_date(request)
         entries = own_entries(request.user).filter(date=day)
         profile = Profile.objects.filter(user=request.user).first()
@@ -120,6 +136,7 @@ class DiaryCopyView(APIView):
         responses=inline_serializer("DiaryCopyResult", {"copied": serializers.IntegerField()}),
     )
     def post(self, request: Request) -> Response:
+        """Copy all entries of a day (or one meal) to another day."""
         serializer = DiaryCopySerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data

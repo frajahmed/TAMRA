@@ -79,6 +79,7 @@ List<RouteBase> foodRoutes() => [
       ),
     ];
 
+/// The app's router; re-checks [authRedirect] whenever the login state changes.
 final routerProvider = Provider<GoRouter>((ref) {
   final refresh = ValueNotifier<int>(0);
   ref.listen<AuthState>(authControllerProvider, (previous, next) => refresh.value++);

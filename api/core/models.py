@@ -17,10 +17,13 @@ class ActiveManager(models.Manager):
     """Default manager: hides soft-deleted rows."""
 
     def get_queryset(self) -> models.QuerySet:
+        """Only rows that are not soft-deleted."""
         return super().get_queryset().filter(deleted_at__isnull=True)
 
 
 class TimeStampedModel(models.Model):
+    """Base for every table: UUID id, created/updated timestamps and soft delete."""
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True, db_index=True)
@@ -33,6 +36,7 @@ class TimeStampedModel(models.Model):
         abstract = True
 
     def soft_delete(self) -> None:
+        """Hide the row instead of deleting it (sync and undo need the row)."""
         self.deleted_at = timezone.now()
         self.save(update_fields=["deleted_at", "updated_at"])
 
@@ -47,4 +51,5 @@ class OwnedModel(TimeStampedModel):
 
     @property
     def owner(self):  # used by core.permissions.IsOwner
+        """The user this row belongs to (used by core.permissions.IsOwner)."""
         return self.user

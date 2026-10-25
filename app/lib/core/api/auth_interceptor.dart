@@ -29,6 +29,7 @@ class AuthInterceptor extends QueuedInterceptor {
     '/api/v1/health/',
   ];
 
+  /// Endpoints that work without a token (login, register, refresh, health).
   static bool isPublic(String path) => _publicPaths.any(path.endsWith);
 
   @override
