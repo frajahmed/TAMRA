@@ -48,8 +48,11 @@ water card add/remove with fake repository.
 ## T-42: Statistics – 7 days (api + app)
 
 **API:** `GET /api/v1/stats/summary/?from=YYYY-MM-DD&to=YYYY-MM-DD` (max 31 days else 400) →
-list per day `{date, kcal, protein, carbs, fat, water_ml, weight_kg}` (missing day = zeros, weight null).
-Put the view in `api/tracking/` or a new app `api/stats/`. Tests: totals, empty days, range limit, ownership.
+`{from, to, kcal_target, days: [{date, kcal, protein, carbs, fat, water_ml, weight_kg}],
+averages: {kcal, protein, carbs, fat, logged_days}, weight_change_kg}` (missing day = zeros,
+weight null; averages only over days with diary entries). New app `api/stats/`.
+Tests: totals, empty days, range limit, ownership. Sprint 5 (T-51) extends it with sport kcal and
+`group=week|month`.
 
 **App:** statistics screen (tab from T-41): bar chart kcal per day vs. target line, averages for
 protein/carbs/fat, weight change in the period. Free version shows 7 days (later PRO: more).

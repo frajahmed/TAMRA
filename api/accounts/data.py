@@ -13,6 +13,7 @@ from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, Ou
 from diary.models import DiaryEntry
 from foods.models import Food
 from profiles.models import Consent, Profile
+from tracking.models import WaterLog, WeightLog
 
 
 def _rows(queryset, fields: list[str]) -> list[dict[str, Any]]:
@@ -110,12 +111,24 @@ def _diary(user) -> list[dict[str, Any]]:
     return _rows(DiaryEntry.all_objects.filter(user=user).order_by("date", "created_at"), fields)
 
 
+def _weights(user) -> list[dict[str, Any]]:
+    fields = ["id", "date", "weight_kg", "created_at", "deleted_at"]
+    return _rows(WeightLog.all_objects.filter(user=user).order_by("date"), fields)
+
+
+def _water(user) -> list[dict[str, Any]]:
+    fields = ["id", "date", "amount_ml", "created_at", "deleted_at"]
+    return _rows(WaterLog.all_objects.filter(user=user).order_by("date", "created_at"), fields)
+
+
 EXPORTERS: dict[str, Callable[[Any], Any]] = {
     "account": _account,
     "profile": _profile,
     "consents": _consents,
     "custom_foods": _custom_foods,
     "diary_entries": _diary,
+    "weight_logs": _weights,
+    "water_logs": _water,
 }
 
 
@@ -140,6 +153,8 @@ def delete_account(user) -> None:
     used_by_others = DiaryEntry.all_objects.filter(food__in=custom_foods).values("food_id")
     custom_foods.filter(pk__in=used_by_others).update(created_by=None)
     custom_foods.exclude(pk__in=used_by_others).delete()
+    WeightLog.all_objects.filter(user=user).delete()
+    WaterLog.all_objects.filter(user=user).delete()
     Consent.all_objects.filter(user=user).delete()
     Profile.all_objects.filter(user=user).delete()
     user.delete()

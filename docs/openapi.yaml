@@ -580,6 +580,254 @@ paths:
               schema:
                 $ref: '#/components/schemas/TrialResult'
           description: ''
+  /api/v1/water/:
+    get:
+      operationId: water_list
+      description: 'GET: water entries of ?date= (required). POST: add a glass or
+        bottle.'
+      parameters:
+      - in: query
+        name: date
+        schema:
+          type: string
+          format: date
+        description: The user's local day (YYYY-MM-DD)
+        required: true
+      tags:
+      - water
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WaterLog'
+          description: ''
+    post:
+      operationId: water_create
+      description: 'GET: water entries of ?date= (required). POST: add a glass or
+        bottle.'
+      tags:
+      - water
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WaterLogRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WaterLogRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WaterLogRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WaterLog'
+          description: ''
+  /api/v1/water/{id}/:
+    delete:
+      operationId: water_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - water
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/water/summary/:
+    get:
+      operationId: water_summary_retrieve
+      parameters:
+      - in: query
+        name: date
+        schema:
+          type: string
+          format: date
+        description: The user's local day (YYYY-MM-DD)
+        required: true
+      tags:
+      - water
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WaterSummary'
+          description: ''
+  /api/v1/weight/:
+    get:
+      operationId: weight_list
+      description: 'GET: weights (newest first), optional ?from=&to=. POST: one weight
+        per day (update → 200).'
+      parameters:
+      - in: query
+        name: from
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: to
+        schema:
+          type: string
+          format: date
+      tags:
+      - weight
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WeightLog'
+          description: ''
+    post:
+      operationId: weight_create
+      description: 'GET: weights (newest first), optional ?from=&to=. POST: one weight
+        per day (update → 200).'
+      tags:
+      - weight
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WeightLogRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WeightLogRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WeightLogRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WeightLog'
+          description: ''
+  /api/v1/weight/{id}/:
+    get:
+      operationId: weight_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - weight
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WeightLog'
+          description: ''
+    put:
+      operationId: weight_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - weight
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WeightLogRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WeightLogRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WeightLogRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WeightLog'
+          description: ''
+    patch:
+      operationId: weight_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - weight
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedWeightLogRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedWeightLogRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedWeightLogRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WeightLog'
+          description: ''
+    delete:
+      operationId: weight_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - weight
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
 components:
   schemas:
     ActivityLevelEnum:
@@ -1207,6 +1455,16 @@ components:
           $ref: '#/components/schemas/CarbUnitEnum'
         language:
           $ref: '#/components/schemas/LanguageEnum'
+    PatchedWeightLogRequest:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        weight_kg:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,1})?$
     Profile:
       type: object
       properties:
@@ -1410,6 +1668,99 @@ components:
         * `terms` - Terms
         * `privacy` - Privacy
         * `analytics` - Analytics
+    WaterLog:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        date:
+          type: string
+          format: date
+        amount_ml:
+          type: integer
+          maximum: 5000
+          minimum: 1
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - amount_ml
+      - created_at
+      - date
+      - id
+      - updated_at
+    WaterLogRequest:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        amount_ml:
+          type: integer
+          maximum: 5000
+          minimum: 1
+      required:
+      - amount_ml
+      - date
+    WaterSummary:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        total_ml:
+          type: integer
+      required:
+      - date
+      - total_ml
+    WeightLog:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        date:
+          type: string
+          format: date
+        weight_kg:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,1})?$
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - date
+      - id
+      - updated_at
+      - weight_kg
+    WeightLogRequest:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        weight_kg:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,1})?$
+      required:
+      - date
+      - weight_kg
     WeightUnitEnum:
       enum:
       - kg

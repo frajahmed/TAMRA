@@ -9,6 +9,7 @@ from rest_framework.test import APITestCase
 from diary.models import DiaryEntry
 from foods.models import Food
 from profiles.models import Consent, Profile
+from tracking.models import WaterLog, WeightLog
 
 User = get_user_model()
 PASSWORD = "Sicheres-Passwort-123"
@@ -41,6 +42,9 @@ class PersonalDataTestCase(APITestCase):
         )
         other_entry.apply_snapshot()
         other_entry.save()
+        for user in (self.user, self.other):
+            WeightLog.objects.create(user=user, date="2026-10-23", weight_kg=Decimal("70.0"))
+            WaterLog.objects.create(user=user, date="2026-10-23", amount_ml=250)
 
 
 class ExportTests(PersonalDataTestCase):
@@ -63,6 +67,9 @@ class ExportTests(PersonalDataTestCase):
         self.assertEqual(len(data["diary_entries"]), 2)
         self.assertEqual(data["diary_entries"][1]["food__name"], "Omas Kuchen")
         self.assertEqual(data["diary_entries"][1]["kcal"], "200.00")
+        self.assertEqual(data["weight_logs"][0]["weight_kg"], "70.0")
+        self.assertEqual(data["water_logs"][0]["amount_ml"], 250)
+        self.assertEqual(len(data["weight_logs"]), 1)
         self.assertNotIn("b@example.com", response.content.decode())
 
 
@@ -91,6 +98,9 @@ class DeleteAccountTests(PersonalDataTestCase):
         self.assertFalse(DiaryEntry.all_objects.filter(user_id=self.user.pk).exists())
         self.assertFalse(Profile.all_objects.filter(user_id=self.user.pk).exists())
         self.assertFalse(Consent.all_objects.filter(user_id=self.user.pk).exists())
+        self.assertFalse(WeightLog.all_objects.filter(user_id=self.user.pk).exists())
+        self.assertFalse(WaterLog.all_objects.filter(user_id=self.user.pk).exists())
+        self.assertEqual(WeightLog.objects.filter(user=self.other).count(), 1)
         # still used by the other user's diary → kept, but no longer linked to the account
         self.assertIsNone(Food.all_objects.get(pk=self.mine.pk).created_by)
 
