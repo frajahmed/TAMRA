@@ -17,9 +17,11 @@ Full version: Claude doc "TAMRA – Architektur & Projektsteuerung (Mobile)".
 | E10 | No code generation in the app (no build_runner): plain Riverpod, hand-written models, translations as Dart maps |
 | E11 | Custom user model: email login, UUID primary key |
 | E12 | User data: UUID ids, `updated_at`, soft delete (`deleted_at`) via `core.models.OwnedModel` |
+| E13 | Sport and steps come from Apple Health / Health Connect on the phone (hub for Garmin, Fitbit, Polar, Samsung Health, Strava); direct cloud APIs only in phase 3 |
+| E14 | Calorie balance: `budget = target + workout kcal`, `remaining = budget – eaten`; steps are shown but not added (the activity level of the target already covers daily life) |
 
 ## Stack
-- App: Flutter stable, flutter_riverpod 2.x, go_router, dio, flutter_secure_storage; later drift, mobile_scanner, fl_chart
+- App: Flutter stable, flutter_riverpod 2.x, go_router, dio, flutter_secure_storage, mobile_scanner, app_settings; later drift, fl_chart, health
 - API: Django 5.2, DRF, simplejwt (access 15 min, refresh 30 days, rotation + blacklist), drf-spectacular,
   PostgreSQL 16, Redis, Celery, sentry-sdk (filtered)
 - CI: GitHub Actions – `api.yml`, `app.yml`, `autofix.yml` (formats PRs), `bootstrap-flutter.yml` (one-time)
@@ -37,7 +39,9 @@ Full version: Claude doc "TAMRA – Architektur & Projektsteuerung (Mobile)".
 | GET, POST, PATCH, DELETE | /api/v1/diary/ · /diary/summary/ · /diary/copy/ | T-30, T-32 |
 | GET, POST | /api/v1/sync/ | T-33 |
 | CRUD | /api/v1/weight/ · /api/v1/water/ | T-40 |
-| GET | /api/v1/stats/summary/ | T-42 |
+| GET | /api/v1/stats/summary/?from&to&group=day\|week\|month | T-42, T-51 |
+| GET | /api/v1/stats/day/?date= | T-51 |
+| CRUD | /api/v1/activities/ · POST /activities/import/ · GET /activities/summary/ | T-50 |
 | GET, DELETE | /api/v1/me/export/ · /api/v1/me/ | T-43 |
 | GET, POST | /api/v1/me/trial/ | security |
 
@@ -48,6 +52,20 @@ Full version: Claude doc "TAMRA – Architektur & Projektsteuerung (Mobile)".
 - Visibility: shared foods (Open Food Facts, TAMRA) plus the user's own custom foods; never other users' custom foods.
 - Barcode: own custom food → local database → Open Food Facts API (5 s timeout, User-Agent) → 404.
 - Import: `python manage.py import_off_jsonl <dump.jsonl.gz> --countries de,fr,it,be` (streaming, no full load).
+
+## Activity and calorie balance (Sprint 5)
+- Sources: manual entry (MET × kg × hours), Apple Health (iOS) and Health Connect (Android) via the
+  Flutter package `health`. Garmin, Fitbit, Polar, Samsung Health, Strava and most watches write into
+  these hubs, so one connection covers them. Direct cloud APIs (Strava, Garmin Health API, Fitbit,
+  Polar) are phase 3 and only if needed.
+- Import is idempotent: `user + source + external_id` is unique; a deleted import is not re-created.
+- No double counting: the onboarding activity level describes daily life *without* sport; workouts add
+  their active kcal to the day budget (switch `count_activity_kcal` in the profile, default on).
+  Steps are displayed only.
+- History: per day, ISO week or month (averages per logged day), up to 366 days.
+- Store rules: HealthKit and Health Connect data never for ads, only for the user's own features,
+  named in the privacy policy; Google Play needs the Health Connect declaration form.
+- Health data consent (`health_data`) also covers activity data; disconnecting can delete imported data.
 
 ## Error format
 `{"code": "validation_error", "message": "Invalid input.", "fields": {"email": ["..."]}}` – for every error.

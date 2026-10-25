@@ -10,6 +10,9 @@ Alle wichtigen Änderungen an TAMRA. Format: [Keep a Changelog](https://keepacha
 - API braucht jetzt PostgreSQL (lokal über `docker compose up`); SQLite wird nicht mehr unterstützt.
 
 ### Added
+- Planung Sprint 5 (`docs/tickets/sprint-5.md`): Sport und Schritte aus Apple Health / Health Connect
+  (darüber Garmin, Fitbit, Polar, Samsung Health, Strava), manuelle Aktivitäten, Kalorienbilanz
+  (Ziel + Sport – Gegessen) und Verlauf nach Tagen, Wochen und Monaten.
 - App: Barcode-Scan (T-24) mit `mobile_scanner`: EAN-8/13 und UPC, gleicher Code nur einmal
   abgefragt, „nicht gefunden“ → eigenes Lebensmittel mit Barcode, Kamera verweigert → Einstellungen.
   Kamera-Berechtigung wird vom Workflow „Bootstrap Flutter platforms“ eingetragen.

@@ -14,8 +14,8 @@ Tickets marked **[Claude]** are done by Claude, not by Qwen.
 | 2 | T-20 | Food model | api | done (Claude, reviewed Qwen draft) |
 | 2 | T-21 | Open Food Facts mapping and import | api | done (Claude, reviewed Qwen draft) |
 | 2 | T-22 | Food search, barcode lookup, custom food | api | done (Claude, reviewed Qwen draft) |
-| 2 | T-23 | App: food search | app | open |
-| 2 | T-24 | App: barcode scanner | app | open |
+| 2 | T-23 | App: food search | app | done (Claude) |
+| 2 | T-24 | App: barcode scanner | app | done (Claude) |
 | 3 | T-30 | Diary entries and day summary | api | done (Claude) |
 | 3 | T-31 | App: diary screen and add entry | app | open |
 | 3 | T-32 | Copy meal or day | api + app | api done (Claude), app open |
@@ -25,7 +25,13 @@ Tickets marked **[Claude]** are done by Claude, not by Qwen.
 | 4 | T-42 | Statistics (7 days) | api + app | open |
 | 4 | T-43 | Settings, data export, delete account | api + app | api done (Claude), app open |
 | 4 | T-44 | Accessibility, RTL and store texts **[Claude]** | app | open |
+| 5 | T-50 | Activity model, CRUD and import | api | open |
+| 5 | T-51 | Calorie balance and history | api | open |
+| 5 | T-52 | App: activities and manual sport entry | app | open |
+| 5 | T-53 | App: connect Apple Health and Health Connect **[Claude]** | app | open |
+| 5 | T-54 | App: balance dashboard and history | app | open |
 
+Later (phase 3): direct Strava, Garmin, Fitbit and Polar connections (server-side).
 Later (phase 2): fasting, reminders, recipes, subscription (RevenueCat),
 Apple/Google sign-in, Sentry in the app, store release pipeline,
 two-factor login, leaked-password check (see docs/SECURITY.md).
