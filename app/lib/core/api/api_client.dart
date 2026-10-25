@@ -139,6 +139,50 @@ class ApiClient {
           data: {'type': type, 'version': version},
         );
       });
+
+  // --- Foods ----------------------------------------------------------------
+
+  /// GET /api/v1/foods/?q= → the `results` of the first page.
+  Future<List<Map<String, dynamic>>> searchFoods(
+    String query, {
+    String? country,
+    int limit = 30,
+  }) =>
+      _call(() async {
+        final response = await _dio.get<Map<String, dynamic>>(
+          '/api/v1/foods/',
+          queryParameters: {
+            'q': query,
+            'limit': limit,
+            if (country != null && country.isNotEmpty) 'country': country,
+          },
+        );
+        final results = _map(response)['results'];
+        return [
+          if (results is List)
+            for (final item in results)
+              if (item is Map<String, dynamic>) item,
+        ];
+      });
+
+  Future<Map<String, dynamic>> foodByBarcode(String barcode) => _call(() async {
+        final response = await _dio.get<Map<String, dynamic>>(
+          '/api/v1/foods/barcode/${Uri.encodeComponent(barcode)}/',
+        );
+        return _map(response);
+      });
+
+  Future<Map<String, dynamic>> foodById(String id) => _call(() async {
+        final response = await _dio.get<Map<String, dynamic>>(
+          '/api/v1/foods/${Uri.encodeComponent(id)}/',
+        );
+        return _map(response);
+      });
+
+  Future<Map<String, dynamic>> createFood(Map<String, dynamic> data) => _call(() async {
+        final response = await _dio.post<Map<String, dynamic>>('/api/v1/foods/', data: data);
+        return _map(response);
+      });
 }
 
 BaseOptions _baseOptions() => BaseOptions(

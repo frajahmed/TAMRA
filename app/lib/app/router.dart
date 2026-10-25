@@ -7,6 +7,9 @@ import '../features/auth/presentation/login_screen.dart';
 import '../features/auth/presentation/register_screen.dart';
 import '../features/auth/presentation/splash_screen.dart';
 import '../features/debug/presentation/debug_screen.dart';
+import '../features/food/domain/food.dart';
+import '../features/food/presentation/custom_food_screen.dart';
+import '../features/food/presentation/food_search_screen.dart';
 import '../features/home/presentation/home_screen.dart';
 import '../features/onboarding/presentation/consent_screen.dart';
 import '../features/onboarding/presentation/onboarding_screen.dart';
@@ -20,6 +23,8 @@ abstract final class AppRoutes {
   static const onboarding = '/onboarding';
   static const home = '/';
   static const debug = '/debug';
+  static const foodSearch = '/food/search';
+  static const foodCustom = '/food/custom';
 }
 
 /// Where the user may go, based on the login state. Pure function, unit-tested.
@@ -51,6 +56,23 @@ String? authRedirect(AuthState auth, String location) {
   }
 }
 
+/// Food search and "own food" form. Both return the chosen [Food] with `context.pop(food)`.
+List<RouteBase> foodRoutes() => [
+      GoRoute(
+        path: AppRoutes.foodSearch,
+        builder: (context, state) => const FoodSearchScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.foodCustom,
+        builder: (context, state) {
+          final extra = state.extra;
+          return CustomFoodScreen(
+            prefill: extra is CustomFoodPrefill ? extra : const CustomFoodPrefill(),
+          );
+        },
+      ),
+    ];
+
 final routerProvider = Provider<GoRouter>((ref) {
   final refresh = ValueNotifier<int>(0);
   ref.listen<AuthState>(authControllerProvider, (previous, next) => refresh.value++);
@@ -71,6 +93,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(path: AppRoutes.home, builder: (context, state) => const HomeScreen()),
       GoRoute(path: AppRoutes.debug, builder: (context, state) => const DebugScreen()),
+      ...foodRoutes(),
     ],
   );
 

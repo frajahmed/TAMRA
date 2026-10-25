@@ -111,6 +111,29 @@ class AppStrings {
   String get carbs => text('carbs');
   String get fat => text('fat');
   String get startButton => text('startButton');
+
+  // --- Food search and own food ---------------------------------------------
+  String get foodSearchTitle => text('foodSearchTitle');
+  String get foodSearchHint => text('foodSearchHint');
+  String get foodSearchMinChars => text('foodSearchMinChars');
+  String foodNoResults(String query) => _fill('foodNoResults', {'query': query});
+  String get foodCreateCustom => text('foodCreateCustom');
+  String get retry => text('retry');
+  String kcalPer100g(int kcal) => _fill('kcalPer100g', {'kcal': kcal});
+  String get customFoodTitle => text('customFoodTitle');
+  String get foodName => text('foodName');
+  String get foodBrand => text('foodBrand');
+  String get barcodeOptional => text('barcodeOptional');
+  String get barcodeInvalid => text('barcodeInvalid');
+  String get per100gHeading => text('per100gHeading');
+  String get kcalLabel => text('kcalLabel');
+  String gramsLabel(String name) => _fill('gramsLabel', {'name': name});
+  String get sugar => text('sugar');
+  String get fiber => text('fiber');
+  String get salt => text('salt');
+  String get servingSize => text('servingSize');
+  String get invalidNumber => text('invalidNumber');
+  String get macrosTooHigh => text('macrosTooHigh');
 }
 
 class _AppStringsDelegate extends LocalizationsDelegate<AppStrings> {

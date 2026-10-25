@@ -46,8 +46,15 @@ class HomeScreen extends ConsumerWidget {
                 style: textTheme.bodyLarge,
                 textAlign: TextAlign.center,
               ),
+              const SizedBox(height: 32),
+              FilledButton.icon(
+                key: const Key('open-food-search'),
+                onPressed: () => context.push(AppRoutes.foodSearch),
+                icon: const Icon(Icons.search),
+                label: Text(strings.foodSearchTitle),
+              ),
               if (kDebugMode) ...[
-                const SizedBox(height: 32),
+                const SizedBox(height: 16),
                 OutlinedButton(
                   key: const Key('open-debug'),
                   onPressed: () => context.push(AppRoutes.debug),

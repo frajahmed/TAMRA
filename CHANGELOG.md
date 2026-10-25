@@ -10,6 +10,8 @@ Alle wichtigen Änderungen an TAMRA. Format: [Keep a Changelog](https://keepacha
 - API braucht jetzt PostgreSQL (lokal über `docker compose up`); SQLite wird nicht mehr unterstützt.
 
 ### Added
+- App: Lebensmittel-Suche (T-23) mit 400 ms Debounce, Leer- und Fehlerzustand, Formular
+  „Eigenes Lebensmittel“ (Komma als Dezimalzeichen, kcal ≤ 900, Makros ≤ 100 g), Texte in 5 Sprachen.
 - Sicherheit (Claude): Passwörter mit Argon2id (Salt pro Nutzer, automatisches Upgrade alter
   Hashes), Mindestlänge 10, Login-Begrenzung gegen Passwort-Raten, Schutz gegen
   Testabo-Missbrauch (HMAC-Hash von E-Mail und Gerät, überlebt Konto-Löschung), `docs/SECURITY.md`.
