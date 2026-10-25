@@ -83,6 +83,11 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen> {
     if (food != null && mounted) context.pop(food);
   }
 
+  Future<void> _scan() async {
+    final food = await context.push<Food>(AppRoutes.foodScan);
+    if (food != null && mounted) context.pop(food);
+  }
+
   @override
   Widget build(BuildContext context) {
     final strings = AppStrings.of(context);
@@ -91,6 +96,12 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen> {
       appBar: AppBar(
         title: Text(strings.foodSearchTitle),
         actions: [
+          IconButton(
+            key: const Key('food-scan'),
+            tooltip: strings.scanTitle,
+            icon: const Icon(Icons.qr_code_scanner),
+            onPressed: _scan,
+          ),
           IconButton(
             key: const Key('food-add-custom'),
             tooltip: strings.foodCreateCustom,

@@ -10,6 +10,9 @@ Alle wichtigen Änderungen an TAMRA. Format: [Keep a Changelog](https://keepacha
 - API braucht jetzt PostgreSQL (lokal über `docker compose up`); SQLite wird nicht mehr unterstützt.
 
 ### Added
+- App: Barcode-Scan (T-24) mit `mobile_scanner`: EAN-8/13 und UPC, gleicher Code nur einmal
+  abgefragt, „nicht gefunden“ → eigenes Lebensmittel mit Barcode, Kamera verweigert → Einstellungen.
+  Kamera-Berechtigung wird vom Workflow „Bootstrap Flutter platforms“ eingetragen.
 - App: Lebensmittel-Suche (T-23) mit 400 ms Debounce, Leer- und Fehlerzustand, Formular
   „Eigenes Lebensmittel“ (Komma als Dezimalzeichen, kcal ≤ 900, Makros ≤ 100 g), Texte in 5 Sprachen.
 - Sicherheit (Claude): Passwörter mit Argon2id (Salt pro Nutzer, automatisches Upgrade alter

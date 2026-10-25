@@ -17,6 +17,8 @@ dependencies:
   dio: ^5.7.0
   flutter_secure_storage: ^9.2.2
   intl: any
+  mobile_scanner: ^7.0.0
+  app_settings: ^9.0.0
 
 dev_dependencies:
   flutter_test:

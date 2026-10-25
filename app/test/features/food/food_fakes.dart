@@ -4,9 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tamra_app/app/router.dart';
+import 'package:tamra_app/core/api/api_client.dart';
 import 'package:tamra_app/core/nutrition/nutrition.dart';
 import 'package:tamra_app/features/food/data/food_repository.dart';
 import 'package:tamra_app/features/food/domain/food.dart';
+import 'package:tamra_app/features/food/presentation/barcode_source.dart';
 import 'package:tamra_app/l10n/app_strings.dart';
 
 const apple = Food(
@@ -22,7 +24,11 @@ class FakeFoodRepository implements FoodRepository {
   Object? searchError;
   Object? createError;
   final List<String> queries = [];
+  final List<String> barcodes = [];
   CustomFoodInput? created;
+
+  /// Answer for [byBarcode]; null means "not found" (404).
+  Food? barcodeFood = apple;
 
   @override
   Future<List<Food>> search(String query, {String? country}) async {
@@ -32,7 +38,14 @@ class FakeFoodRepository implements FoodRepository {
   }
 
   @override
-  Future<Food> byBarcode(String barcode) async => apple;
+  Future<Food> byBarcode(String barcode) async {
+    barcodes.add(barcode);
+    final food = barcodeFood;
+    if (food == null) {
+      throw const ApiError(code: 'not_found', message: 'Not found.', statusCode: 404);
+    }
+    return food;
+  }
 
   @override
   Future<Food> byId(String id) async => apple;
@@ -55,9 +68,40 @@ class FakeFoodRepository implements FoodRepository {
   }
 }
 
+/// Camera replacement: the test calls [emit] or [deny].
+class FakeBarcodeSource implements BarcodeSource {
+  ValueChanged<String>? _onCode;
+  VoidCallback? _onDenied;
+  int settingsOpened = 0;
+
+  void emit(String code) => _onCode!(code);
+
+  void deny() => _onDenied!();
+
+  @override
+  Widget buildPreview(
+    BuildContext context, {
+    required ValueChanged<String> onCode,
+    required VoidCallback onPermissionDenied,
+  }) {
+    _onCode = onCode;
+    _onDenied = onPermissionDenied;
+    return const ColoredBox(key: Key('fake-camera'), color: Colors.black);
+  }
+
+  @override
+  Future<void> openSettings() async {
+    settingsOpened++;
+  }
+}
+
 /// A start page with an "open" button that pushes the food search and
 /// collects what the search returns into [picked].
-Widget foodTestApp(FakeFoodRepository repository, List<Food?> picked) {
+Widget foodTestApp(
+  FakeFoodRepository repository,
+  List<Food?> picked, {
+  FakeBarcodeSource? barcodeSource,
+}) {
   final router = GoRouter(
     routes: [
       GoRoute(
@@ -78,7 +122,10 @@ Widget foodTestApp(FakeFoodRepository repository, List<Food?> picked) {
     ],
   );
   return ProviderScope(
-    overrides: [foodRepositoryProvider.overrideWithValue(repository)],
+    overrides: [
+      foodRepositoryProvider.overrideWithValue(repository),
+      barcodeSourceProvider.overrideWithValue(barcodeSource ?? FakeBarcodeSource()),
+    ],
     child: MaterialApp.router(
       routerConfig: router,
       locale: const Locale('en'),

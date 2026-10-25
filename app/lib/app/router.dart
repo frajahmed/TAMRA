@@ -8,6 +8,7 @@ import '../features/auth/presentation/register_screen.dart';
 import '../features/auth/presentation/splash_screen.dart';
 import '../features/debug/presentation/debug_screen.dart';
 import '../features/food/domain/food.dart';
+import '../features/food/presentation/barcode_screen.dart';
 import '../features/food/presentation/custom_food_screen.dart';
 import '../features/food/presentation/food_search_screen.dart';
 import '../features/home/presentation/home_screen.dart';
@@ -25,6 +26,7 @@ abstract final class AppRoutes {
   static const debug = '/debug';
   static const foodSearch = '/food/search';
   static const foodCustom = '/food/custom';
+  static const foodScan = '/food/scan';
 }
 
 /// Where the user may go, based on the login state. Pure function, unit-tested.
@@ -56,11 +58,15 @@ String? authRedirect(AuthState auth, String location) {
   }
 }
 
-/// Food search and "own food" form. Both return the chosen [Food] with `context.pop(food)`.
+/// Food search, barcode scan and "own food" form. All return the chosen [Food] with `context.pop(food)`.
 List<RouteBase> foodRoutes() => [
       GoRoute(
         path: AppRoutes.foodSearch,
         builder: (context, state) => const FoodSearchScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.foodScan,
+        builder: (context, state) => const BarcodeScreen(),
       ),
       GoRoute(
         path: AppRoutes.foodCustom,

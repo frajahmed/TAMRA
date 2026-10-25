@@ -134,6 +134,15 @@ class AppStrings {
   String get servingSize => text('servingSize');
   String get invalidNumber => text('invalidNumber');
   String get macrosTooHigh => text('macrosTooHigh');
+
+  // --- Barcode scan ---------------------------------------------------------
+  String get scanTitle => text('scanTitle');
+  String get scanHint => text('scanHint');
+  String get scanNotFoundTitle => text('scanNotFoundTitle');
+  String scanNotFoundText(String code) => _fill('scanNotFoundText', {'code': code});
+  String get scanAgain => text('scanAgain');
+  String get cameraDeniedText => text('cameraDeniedText');
+  String get openSettings => text('openSettings');
 }
 
 class _AppStringsDelegate extends LocalizationsDelegate<AppStrings> {
