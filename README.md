@@ -20,6 +20,7 @@ cp .env.example .env
 docker compose up --build
 # http://localhost:8000/api/v1/health/  →  {"status": "ok"}
 ```
+Ist Port 8000 belegt, in `api/.env` z. B. `API_PORT=8010` setzen.
 
 App (braucht Flutter):
 ```bash
