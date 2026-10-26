@@ -1,11 +1,5 @@
+import '../../../core/json.dart';
 import '../../../core/nutrition/nutrition.dart';
-
-/// Converts DRF decimals ("52.00"), ints and doubles to double.
-double? _toDouble(Object? value) => switch (value) {
-      final num number => number.toDouble(),
-      final String text => double.tryParse(text),
-      _ => null,
-    };
 
 /// A food as returned by /api/v1/foods/. Nutrients are per 100 g.
 class Food {
@@ -38,15 +32,15 @@ class Food {
       barcode: barcode == null || barcode.toString().isEmpty ? null : barcode.toString(),
       isCustom: json['is_custom'] == true,
       per100g: NutritionPer100g(
-        kcal: _toDouble(json['kcal']) ?? 0,
-        protein: _toDouble(json['protein']) ?? 0,
-        carbs: _toDouble(json['carbs']) ?? 0,
-        fat: _toDouble(json['fat']) ?? 0,
-        sugar: _toDouble(json['sugar']) ?? 0,
-        fiber: _toDouble(json['fiber']) ?? 0,
-        salt: _toDouble(json['salt']) ?? 0,
+        kcal: jsonDouble(json['kcal']) ?? 0,
+        protein: jsonDouble(json['protein']) ?? 0,
+        carbs: jsonDouble(json['carbs']) ?? 0,
+        fat: jsonDouble(json['fat']) ?? 0,
+        sugar: jsonDouble(json['sugar']) ?? 0,
+        fiber: jsonDouble(json['fiber']) ?? 0,
+        salt: jsonDouble(json['salt']) ?? 0,
       ),
-      servingSizeG: _toDouble(json['serving_size_g']),
+      servingSizeG: jsonDouble(json['serving_size_g']),
       servingLabel: json['serving_label']?.toString() ?? '',
     );
   }

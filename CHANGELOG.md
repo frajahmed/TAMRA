@@ -12,6 +12,9 @@ Alle wichtigen Änderungen an TAMRA. Format: [Keep a Changelog](https://keepacha
 - API braucht jetzt PostgreSQL (lokal über `docker compose up`); SQLite wird nicht mehr unterstützt.
 
 ### Added
+- App: Tagebuch als Startbildschirm (T-31): Wochenleiste, Kalorienbogen mit sichtbarer Formel,
+  Makro-Balken, vier Mahlzeiten mit „+“, Eintrag hinzufügen/ändern mit Live-Vorschau,
+  Wischen zum Löschen mit „Rückgängig“ (4 s), kcal oder kJ. API: Tagesübersicht liefert `energy_unit`.
 - Design-System (`docs/DESIGN.md`) nach dem Konzept vom 26.10.: Farb-Tokens für Hell/Dunkel
   (`AppColors`: Dattelbraun als Marke, Blau für Fortschritt, feste Makro-Farben), Karten mit Rand,
   Komponenten-Plan (Kalorienbogen, Wochenleiste, Navigations-Dock mit Scan-Knopf), Backlog mit

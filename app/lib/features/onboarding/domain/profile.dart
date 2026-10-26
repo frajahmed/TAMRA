@@ -1,18 +1,5 @@
+import '../../../core/json.dart';
 import '../../../core/nutrition/nutrition.dart';
-
-/// Converts DRF decimals ("170.0"), ints and doubles to double.
-double? _toDouble(Object? value) => switch (value) {
-      final num number => number.toDouble(),
-      final String text => double.tryParse(text),
-      _ => null,
-    };
-
-int? _toInt(Object? value) => switch (value) {
-      final int number => number,
-      final num number => number.round(),
-      final String text => int.tryParse(text),
-      _ => null,
-    };
 
 /// The user's profile as returned by GET /api/v1/me/profile/.
 class Profile {
@@ -46,15 +33,15 @@ class Profile {
     final sex = json['sex'] as String?;
     return Profile(
       sex: (sex == null || sex.isEmpty) ? null : sex,
-      birthYear: _toInt(json['birth_year']),
-      heightCm: _toDouble(json['height_cm']),
-      weightKg: _toDouble(json['weight_kg']),
+      birthYear: jsonInt(json['birth_year']),
+      heightCm: jsonDouble(json['height_cm']),
+      weightKg: jsonDouble(json['weight_kg']),
       activityLevel: (json['activity_level'] as String?) ?? 'sedentary',
       goal: (json['goal'] as String?) ?? 'maintain',
-      kcalTarget: _toInt(json['kcal_target']),
-      proteinG: _toInt(json['protein_g']),
-      carbsG: _toInt(json['carbs_g']),
-      fatG: _toInt(json['fat_g']),
+      kcalTarget: jsonInt(json['kcal_target']),
+      proteinG: jsonInt(json['protein_g']),
+      carbsG: jsonInt(json['carbs_g']),
+      fatG: jsonInt(json['fat_g']),
       isComplete: json['is_complete'] == true,
     );
   }

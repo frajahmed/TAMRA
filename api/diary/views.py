@@ -103,11 +103,12 @@ class DiarySummaryView(APIView):
                 "totals": serializers.DictField(child=serializers.CharField()),
                 "meals": serializers.DictField(child=serializers.DictField()),
                 "targets": serializers.DictField(allow_null=True),
+                "energy_unit": serializers.CharField(),
             },
         ),
     )
     def get(self, request: Request) -> Response:
-        """Totals of ?date= overall and per meal (meals without entries are 0) plus the targets."""
+        """Totals of ?date= overall and per meal (meals without entries are 0), targets and unit."""
         day = required_date(request)
         entries = own_entries(request.user).filter(date=day)
         profile = Profile.objects.filter(user=request.user).first()
@@ -124,6 +125,8 @@ class DiarySummaryView(APIView):
                     "carbs_g": profile.carbs_g if profile else None,
                     "fat_g": profile.fat_g if profile else None,
                 },
+                # The diary header shows kcal or kJ; one request is enough for the whole header.
+                "energy_unit": profile.energy_unit if profile else Profile.EnergyUnit.KCAL,
             }
         )
 

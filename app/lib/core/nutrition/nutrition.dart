@@ -136,6 +136,18 @@ int dailyCalorieTarget({
   return (adjusted < floor ? floor : adjusted).round();
 }
 
+/// How energy is shown (stored is always kcal); the user chooses it in the profile.
+enum EnergyUnit {
+  /// Kilocalories (default).
+  kcal,
+
+  /// Kilojoules.
+  kj;
+
+  /// The unit from the API value `kcal` or `kj`; unknown values fall back to kcal.
+  static EnergyUnit fromApi(Object? value) => value == 'kj' ? EnergyUnit.kj : EnergyUnit.kcal;
+}
+
 /// Unit conversions for display only.
 abstract final class Units {
   static const double _kgPerLb = 0.45359237;

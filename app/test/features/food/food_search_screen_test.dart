@@ -114,13 +114,15 @@ void main() {
     expect(find.byKey(const Key('open')), findsOneWidget);
   });
 
-  testWidgets('home screen opens the food search', (tester) async {
+  testWidgets('the + of a meal in the diary opens the food search', (tester) async {
     await tester.pumpWidget(
       testApp(overrides: [foodRepositoryProvider.overrideWithValue(FakeFoodRepository())]),
     );
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byKey(const Key('open-food-search')));
+    await tester.ensureVisible(find.byKey(const Key('add-breakfast')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('add-breakfast')));
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('food-search-field')), findsOneWidget);

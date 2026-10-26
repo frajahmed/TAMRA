@@ -5,6 +5,10 @@ import 'package:tamra_app/app/app.dart';
 import 'package:tamra_app/app/locale_provider.dart';
 import 'package:tamra_app/core/api/api_client.dart';
 import 'package:tamra_app/core/auth/auth_controller.dart';
+import 'package:tamra_app/core/json.dart';
+import 'package:tamra_app/core/nutrition/nutrition.dart';
+import 'package:tamra_app/features/diary/data/diary_repository.dart';
+import 'package:tamra_app/features/diary/domain/diary.dart';
 import 'package:tamra_app/features/onboarding/data/profile_repository.dart';
 import 'package:tamra_app/features/onboarding/domain/profile.dart';
 
@@ -112,6 +116,97 @@ class FakeProfileRepository implements ProfileRepository {
   }
 }
 
+/// Diary repository keeping entries in memory; records every call.
+class FakeDiaryRepository implements DiaryRepository {
+  FakeDiaryRepository({
+    List<DiaryEntry>? entries,
+    this.targets = const DayTargets(kcal: 2000, proteinG: 150, carbsG: 200, fatG: 67),
+    this.energyUnit = EnergyUnit.kcal,
+  }) : entries = entries ?? [];
+
+  final List<DiaryEntry> entries;
+  DayTargets targets;
+  EnergyUnit energyUnit;
+  Object? dayError;
+  final List<DateTime> requestedDays = [];
+  final List<NewDiaryEntry> added = [];
+  final List<String> deleted = [];
+  final List<String> updated = [];
+
+  @override
+  Future<DiaryDay> day(DateTime date) async {
+    requestedDays.add(dateOnly(date));
+    if (dayError != null) throw dayError!;
+    return DiaryDay(
+      date: dateOnly(date),
+      entries: [
+        for (final entry in entries)
+          if (dateKey(entry.date) == dateKey(date)) entry,
+      ],
+      targets: targets,
+      energyUnit: energyUnit,
+    );
+  }
+
+  @override
+  Future<DiaryEntry> add(NewDiaryEntry entry) async {
+    added.add(entry);
+    final saved = diaryEntry(
+      id: 'new-${added.length}',
+      date: entry.date,
+      meal: entry.meal,
+      name: 'Added',
+      grams: entry.amountG,
+      kcal: entry.amountG,
+    );
+    entries.add(saved);
+    return saved;
+  }
+
+  @override
+  Future<DiaryEntry> update(String id, {double? amountG, Meal? meal}) async {
+    updated.add('$id:${amountG ?? '-'}:${meal?.name ?? '-'}');
+    final index = entries.indexWhere((entry) => entry.id == id);
+    final old = entries[index];
+    final changed = diaryEntry(
+      id: id,
+      date: old.date,
+      meal: meal ?? old.meal,
+      name: old.foodName,
+      grams: amountG ?? old.amountG,
+      kcal: old.per100g.kcal * (amountG ?? old.amountG) / 100,
+    );
+    entries[index] = changed;
+    return changed;
+  }
+
+  @override
+  Future<void> delete(String id) async {
+    deleted.add(id);
+    entries.removeWhere((entry) => entry.id == id);
+  }
+}
+
+/// A diary entry for tests; macros are derived from [kcal] in fixed shares.
+DiaryEntry diaryEntry({
+  required String id,
+  required DateTime date,
+  required Meal meal,
+  required String name,
+  required double grams,
+  required double kcal,
+}) {
+  return DiaryEntry(
+    id: id,
+    date: date,
+    meal: meal,
+    foodId: 'food-$id',
+    foodName: name,
+    amountG: grams,
+    nutrients: NutrientAmounts(kcal: kcal, protein: kcal / 20, carbs: kcal / 8, fat: kcal / 30),
+  );
+}
+
 const loggedInComplete = AuthState(status: AuthStatus.loggedIn);
 
 /// The whole app with a fixed language and auth state.
@@ -119,12 +214,14 @@ Widget testApp({
   Locale locale = const Locale('en'),
   AuthState auth = loggedInComplete,
   FakeAuthController? controller,
+  FakeDiaryRepository? diary,
   List<Override> overrides = const [],
 }) {
   return ProviderScope(
     overrides: [
       localeProvider.overrideWith(() => FixedLocale(locale)),
       authControllerProvider.overrideWith(() => controller ?? FakeAuthController(auth)),
+      diaryRepositoryProvider.overrideWithValue(diary ?? FakeDiaryRepository()),
       ...overrides,
     ],
     child: const TamraApp(),

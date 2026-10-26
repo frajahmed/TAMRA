@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
+import '../core/nutrition/nutrition.dart';
+import '../features/diary/domain/diary.dart';
 import 'translations.dart';
 
 /// All user-facing texts of the app.
@@ -57,8 +59,6 @@ class AppStrings {
   }
 
   String get appName => text('appName');
-  String get homeTitle => text('homeTitle');
-  String get homeSubtitle => text('homeSubtitle');
   String get debugTitle => text('debugTitle');
   String get checkServer => text('checkServer');
   String get serverOk => text('serverOk');
@@ -146,6 +146,42 @@ class AppStrings {
   String get scanAgain => text('scanAgain');
   String get cameraDeniedText => text('cameraDeniedText');
   String get openSettings => text('openSettings');
+
+  // --- Diary ----------------------------------------------------------------
+  String get today => text('today');
+  String get caloriesLeft => text('caloriesLeft');
+  String get caloriesOver => text('caloriesOver');
+  String get addFood => text('addFood');
+  String get entryDeleted => text('entryDeleted');
+  String get undo => text('undo');
+  String get addEntryTitle => text('addEntryTitle');
+  String get editEntryTitle => text('editEntryTitle');
+  String get amountLabel => text('amountLabel');
+  String get mealLabel => text('mealLabel');
+  String get previousWeek => text('previousWeek');
+  String get nextWeek => text('nextWeek');
+  String gramsValue(Object value) => _fill('gramsValue', {'value': value});
+  /// "45 / 130 g" under a macro bar.
+  String gramsProgress(num value, num target) =>
+      _fill('gramsProgress', {'value': value, 'target': target});
+  String oneServing(num grams) => _fill('oneServing', {'grams': grams});
+  /// The visible calorie formula under the arc (values already formatted).
+  String calorieFormula({required String target, required String eaten, required String remaining}) =>
+      _fill('calorieFormula', {'target': target, 'eaten': eaten, 'remaining': remaining});
+
+  /// Name of a meal.
+  String meal(Meal meal) => switch (meal) {
+        Meal.breakfast => text('mealBreakfast'),
+        Meal.lunch => text('mealLunch'),
+        Meal.dinner => text('mealDinner'),
+        Meal.snack => text('mealSnack'),
+      };
+
+  /// [kcal] as "520 kcal" or, when the user chose kJ, "2176 kJ" (rounded to whole numbers).
+  String energy(double kcal, EnergyUnit unit) => switch (unit) {
+        EnergyUnit.kcal => _fill('kcalValue', {'value': kcal.round()}),
+        EnergyUnit.kj => _fill('kjValue', {'value': Units.kcalToKj(kcal).round()}),
+      };
 }
 
 class _AppStringsDelegate extends LocalizationsDelegate<AppStrings> {

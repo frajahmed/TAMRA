@@ -17,7 +17,7 @@ Tickets marked **[Claude]** are done by Claude, not by Qwen.
 | 2 | T-23 | App: food search | app | done (Claude) |
 | 2 | T-24 | App: barcode scanner | app | done (Claude) |
 | 3 | T-30 | Diary entries and day summary | api | done (Claude) |
-| 3 | T-31 | App: diary screen and add entry | app | open |
+| 3 | T-31 | App: diary screen and add entry | app | done (Claude) |
 | 3 | T-32 | Copy meal or day | api + app | api done (Claude), app open |
 | 3 | T-33 | Offline storage and sync **[Claude]** | api + app | open |
 | 4 | T-40 | Weight and water logs | api | done (Qwen, reviewed and fixed by Claude) |

@@ -7,11 +7,12 @@ import '../features/auth/presentation/login_screen.dart';
 import '../features/auth/presentation/register_screen.dart';
 import '../features/auth/presentation/splash_screen.dart';
 import '../features/debug/presentation/debug_screen.dart';
+import '../features/diary/presentation/diary_screen.dart';
+import '../features/diary/presentation/entry_editor_screen.dart';
 import '../features/food/domain/food.dart';
 import '../features/food/presentation/barcode_screen.dart';
 import '../features/food/presentation/custom_food_screen.dart';
 import '../features/food/presentation/food_search_screen.dart';
-import '../features/home/presentation/home_screen.dart';
 import '../features/onboarding/presentation/consent_screen.dart';
 import '../features/onboarding/presentation/onboarding_screen.dart';
 
@@ -27,6 +28,7 @@ abstract final class AppRoutes {
   static const foodSearch = '/food/search';
   static const foodCustom = '/food/custom';
   static const foodScan = '/food/scan';
+  static const diaryEntry = '/diary/entry';
 }
 
 /// Where the user may go, based on the login state. Pure function, unit-tested.
@@ -98,7 +100,15 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.onboarding,
         builder: (context, state) => const OnboardingScreen(),
       ),
-      GoRoute(path: AppRoutes.home, builder: (context, state) => const HomeScreen()),
+      GoRoute(path: AppRoutes.home, builder: (context, state) => const DiaryScreen()),
+      GoRoute(
+        path: AppRoutes.diaryEntry,
+        builder: (context, state) {
+          final extra = state.extra;
+          // Without arguments (e.g. an old deep link) there is nothing to edit: show the diary.
+          return extra is EntryEditorArgs ? EntryEditorScreen(args: extra) : const DiaryScreen();
+        },
+      ),
       GoRoute(path: AppRoutes.debug, builder: (context, state) => const DebugScreen()),
       ...foodRoutes(),
     ],

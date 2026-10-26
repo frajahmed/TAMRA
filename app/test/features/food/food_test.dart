@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:tamra_app/core/json.dart';
 import 'package:tamra_app/features/food/domain/food.dart';
-import 'package:tamra_app/features/food/presentation/custom_food_screen.dart';
 
 void main() {
   test('Food.fromJson reads DRF decimal strings and missing values', () {

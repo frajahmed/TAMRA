@@ -261,7 +261,7 @@ paths:
     get:
       operationId: diary_summary_retrieve
       description: Totals of ?date= overall and per meal (meals without entries are
-        0) plus the targets.
+        0), targets and unit.
       parameters:
       - in: query
         name: date
@@ -1208,8 +1208,11 @@ components:
           type: object
           additionalProperties: {}
           nullable: true
+        energy_unit:
+          type: string
       required:
       - date
+      - energy_unit
       - meals
       - targets
       - totals

@@ -169,11 +169,18 @@ class SummaryTests(DiaryTestCase):
         self.assertEqual(
             data["targets"], {"kcal": 2000, "protein_g": 150, "carbs_g": 200, "fat_g": 67}
         )
+        self.assertEqual(data["energy_unit"], "kcal")
 
     def test_empty_day_without_profile(self):
         response = self.client.get(reverse("diary-summary"), {"date": DAY})
         self.assertEqual(response.data["totals"]["kcal"], "0.00")
         self.assertIsNone(response.data["targets"]["kcal"])
+        self.assertEqual(response.data["energy_unit"], "kcal")
+
+    def test_summary_reports_kilojoules_when_chosen(self):
+        Profile.objects.update_or_create(user=self.user, defaults={"energy_unit": "kj"})
+        response = self.client.get(reverse("diary-summary"), {"date": DAY})
+        self.assertEqual(response.data["energy_unit"], "kj")
 
     def test_summary_needs_date(self):
         self.assertEqual(self.client.get(reverse("diary-summary")).status_code, 400)

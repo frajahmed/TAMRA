@@ -4,16 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/api/api_client.dart';
+import '../../../core/json.dart';
 import '../../../l10n/app_strings.dart';
 import '../data/food_repository.dart';
 import '../domain/food.dart';
-
-/// Parses "3.5" and "3,5". Returns null for empty or invalid text.
-double? parseAmount(String? text) {
-  final value = (text ?? '').trim().replaceAll(',', '.');
-  if (value.isEmpty) return null;
-  return double.tryParse(value);
-}
 
 /// Form for a food that is missing in the database. Returns the created [Food].
 class CustomFoodScreen extends ConsumerStatefulWidget {

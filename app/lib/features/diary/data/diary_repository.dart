@@ -1,0 +1,65 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../core/api/api_client.dart';
+import '../../../core/json.dart';
+import '../../../core/nutrition/nutrition.dart';
+import '../domain/diary.dart';
+
+/// Diary entries of the logged-in user from the TAMRA API.
+class DiaryRepository {
+  /// Creates the repository on top of [ApiClient].
+  DiaryRepository(this._api);
+
+  final ApiClient _api;
+
+  /// Entries, targets and energy unit of [date]. Errors arrive as [ApiError].
+  Future<DiaryDay> day(DateTime date) async {
+    final key = dateKey(date);
+    final entries = await _api.listDiary(key);
+    final summary = await _api.diarySummary(key);
+    return DiaryDay(
+      date: dateOnly(date),
+      entries: [for (final item in entries) DiaryEntry.fromJson(item)],
+      targets: DayTargets.fromJson(summary['targets']),
+      energyUnit: EnergyUnit.fromApi(summary['energy_unit']),
+    );
+  }
+
+  /// Saves a new entry and returns it with the nutrients calculated by the server.
+  Future<DiaryEntry> add(NewDiaryEntry entry) async =>
+      DiaryEntry.fromJson(await _api.createDiaryEntry(entry.toJson()));
+
+  /// Changes amount and/or meal of an entry.
+  Future<DiaryEntry> update(String id, {double? amountG, Meal? meal}) async =>
+      DiaryEntry.fromJson(
+        await _api.updateDiaryEntry(id, {
+          if (amountG != null) 'amount_g': amountG.toStringAsFixed(2),
+          if (meal != null) 'meal': meal.name,
+        }),
+      );
+
+  /// Deletes an entry.
+  Future<void> delete(String id) => _api.deleteDiaryEntry(id);
+}
+
+/// The [DiaryRepository] used by the diary screens (replaced by a fake in tests).
+final diaryRepositoryProvider = Provider<DiaryRepository>((ref) {
+  return DiaryRepository(ref.watch(apiClientProvider));
+});
+
+/// The day shown in the diary (starts with today).
+class SelectedDay extends Notifier<DateTime> {
+  @override
+  DateTime build() => dateOnly(DateTime.now());
+
+  /// Shows [day] in the diary.
+  void select(DateTime day) => state = dateOnly(day);
+}
+
+/// The day shown in the diary.
+final selectedDayProvider = NotifierProvider<SelectedDay, DateTime>(SelectedDay.new);
+
+/// Entries and targets of one day; invalidate it after a change to reload.
+final diaryDayProvider = FutureProvider.autoDispose.family<DiaryDay, DateTime>((ref, day) {
+  return ref.watch(diaryRepositoryProvider).day(day);
+});

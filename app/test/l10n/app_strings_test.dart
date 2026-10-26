@@ -44,7 +44,7 @@ void main() {
   });
 
   test('getters return the right language', () {
-    expect(AppStrings(const Locale('de')).homeTitle, 'Willkommen bei TAMRA');
+    expect(AppStrings(const Locale('de')).today, 'Heute');
     expect(AppStrings(const Locale('ar')).appName, 'تمرة');
   });
 }

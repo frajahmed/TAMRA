@@ -194,6 +194,50 @@ class ApiClient {
         final response = await _dio.post<Map<String, dynamic>>('/api/v1/foods/', data: data);
         return _map(response);
       });
+
+  // --- Diary ----------------------------------------------------------------
+
+  /// GET `/diary/?date=` → all entries of one day.
+  Future<List<Map<String, dynamic>>> listDiary(String date) => _call(() async {
+        final response = await _dio.get<List<dynamic>>(
+          '/api/v1/diary/',
+          queryParameters: {'date': date},
+        );
+        return [
+          for (final item in response.data ?? const <dynamic>[])
+            if (item is Map<String, dynamic>) item,
+        ];
+      });
+
+  /// GET `/diary/summary/?date=` → totals, targets and the energy unit of one day.
+  Future<Map<String, dynamic>> diarySummary(String date) => _call(() async {
+        final response = await _dio.get<Map<String, dynamic>>(
+          '/api/v1/diary/summary/',
+          queryParameters: {'date': date},
+        );
+        return _map(response);
+      });
+
+  /// POST `/diary/` → the saved entry with the nutrient snapshot.
+  Future<Map<String, dynamic>> createDiaryEntry(Map<String, dynamic> data) => _call(() async {
+        final response = await _dio.post<Map<String, dynamic>>('/api/v1/diary/', data: data);
+        return _map(response);
+      });
+
+  /// PATCH `/diary/<id>/` → the changed entry (amount or meal).
+  Future<Map<String, dynamic>> updateDiaryEntry(String id, Map<String, dynamic> changes) =>
+      _call(() async {
+        final response = await _dio.patch<Map<String, dynamic>>(
+          '/api/v1/diary/${Uri.encodeComponent(id)}/',
+          data: changes,
+        );
+        return _map(response);
+      });
+
+  /// DELETE `/diary/<id>/` → the entry is removed (soft delete on the server).
+  Future<void> deleteDiaryEntry(String id) => _call(() async {
+        await _dio.delete<dynamic>('/api/v1/diary/${Uri.encodeComponent(id)}/');
+      });
 }
 
 BaseOptions _baseOptions() => BaseOptions(

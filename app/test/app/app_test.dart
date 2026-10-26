@@ -6,11 +6,12 @@ import 'package:tamra_app/features/debug/presentation/debug_screen.dart';
 import '../helpers/fakes.dart';
 
 void main() {
-  testWidgets('home screen shows German texts, left-to-right', (tester) async {
+  testWidgets('diary start screen shows German texts, left-to-right', (tester) async {
     await tester.pumpWidget(testApp(locale: const Locale('de')));
     await tester.pumpAndSettle();
 
-    expect(find.text('Willkommen bei TAMRA'), findsOneWidget);
+    expect(find.text('Heute'), findsOneWidget);
+    expect(find.text('Frühstück'), findsOneWidget);
     final direction = Directionality.of(tester.element(find.byKey(const Key('home-title'))));
     expect(direction, TextDirection.ltr);
   });
@@ -19,7 +20,8 @@ void main() {
     await tester.pumpWidget(testApp(locale: const Locale('ar')));
     await tester.pumpAndSettle();
 
-    expect(find.text('مرحبًا بك في تمرة'), findsOneWidget);
+    expect(find.text('اليوم'), findsOneWidget);
+    expect(find.text('الفطور'), findsOneWidget);
     final direction = Directionality.of(tester.element(find.byKey(const Key('home-title'))));
     expect(direction, TextDirection.rtl);
   });
