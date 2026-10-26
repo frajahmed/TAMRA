@@ -70,7 +70,6 @@ and macro targets with the same formula as the app.
 | `protein_g`, `carbs_g`, `fat_g` | `PositiveIntegerField(null=True, blank=True)` |
 | `weight_unit` | choices `kg, lb`, default `kg` |
 | `energy_unit` | choices `kcal, kj`, default `kcal` |
-| `carb_unit` | choices `g, ke, be`, default `g` |
 | `language` | choices `de, en, fr, it, ar`, default `en` |
 
 Validation: `birth_year` between current year − 100 and current year − 16;

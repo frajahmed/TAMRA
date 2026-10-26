@@ -34,11 +34,6 @@ class Profile(TimeStampedModel):
         KCAL = "kcal"
         KJ = "kj"
 
-    class CarbUnit(models.TextChoices):
-        GRAM = "g"
-        KE = "ke"
-        BE = "be"
-
     class Language(models.TextChoices):
         DE = "de"
         EN = "en"
@@ -65,7 +60,6 @@ class Profile(TimeStampedModel):
     energy_unit = models.CharField(
         max_length=4, choices=EnergyUnit.choices, default=EnergyUnit.KCAL
     )
-    carb_unit = models.CharField(max_length=2, choices=CarbUnit.choices, default=CarbUnit.GRAM)
     language = models.CharField(max_length=2, choices=Language.choices, default=Language.EN)
 
     def __str__(self) -> str:

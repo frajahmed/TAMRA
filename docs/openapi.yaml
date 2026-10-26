@@ -855,16 +855,6 @@ components:
     BlankEnum:
       enum:
       - ''
-    CarbUnitEnum:
-      enum:
-      - g
-      - ke
-      - be
-      type: string
-      description: |-
-        * `g` - Gram
-        * `ke` - Ke
-        * `be` - Be
     Consent:
       type: object
       description: A consent with version and timestamps; the user is set by the server.
@@ -1475,8 +1465,6 @@ components:
           $ref: '#/components/schemas/WeightUnitEnum'
         energy_unit:
           $ref: '#/components/schemas/EnergyUnitEnum'
-        carb_unit:
-          $ref: '#/components/schemas/CarbUnitEnum'
         language:
           $ref: '#/components/schemas/LanguageEnum'
     PatchedWeightLogRequest:
@@ -1537,8 +1525,6 @@ components:
           $ref: '#/components/schemas/WeightUnitEnum'
         energy_unit:
           $ref: '#/components/schemas/EnergyUnitEnum'
-        carb_unit:
-          $ref: '#/components/schemas/CarbUnitEnum'
         language:
           $ref: '#/components/schemas/LanguageEnum'
         is_complete:

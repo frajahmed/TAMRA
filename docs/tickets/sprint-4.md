@@ -69,7 +69,7 @@ Tests with fake repository; German and Arabic render.
   data deleted for real (not soft) → 204. Blacklist all the user's refresh tokens.
 - Tests: export contains only own data; delete removes everything; wrong password keeps data.
 
-**App:** settings screen: language (5 + "device"), weight unit, energy unit, carb unit (g/KE/BE),
+**App:** settings screen: language (5 + "device"), weight unit, energy unit,
 withdraw health-data consent (with warning), export data (save/share the JSON file), logout,
 delete account (confirmation dialog + password). Changes PATCH the profile. Tests for each action
 with fakes.

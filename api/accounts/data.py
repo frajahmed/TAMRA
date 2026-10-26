@@ -54,7 +54,6 @@ def _profile(user) -> list[dict[str, Any]]:
         "fat_g",
         "weight_unit",
         "energy_unit",
-        "carb_unit",
         "language",
         "updated_at",
     ]

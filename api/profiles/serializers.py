@@ -36,7 +36,6 @@ class ProfileSerializer(serializers.ModelSerializer):
             "fat_g",
             "weight_unit",
             "energy_unit",
-            "carb_unit",
             "language",
             "is_complete",
             "updated_at",

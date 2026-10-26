@@ -105,18 +105,10 @@ void main() {
     });
   });
 
-  test('carb units', () {
-    expect(CarbUnits.toKE(45), closeTo(4.5, 1e-9));
-    expect(CarbUnits.toBE(48), closeTo(4, 1e-9));
-    expect(CarbUnits.toCarbChoices(30), closeTo(2, 1e-9));
-  });
-
   test('unit conversions', () {
     expect(Units.kgToLb(1), closeTo(2.20462, 1e-5));
     expect(Units.lbToKg(Units.kgToLb(80)), closeTo(80, 1e-9));
     expect(Units.kcalToKj(100), closeTo(418.4, 1e-9));
     expect(Units.kjToKcal(418.4), closeTo(100, 1e-9));
-    expect(Units.mgDlToMmolL(180), closeTo(10, 1e-9));
-    expect(Units.mmolLToMgDl(5.5), closeTo(99, 1e-9));
   });
 }

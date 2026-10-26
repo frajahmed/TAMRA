@@ -5,6 +5,8 @@ Alle wichtigen Änderungen an TAMRA. Format: [Keep a Changelog](https://keepacha
 ## [Unreleased]
 
 ### Changed
+- Reste des gestrichenen Diabetes-Modus entfernt: Profilfeld `carb_unit` (KE/BE, Migration
+  `profiles 0002`), App-Umrechnungen `CarbUnits` und Blutzucker-Einheiten.
 - Diabetes-Modus aus der Planung gestrichen (Entscheidung 25.10.2026).
 - Mindestlänge für Passwörter von 8 auf 10 Zeichen (API und App).
 - API braucht jetzt PostgreSQL (lokal über `docker compose up`); SQLite wird nicht mehr unterstützt.

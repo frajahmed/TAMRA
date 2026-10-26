@@ -136,23 +136,10 @@ int dailyCalorieTarget({
   return (adjusted < floor ? floor : adjusted).round();
 }
 
-/// Carbohydrate units used by people with diabetes.
-abstract final class CarbUnits {
-  /// KE (Kohlenhydrateinheit) = 10 g carbohydrates.
-  static double toKE(double carbsGrams) => carbsGrams / 10;
-
-  /// BE (Broteinheit) = 12 g carbohydrates.
-  static double toBE(double carbsGrams) => carbsGrams / 12;
-
-  /// US "carb choice" = 15 g carbohydrates.
-  static double toCarbChoices(double carbsGrams) => carbsGrams / 15;
-}
-
 /// Unit conversions for display only.
 abstract final class Units {
   static const double _kgPerLb = 0.45359237;
   static const double _kjPerKcal = 4.184;
-  static const double _mgDlPerMmolL = 18.0;
 
   /// Kilograms to pounds.
   static double kgToLb(double kg) => kg / _kgPerLb;
@@ -162,8 +149,4 @@ abstract final class Units {
   static double kcalToKj(double kcal) => kcal * _kjPerKcal;
   /// Kilojoules to kilocalories (stored value).
   static double kjToKcal(double kj) => kj / _kjPerKcal;
-  /// Blood glucose mg/dL to mmol/L (display only, no medical use).
-  static double mgDlToMmolL(double mgDl) => mgDl / _mgDlPerMmolL;
-  /// Blood glucose mmol/L to mg/dL (display only, no medical use).
-  static double mmolLToMgDl(double mmolL) => mmolL * _mgDlPerMmolL;
 }

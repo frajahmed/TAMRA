@@ -62,7 +62,7 @@ amount 0 → 400.
   amount input in g (or serving if `serving_size_g` exists), live preview of nutrients via
   `NutritionPer100g.forGrams`, save → `POST /diary/` → back to diary, refreshed.
 - Swipe an entry to delete (with undo snackbar 4 s, then `DELETE`). Tap to edit amount/meal.
-- Display units from profile (`energy_unit`, `carb_unit`) via `Units` / `CarbUnits`.
+- Display units from profile (`energy_unit`) via `Units`.
 
 **Tests:** diary renders summary and meals with a fake repository; add entry flow; delete with undo
 (no DELETE call when undo pressed); German and Arabic render; kJ display when profile says `kj`.

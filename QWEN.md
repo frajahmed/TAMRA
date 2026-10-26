@@ -67,7 +67,7 @@ docs/                        ARCHITECTURE.md, openapi.yaml, tickets/
   and ALWAYS that user A cannot see or change data of user B (expect 404).
 - Code style: ruff (line length 100), type hints on functions.
 - Every public class, method and function gets a docstring (checked by ruff D101–D103 in CI).
-- Never log or print health data (weight, food, kcal, glucose, insulin) or tokens.
+- Never log or print health data (weight, food, kcal, body measurements, activity) or tokens.
 
 ## 4. App rules (Flutter)
 
