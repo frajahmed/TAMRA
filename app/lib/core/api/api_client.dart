@@ -173,7 +173,7 @@ class ApiClient {
         ];
       });
 
-  /// GET /foods/barcode/<code>/ → the food; [ApiError] with status 404 when unknown.
+  /// GET `/foods/barcode/<code>/` → the food; [ApiError] with status 404 when unknown.
   Future<Map<String, dynamic>> foodByBarcode(String barcode) => _call(() async {
         final response = await _dio.get<Map<String, dynamic>>(
           '/api/v1/foods/barcode/${Uri.encodeComponent(barcode)}/',
@@ -181,7 +181,7 @@ class ApiClient {
         return _map(response);
       });
 
-  /// GET /foods/<id>/ → one food.
+  /// GET `/foods/<id>/` → one food.
   Future<Map<String, dynamic>> foodById(String id) => _call(() async {
         final response = await _dio.get<Map<String, dynamic>>(
           '/api/v1/foods/${Uri.encodeComponent(id)}/',

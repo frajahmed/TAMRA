@@ -4,6 +4,7 @@ Covers classes, enums, extensions, typedefs, top-level functions, top-level
 providers/constants and public methods/getters of classes (2-space indent).
 Skipped: private names ("_"), overrides (@override), constructors, fields, generated files
 and translation getters in app_strings.dart (`=> text('key')`: the key names the text).
+Doc lines with "<" outside backticks are reported too (flutter analyze rejects them).
 Usage: python .github/scripts/check_dart_docs.py app/lib
 """
 
@@ -41,6 +42,8 @@ def undocumented(path: Path) -> list[str]:
     lines = path.read_text(encoding="utf-8").splitlines()
     classes = _class_names(lines)
     for index, line in enumerate(lines):
+        if line.lstrip().startswith("///") and "<" in re.sub(r"`[^`]*`", "", line):
+            missing.append(f"{path}:{index + 1}: '<' outside backticks (read as HTML)")
         if line.startswith("  ") and not line.startswith("   "):
             method = METHOD.match(line)
             if not method or method.group(1) in classes or method.group(1).startswith("_"):
