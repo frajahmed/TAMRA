@@ -19,6 +19,7 @@ Full version: Claude doc "TAMRA – Architektur & Projektsteuerung (Mobile)".
 | E12 | User data: UUID ids, `updated_at`, soft delete (`deleted_at`) via `core.models.OwnedModel` |
 | E13 | Sport and steps come from Apple Health / Health Connect on the phone (hub for Garmin, Fitbit, Polar, Samsung Health, Strava); direct cloud APIs only in phase 3 |
 | E14 | Calorie balance: `budget = target + workout kcal`, `remaining = budget – eaten`; steps are shown but not added (the activity level of the target already covers daily life) |
+| E15 | Design system `docs/DESIGN.md`: colour tokens `AppColors` (brand brown, progress blue, fixed macro colours), light + dark mode, shared widgets in `app/lib/core/widgets/` |
 
 ## Stack
 - App: Flutter stable, flutter_riverpod 2.x, go_router, dio, flutter_secure_storage, mobile_scanner, app_settings; later drift, fl_chart, health

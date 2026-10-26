@@ -34,7 +34,8 @@ After saving a weight, also update `Profile.weight_kg` with the newest weight an
 
 **Files to create/change:** `app/pubspec.yaml` (add `fl_chart: ^0.69.0`),
 `app/lib/features/tracking/{domain,data,presentation}/...`, a water card on the diary screen,
-route `/weight`, bottom navigation (Diary, Weight, Statistics, Settings) in `lib/app/`, texts, tests.
+route `/weight`, floating navigation dock `NavDock` (Diary, Statistics, centre Scan, Activity,
+Profile – see `docs/DESIGN.md`) in `lib/app/`, texts, tests.
 
 **Specification:** weight screen with line chart (last 90 days), list, add/edit dialog in kg or lb
 (profile `weight_unit`, convert with `Units`); water card: 8 glass buttons of 250 ml, tap adds,

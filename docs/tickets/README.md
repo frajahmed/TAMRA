@@ -31,6 +31,9 @@ Tickets marked **[Claude]** are done by Claude, not by Qwen.
 | 5 | T-53 | App: connect Apple Health and Health Connect **[Claude]** | app | open |
 | 5 | T-54 | App: balance dashboard and history | app | open |
 
+Design system and screen plan: `docs/DESIGN.md`. Ideas for later: `docs/tickets/backlog.md`
+(AI photo scan T-60, fasting T-61, recipes T-62, streaks T-63, cloud connections T-64).
+
 Later (phase 3): direct Strava, Garmin, Fitbit and Polar connections (server-side).
 Later (phase 2): fasting, reminders, recipes, subscription (RevenueCat),
 Apple/Google sign-in, Sentry in the app, store release pipeline,

@@ -12,6 +12,10 @@ Alle wichtigen Änderungen an TAMRA. Format: [Keep a Changelog](https://keepacha
 - API braucht jetzt PostgreSQL (lokal über `docker compose up`); SQLite wird nicht mehr unterstützt.
 
 ### Added
+- Design-System (`docs/DESIGN.md`) nach dem Konzept vom 26.10.: Farb-Tokens für Hell/Dunkel
+  (`AppColors`: Dattelbraun als Marke, Blau für Fortschritt, feste Makro-Farben), Karten mit Rand,
+  Komponenten-Plan (Kalorienbogen, Wochenleiste, Navigations-Dock mit Scan-Knopf), Backlog mit
+  KI-Foto-Scan, Fasten, Rezepten und Serien (`docs/tickets/backlog.md`).
 - Sauberer Code: jede öffentliche Klasse, Methode und Funktion hat einen Doc-Kommentar (API und App);
   CI prüft das automatisch (ruff D101–D103, `.github/scripts/check_dart_docs.py`); Regeln in `QWEN.md` §5.
 - API: Gewicht und Wasser (T-40, Qwen; Review Claude): ein Gewicht pro Tag, Profilgewicht und

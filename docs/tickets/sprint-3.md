@@ -55,9 +55,12 @@ amount 0 → 400.
 `app/lib/features/diary/presentation/widgets/`, router (diary becomes `/`), texts, tests.
 
 **Specification**
-- Diary screen: date bar (previous/next day, tap for date picker, "today"), calorie summary
-  (eaten / target / remaining), three macro progress rings (protein, carbs, fat in g vs. target),
-  four meal sections with entries (name, amount, kcal) and "+" per meal.
+- Layout and components follow `docs/DESIGN.md` (colours only via `AppColors`): greeting,
+  `DateStrip` (week M–S, tap a day, swipe weeks, tap the month for a date picker),
+  `CalorieArc` (eaten vs. target, "remaining" in the centre, formula line below),
+  three `MacroBar`s (carbs, fat, protein in g vs. target, macro colours), four `MealCard`s with
+  entries (name, amount, kcal) and a quick-add "+" per meal. Shared widgets go to
+  `app/lib/core/widgets/`.
 - "+" opens food search (T-23) or barcode scan (T-24); after a food is chosen → add-entry screen:
   amount input in g (or serving if `serving_size_g` exists), live preview of nutrients via
   `NutritionPer100g.forGrams`, save → `POST /diary/` → back to diary, refreshed.

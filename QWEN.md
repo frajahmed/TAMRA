@@ -85,6 +85,8 @@ docs/                        ARCHITECTURE.md, openapi.yaml, tickets/
   `lib/core/nutrition/nutrition.dart`. Nutrition math only via that file.
 - Every public class, function, method and provider gets a `///` doc comment
   (checked in CI by `.github/scripts/check_dart_docs.py`).
+- Colours only via `AppColors.of(context)` / the theme (tokens in `lib/app/theme.dart`,
+  see `docs/DESIGN.md`), never `Color(0x...)` or `Colors.red` in a screen.
 - Widgets: small, `const` where possible, `super.key`. Give important widgets a `Key('...')`
   so tests can find them.
 - Tests: `flutter_test`. Unit tests for logic, widget tests for every screen
