@@ -41,15 +41,15 @@ void main() {
       expect(storage.connected, isTrue);
       expect(storage.last, _now);
       final sent = repository.imported.single;
-      final workout = (sent['activities'] as List).single as Map<String, dynamic>;
+      final workout = (sent['activities'] as List<dynamic>).single as Map<String, dynamic>;
       expect(workout['external_id'], 'hc-1');
       expect(workout['source'], 'health_connect');
       expect(workout['date'], '2026-10-27');
       expect(workout['kind'], 'running');
       expect(workout['kcal'], '410.4');
-      final steps = sent['steps'] as List;
+      final steps = sent['steps'] as List<dynamic>;
       expect(steps, hasLength(2));
-      expect((steps.first as Map)['steps'], 11200);
+      expect((steps.first as Map<String, dynamic>)['steps'], 11200);
     });
 
     test('refused access keeps the hub disconnected', () async {
@@ -88,8 +88,8 @@ void main() {
       final repository = FakeActivityRepository();
       final created = await _sync(source, repository, MemoryHealthSettingsStorage()).sync();
 
-      expect(repository.imported.map((page) => (page['activities'] as List).length), [500, 500, 200]);
-      expect(repository.imported.map((page) => (page['steps'] as List).length), [1, 0, 0]);
+      expect(repository.imported.map((page) => (page['activities'] as List<dynamic>).length), [500, 500, 200]);
+      expect(repository.imported.map((page) => (page['steps'] as List<dynamic>).length), [1, 0, 0]);
       expect(created, 1201);
     });
 
