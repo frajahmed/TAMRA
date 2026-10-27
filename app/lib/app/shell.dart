@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/widgets/nav_dock.dart';
+import '../features/activity/presentation/health_auto_sync.dart';
 import '../features/diary/presentation/add_food_flow.dart';
 import '../features/food/domain/food.dart';
 import '../l10n/app_strings.dart';
@@ -58,7 +59,7 @@ class AppShell extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final strings = AppStrings.of(context);
     return Scaffold(
-      body: navigationShell,
+      body: HealthAutoSync(child: navigationShell),
       bottomNavigationBar: NavDock(
         currentIndex: navigationShell.currentIndex,
         centerLabel: strings.addFood,

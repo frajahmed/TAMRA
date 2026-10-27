@@ -8,6 +8,8 @@ import 'package:tamra_app/core/auth/auth_controller.dart';
 import 'package:tamra_app/core/json.dart';
 import 'package:tamra_app/core/nutrition/nutrition.dart';
 import 'package:tamra_app/features/activity/data/activity_repository.dart';
+import 'package:tamra_app/features/activity/data/health_source.dart';
+import 'package:tamra_app/features/activity/data/health_sync.dart';
 import 'package:tamra_app/features/activity/domain/activity.dart';
 import 'package:tamra_app/features/diary/data/diary_repository.dart';
 import 'package:tamra_app/features/diary/domain/diary.dart';
@@ -397,6 +399,38 @@ class FakeActivityRepository implements ActivityRepository {
   }
 }
 
+/// Health hub that returns prepared data and records permission requests.
+class FakeHealthSource implements HealthSource {
+  FakeHealthSource({this.supported = true, this.grant = true, this.data = const HealthImport()});
+
+  final bool supported;
+  bool grant;
+  HealthImport data;
+  int permissionRequests = 0;
+  final List<String> reads = [];
+
+  @override
+  bool get isSupported => supported;
+
+  @override
+  String get displayName => 'Health Connect';
+
+  @override
+  String get sourceApi => 'health_connect';
+
+  @override
+  Future<bool> requestPermission() async {
+    permissionRequests++;
+    return grant;
+  }
+
+  @override
+  Future<HealthImport> read({required DateTime from, required DateTime to}) async {
+    reads.add('${dateKey(from)}..${dateKey(to)}');
+    return data;
+  }
+}
+
 /// Statistics with a fixed answer.
 class FakeStatsRepository implements StatsRepository {
   FakeStatsRepository([this.result]);
@@ -446,6 +480,8 @@ Widget testApp({
   FakeStatsRepository? stats,
   FakeFileSharer? sharer,
   FakeActivityRepository? activity,
+  FakeHealthSource? health,
+  MemoryHealthSettingsStorage? healthStorage,
   MemoryLanguageStorage? languageStorage,
   List<Override> overrides = const [],
 }) {
@@ -459,6 +495,8 @@ Widget testApp({
       statsRepositoryProvider.overrideWithValue(stats ?? FakeStatsRepository()),
       fileSharerProvider.overrideWithValue(sharer ?? FakeFileSharer()),
       activityRepositoryProvider.overrideWithValue(activity ?? FakeActivityRepository()),
+      healthSourceProvider.overrideWithValue(health ?? FakeHealthSource()),
+      healthStorageProvider.overrideWithValue(healthStorage ?? MemoryHealthSettingsStorage()),
       languageStorageProvider.overrideWithValue(languageStorage ?? MemoryLanguageStorage()),
       ...overrides,
     ],

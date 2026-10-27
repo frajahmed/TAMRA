@@ -12,6 +12,9 @@ Alle wichtigen Änderungen an TAMRA. Format: [Keep a Changelog](https://keepacha
 - API braucht jetzt PostgreSQL (lokal über `docker compose up`); SQLite wird nicht mehr unterstützt.
 
 ### Added
+- App: Apple Health / Health Connect verbinden (T-53): Trainings und Schritte der letzten 30 Tage,
+  danach seit dem letzten Abgleich, beim App-Start automatisch und per „Jetzt abgleichen“; Import
+  seitenweise (500), ohne Duplikate; Plattform-Berechtigungen per `configure_platforms.py`.
 - App Sport (T-52, T-54): Aktivität-Tab mit Wochenleiste, Sport eintragen (kcal-Vorschlag aus
   MET × Gewicht × Zeit, änderbar), importierte Trainings nur löschbar; Tagebuch rechnet
   Ziel + Sport − Gegessen (Schalter im Profil); Statistik mit 7 Tagen / 4 Wochen / 12 Monaten und

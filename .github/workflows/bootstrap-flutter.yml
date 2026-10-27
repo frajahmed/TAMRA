@@ -27,16 +27,8 @@ jobs:
         run: |
           flutter create --org com.tamra --project-name tamra_app --platforms android,ios .
           rm -f test/widget_test.dart
-      - name: Camera permission for the barcode scanner (T-24)
-        run: |
-          MANIFEST=android/app/src/main/AndroidManifest.xml
-          grep -q 'android.permission.CAMERA' "$MANIFEST" || \
-            sed -i '0,/<application/s||<uses-permission android:name="android.permission.CAMERA" />\n    <application|' "$MANIFEST"
-          PLIST=ios/Runner/Info.plist
-          grep -q 'NSCameraUsageDescription' "$PLIST" || \
-            sed -i '0,/<dict>/s||<dict>\n\t<key>NSCameraUsageDescription</key>\n\t<string>TAMRA uses the camera to scan barcodes of foods.</string>|' "$PLIST"
-          grep -n 'CAMERA' "$MANIFEST"
-          grep -n -A1 'NSCameraUsageDescription' "$PLIST"
+      - name: Permissions for camera (T-24) and health data (T-53)
+        run: python3 ../.github/scripts/configure_platforms.py .
       - name: Install, fix, format
         run: |
           flutter pub get

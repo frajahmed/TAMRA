@@ -294,6 +294,16 @@ class AppStrings {
         ActivityKind.other => text('kindOther'),
       };
 
+  String get healthTitle => text('healthTitle');
+  String get healthConnect => text('healthConnect');
+  String get healthDisconnect => text('healthDisconnect');
+  String get healthSyncNow => text('healthSyncNow');
+  String get healthUnsupported => text('healthUnsupported');
+  String healthConnectHint(String app) => _fill('healthConnectHint', {'app': app});
+  String healthLastSync(String time) => _fill('healthLastSync', {'time': time});
+  String healthSynced(int count) => _fill('healthSynced', {'count': count});
+  String healthDenied(String app) => _fill('healthDenied', {'app': app});
+
   /// Name of a meal.
   String meal(Meal meal) => switch (meal) {
         Meal.breakfast => text('mealBreakfast'),

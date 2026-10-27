@@ -28,7 +28,7 @@ Tickets marked **[Claude]** are done by Claude, not by Qwen.
 | 5 | T-50 | Activity model, CRUD and import | api | done (Claude) |
 | 5 | T-51 | Calorie balance and history | api | done (Claude) |
 | 5 | T-52 | App: activities and manual sport entry | app | done (Claude) |
-| 5 | T-53 | App: connect Apple Health and Health Connect **[Claude]** | app | open |
+| 5 | T-53 | App: connect Apple Health and Health Connect **[Claude]** | app | done (Claude; iOS needs the HealthKit capability in Xcode) |
 | 5 | T-54 | App: balance dashboard and history | app | done (Claude) |
 
 Design system and screen plan: `docs/DESIGN.md`. Ideas for later: `docs/tickets/backlog.md`

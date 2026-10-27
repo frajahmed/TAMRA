@@ -12,6 +12,7 @@ import '../../onboarding/data/profile_repository.dart';
 import '../data/activity_repository.dart';
 import '../domain/activity.dart';
 import 'activity_icons.dart';
+import 'health_card.dart';
 
 /// Activity tab: sport and steps of the day shown in the diary; add or delete workouts.
 class ActivityScreen extends ConsumerWidget {
@@ -98,6 +99,8 @@ class ActivityScreen extends ConsumerWidget {
                       ),
                     ),
                   ),
+                  const SizedBox(height: 12),
+                  const HealthCard(),
                   const SizedBox(height: 12),
                   if (data.activities.isEmpty)
                     Padding(

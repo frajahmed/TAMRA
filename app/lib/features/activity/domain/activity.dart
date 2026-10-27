@@ -193,3 +193,88 @@ class ActivityDay {
   /// Sum of sport minutes.
   int get minutes => activities.fold(0, (sum, activity) => sum + activity.durationMin);
 }
+
+/// One workout read from Apple Health or Health Connect.
+class HealthWorkout {
+  /// Creates a workout; [externalId] is its id in the health app (prevents duplicates).
+  const HealthWorkout({
+    required this.externalId,
+    required this.start,
+    required this.minutes,
+    required this.kcal,
+    required this.kind,
+    this.distanceM,
+    this.title = '',
+  });
+
+  /// Id of the workout in the health app.
+  final String externalId;
+
+  /// Start time (local).
+  final DateTime start;
+
+  /// Duration in minutes.
+  final int minutes;
+
+  /// Active energy in kcal.
+  final double kcal;
+
+  /// Type of sport (mapped from the health app's type).
+  final ActivityKind kind;
+
+  /// Distance in metres, if known.
+  final int? distanceM;
+
+  /// App or device that recorded it ("Garmin Connect").
+  final String title;
+
+  /// Body for POST /api/v1/activities/import/; values are clamped to the API limits.
+  Map<String, dynamic> toImportJson(String source) => {
+        'date': dateKey(start),
+        'started_at': start.toUtc().toIso8601String(),
+        'kind': kind.apiValue,
+        'title': title.length > 100 ? title.substring(0, 100) : title,
+        'duration_min': minutes.clamp(1, 1440),
+        'kcal': kcal.clamp(0, 10000).toStringAsFixed(1),
+        if (distanceM != null) 'distance_m': distanceM,
+        'source': source,
+        'external_id': externalId,
+      };
+}
+
+/// What a health app delivered for a time span.
+class HealthImport {
+  /// Creates the data of one read.
+  const HealthImport({this.workouts = const [], this.stepsByDay = const {}});
+
+  /// Workouts in the time span.
+  final List<HealthWorkout> workouts;
+
+  /// Steps per local day.
+  final Map<DateTime, int> stepsByDay;
+}
+
+/// Maps a workout type name of HealthKit / Health Connect (e.g. `TRADITIONAL_STRENGTH_TRAINING`)
+/// to a TAMRA type. Works on the name so new types in the health package never break the app.
+ActivityKind activityKindFromHealth(String typeName) {
+  final name = typeName.toUpperCase();
+  for (final (words, kind) in _healthKinds) {
+    if (words.any(name.contains)) return kind;
+  }
+  return ActivityKind.other;
+}
+
+/// Parts of health-app type names and the TAMRA type they mean; the first match wins
+/// (so `HIKING` is not read as walking and `STRENGTH` before `WEIGHT`).
+const _healthKinds = <(List<String>, ActivityKind)>[
+  (['RUN', 'JOG'], ActivityKind.running),
+  (['HIK'], ActivityKind.hiking),
+  (['WALK'], ActivityKind.walking),
+  (['BIK', 'CYCL'], ActivityKind.cycling),
+  (['SWIM'], ActivityKind.swimming),
+  (['HIGH_INTENSITY', 'HIIT'], ActivityKind.hiit),
+  (['STRENGTH', 'WEIGHT', 'FUNCTIONAL'], ActivityKind.strength),
+  (['YOGA', 'PILATES', 'STRETCH'], ActivityKind.yoga),
+  (['DANC'], ActivityKind.dancing),
+  (['SOCCER', 'FOOTBALL', 'BASKETBALL', 'VOLLEYBALL', 'HANDBALL', 'HOCKEY', 'RUGBY'], ActivityKind.teamSport),
+];
