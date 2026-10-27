@@ -11,6 +11,7 @@ import 'package:tamra_app/features/diary/data/diary_repository.dart';
 import 'package:tamra_app/features/diary/domain/diary.dart';
 import 'package:tamra_app/features/onboarding/data/profile_repository.dart';
 import 'package:tamra_app/features/onboarding/domain/profile.dart';
+import 'package:tamra_app/features/settings/data/file_sharer.dart';
 import 'package:tamra_app/features/stats/data/stats_repository.dart';
 import 'package:tamra_app/features/stats/domain/stats.dart';
 import 'package:tamra_app/features/tracking/data/tracking_repository.dart';
@@ -56,6 +57,12 @@ class FakeAuthController extends AuthController {
     calls.add('logout');
     state = const AuthState.loggedOut();
   }
+
+  @override
+  Future<void> accountDeleted() async {
+    calls.add('accountDeleted');
+    state = const AuthState.loggedOut();
+  }
 }
 
 /// ApiClient whose methods return canned answers. No network.
@@ -96,15 +103,67 @@ class FakeApiClient extends ApiClient {
 
 /// Profile repository returning a fixed result.
 class FakeProfileRepository implements ProfileRepository {
-  FakeProfileRepository({this.result, this.fail = false});
+  FakeProfileRepository({this.result, this.fail = false, this.correctPassword = 'secret-pass-1'});
 
-  final Profile? result;
+  Profile? result;
   final bool fail;
+  final String correctPassword;
   OnboardingAnswers? saved;
   int consentCalls = 0;
+  int withdrawCalls = 0;
+  final List<Map<String, dynamic>> settingsChanges = [];
+  final List<String> deletedWithPassword = [];
 
   @override
   Future<Profile> getProfile() async => result ?? const Profile();
+
+  @override
+  Future<Profile> updateSettings(Map<String, dynamic> changes) async {
+    settingsChanges.add(changes);
+    final old = result ?? const Profile();
+    result = Profile(
+      sex: old.sex,
+      birthYear: old.birthYear,
+      heightCm: old.heightCm,
+      weightKg: old.weightKg,
+      activityLevel: old.activityLevel,
+      goal: old.goal,
+      kcalTarget: old.kcalTarget,
+      proteinG: old.proteinG,
+      carbsG: old.carbsG,
+      fatG: old.fatG,
+      isComplete: old.isComplete,
+      weightUnit: changes.containsKey('weight_unit')
+          ? WeightUnit.fromApi(changes['weight_unit'])
+          : old.weightUnit,
+      energyUnit: changes.containsKey('energy_unit')
+          ? EnergyUnit.fromApi(changes['energy_unit'])
+          : old.energyUnit,
+      language: changes['language']?.toString() ?? old.language,
+    );
+    return result!;
+  }
+
+  @override
+  Future<void> withdrawHealthConsent() async => withdrawCalls++;
+
+  @override
+  Future<String> exportData() async => '{"account": {"email": "a@example.com"}}';
+
+  @override
+  Future<void> deleteAccount(String password) async {
+    if (password != correctPassword) {
+      throw const ApiError(
+        code: 'validation_error',
+        message: 'Invalid input.',
+        fields: {
+          'password': ['The password is not correct.'],
+        },
+        statusCode: 400,
+      );
+    }
+    deletedWithPassword.add(password);
+  }
 
   @override
   Future<Profile> saveOnboarding(OnboardingAnswers answers) async {
@@ -283,6 +342,18 @@ class FakeStatsRepository implements StatsRepository {
   }
 }
 
+/// Records shared files instead of opening the share menu.
+class FakeFileSharer implements FileSharer {
+  final List<String> sharedNames = [];
+  final List<String> sharedContents = [];
+
+  @override
+  Future<void> shareJson(String fileName, String content) async {
+    sharedNames.add(fileName);
+    sharedContents.add(content);
+  }
+}
+
 const loggedInComplete = AuthState(status: AuthStatus.loggedIn);
 
 /// The whole app with a fixed language and auth state.
@@ -294,6 +365,8 @@ Widget testApp({
   FakeProfileRepository? profile,
   FakeTrackingRepository? tracking,
   FakeStatsRepository? stats,
+  FakeFileSharer? sharer,
+  MemoryLanguageStorage? languageStorage,
   List<Override> overrides = const [],
 }) {
   return ProviderScope(
@@ -304,6 +377,8 @@ Widget testApp({
       profileRepositoryProvider.overrideWithValue(profile ?? FakeProfileRepository()),
       trackingRepositoryProvider.overrideWithValue(tracking ?? FakeTrackingRepository()),
       statsRepositoryProvider.overrideWithValue(stats ?? FakeStatsRepository()),
+      fileSharerProvider.overrideWithValue(sharer ?? FakeFileSharer()),
+      languageStorageProvider.overrideWithValue(languageStorage ?? MemoryLanguageStorage()),
       ...overrides,
     ],
     child: const TamraApp(),

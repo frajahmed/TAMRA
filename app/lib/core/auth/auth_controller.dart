@@ -107,6 +107,16 @@ class AuthController extends Notifier<AuthState> {
   /// Called after the health-data consent was saved.
   void markConsentGiven() => state = state.copyWith(needsConsent: false);
 
+  /// Called after the health-data consent was withdrawn: the consent screen comes back.
+  void markConsentWithdrawn() => state = state.copyWith(needsConsent: true);
+
+  /// Called after the account was deleted on the server: forget the tokens locally
+  /// (the server already blacklisted them).
+  Future<void> accountDeleted() async {
+    await _storage.clear();
+    state = const AuthState.loggedOut();
+  }
+
   /// Called after onboarding saved a complete profile.
   void markProfileComplete() => state = state.copyWith(needsProfile: false);
 

@@ -23,7 +23,7 @@ Tickets marked **[Claude]** are done by Claude, not by Qwen.
 | 4 | T-40 | Weight and water logs | api | done (Qwen, reviewed and fixed by Claude) |
 | 4 | T-41 | App: weight and water | app | done (Claude) |
 | 4 | T-42 | Statistics (7 days) | api + app | done (Claude) |
-| 4 | T-43 | Settings, data export, delete account | api + app | api done (Claude), app open |
+| 4 | T-43 | Settings, data export, delete account | api + app | done (Claude) |
 | 4 | T-44 | Accessibility, RTL and store texts **[Claude]** | app | open |
 | 5 | T-50 | Activity model, CRUD and import | api | open |
 | 5 | T-51 | Calorie balance and history | api | open |

@@ -148,6 +148,25 @@ class ApiClient {
         );
       });
 
+  /// POST `/me/consents/<type>/withdraw/` → the consent is marked as withdrawn.
+  Future<void> withdrawConsent(String type) => _call(() async {
+        await _dio.post<dynamic>('/api/v1/me/consents/${Uri.encodeComponent(type)}/withdraw/');
+      });
+
+  /// GET `/me/export/` → all personal data as JSON text (GDPR Art. 15 and 20).
+  Future<String> exportData() => _call(() async {
+        final response = await _dio.get<String>(
+          '/api/v1/me/export/',
+          options: Options(responseType: ResponseType.plain),
+        );
+        return response.data ?? '{}';
+      });
+
+  /// DELETE `/me/` with the password → account and all data are deleted for good.
+  Future<void> deleteAccount(String password) => _call(() async {
+        await _dio.delete<dynamic>('/api/v1/me/', data: {'password': password});
+      });
+
   // --- Foods ----------------------------------------------------------------
 
   /// GET /api/v1/foods/?q= → the `results` of the first page.

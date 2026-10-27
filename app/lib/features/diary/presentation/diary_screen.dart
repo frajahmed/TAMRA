@@ -7,7 +7,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/router.dart';
 import '../../../app/theme.dart';
-import '../../../core/auth/auth_controller.dart';
 import '../../../core/nutrition/nutrition.dart';
 import '../../../core/widgets/calorie_arc.dart';
 import '../../../core/widgets/date_strip.dart';
@@ -132,12 +131,6 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
               icon: const Icon(Icons.developer_mode),
               onPressed: () => context.push(AppRoutes.debug),
             ),
-          IconButton(
-            key: const Key('logout'),
-            tooltip: strings.logout,
-            icon: const Icon(Icons.logout),
-            onPressed: () => ref.read(authControllerProvider.notifier).logout(),
-          ),
         ],
       ),
       body: Column(

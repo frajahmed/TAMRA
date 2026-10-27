@@ -12,6 +12,9 @@ Alle wichtigen Änderungen an TAMRA. Format: [Keep a Changelog](https://keepacha
 - API braucht jetzt PostgreSQL (lokal über `docker compose up`); SQLite wird nicht mehr unterstützt.
 
 ### Added
+- App: Profil/Einstellungen (T-43): Tagesziel, Einheiten kg/lb und kcal/kJ, Sprache (bleibt nach
+  Neustart), Daten-Export über das Teilen-Menü (`share_plus`), Einwilligung widerrufen, Abmelden,
+  Konto löschen mit Passwort.
 - App: Navigations-Dock (Tagebuch, Statistik, Plus-Knopf, Aktivität, Profil), Wasser-Karte im
   Tagebuch, Gewichtsverlauf mit Diagramm (kg/lb), Statistik der letzten 7 Tage (T-41, T-42 App).
   Diagramme selbst gezeichnet, ohne zusätzliches Paket.

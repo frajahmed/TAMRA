@@ -212,6 +212,33 @@ class AppStrings {
         : _fill('weightValueKg', {'value': shown});
   }
 
+  // --- Settings ---------------------------------------------------------------
+  String get settingsTarget => text('settingsTarget');
+  String get noTargetYet => text('noTargetYet');
+  String get settingsUnits => text('settingsUnits');
+  String get weightUnitLabel => text('weightUnitLabel');
+  String get energyUnitLabel => text('energyUnitLabel');
+  String get languageLabel => text('languageLabel');
+  String get languageDevice => text('languageDevice');
+  String get privacyTitle => text('privacyTitle');
+  String get exportData => text('exportData');
+  String get exportDataHint => text('exportDataHint');
+  String get withdrawConsent => text('withdrawConsent');
+  String get withdrawConsentText => text('withdrawConsentText');
+  String get withdrawConfirm => text('withdrawConfirm');
+  String get deleteAccount => text('deleteAccount');
+  String get deleteAccountText => text('deleteAccountText');
+  String get deleteConfirm => text('deleteConfirm');
+
+  /// Names of the app languages, each written in its own language (never translated).
+  static const languageNames = {
+    'de': 'Deutsch',
+    'en': 'English',
+    'fr': 'Français',
+    'it': 'Italiano',
+    'ar': 'العربية',
+  };
+
   /// Name of a meal.
   String meal(Meal meal) => switch (meal) {
         Meal.breakfast => text('mealBreakfast'),

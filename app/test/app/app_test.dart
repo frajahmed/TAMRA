@@ -48,7 +48,9 @@ void main() {
     await tester.pumpWidget(testApp());
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byKey(const Key('logout')));
+    await tester.tap(find.byKey(const Key('nav-profile')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('profile-logout')));
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('login-email')), findsOneWidget);

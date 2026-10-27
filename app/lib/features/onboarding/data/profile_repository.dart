@@ -19,6 +19,19 @@ class ProfileRepository {
 
   /// Stores the consent to process health data (current version).
   Future<void> giveHealthConsent() => _api.giveConsent('health_data', healthConsentVersion);
+
+  /// Changes settings such as `weight_unit`, `energy_unit` or `language`.
+  Future<Profile> updateSettings(Map<String, dynamic> changes) async =>
+      Profile.fromJson(await _api.updateProfile(changes));
+
+  /// Withdraws the consent to process health data.
+  Future<void> withdrawHealthConsent() => _api.withdrawConsent('health_data');
+
+  /// All personal data as JSON text.
+  Future<String> exportData() => _api.exportData();
+
+  /// Deletes the account for good; throws [ApiError] with a `password` field when wrong.
+  Future<void> deleteAccount(String password) => _api.deleteAccount(password);
 }
 
 /// The [ProfileRepository] used by consent and onboarding.
