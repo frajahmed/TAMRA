@@ -12,6 +12,7 @@ Alle wichtigen Änderungen an TAMRA. Format: [Keep a Changelog](https://keepacha
 - API braucht jetzt PostgreSQL (lokal über `docker compose up`); SQLite wird nicht mehr unterstützt.
 
 ### Added
+- App: „Gestern kopieren“ im Tagebuch-Menü und „Von gestern kopieren“ bei leeren Mahlzeiten (T-32).
 - App: Profil/Einstellungen (T-43): Tagesziel, Einheiten kg/lb und kcal/kJ, Sprache (bleibt nach
   Neustart), Daten-Export über das Teilen-Menü (`share_plus`), Einwilligung widerrufen, Abmelden,
   Konto löschen mit Passwort.

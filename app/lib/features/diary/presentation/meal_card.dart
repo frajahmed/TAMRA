@@ -12,6 +12,7 @@ class MealCard extends StatelessWidget {
     required this.meal,
     required this.energyText,
     required this.onAdd,
+    this.onCopyFromYesterday,
     this.children = const [],
   });
 
@@ -23,6 +24,9 @@ class MealCard extends StatelessWidget {
 
   /// Opens the food search for this meal.
   final VoidCallback onAdd;
+
+  /// Copies this meal from the day before; shown only while the meal is empty.
+  final VoidCallback? onCopyFromYesterday;
 
   /// Entry tiles of the meal.
   final List<Widget> children;
@@ -54,6 +58,16 @@ class MealCard extends StatelessWidget {
               ],
             ),
             ...children,
+            if (children.isEmpty && onCopyFromYesterday != null)
+              Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: TextButton.icon(
+                  key: Key('copy-${meal.name}'),
+                  icon: const Icon(Icons.content_copy, size: 18),
+                  label: Text(strings.copyMealFromYesterday),
+                  onPressed: onCopyFromYesterday,
+                ),
+              ),
           ],
         ),
       ),

@@ -58,6 +58,28 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
     if (saved == true && mounted) ref.invalidate(diaryDayProvider(entry.date));
   }
 
+  /// Copies the day before (or only [meal]) onto [day] and reports how many entries came.
+  Future<void> _copyFromYesterday(DateTime day, {Meal? meal}) async {
+    final strings = AppStrings.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    final yesterday = DateTime(day.year, day.month, day.day - 1);
+    try {
+      final copied = await ref.read(diaryRepositoryProvider).copy(
+            from: yesterday,
+            to: day,
+            meal: meal,
+          );
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(copied == 0 ? strings.nothingToCopy : strings.entriesCopied(copied)),
+        ),
+      );
+      if (copied > 0 && mounted) await _reload(day);
+    } catch (_) {
+      messenger.showSnackBar(SnackBar(content: Text(strings.genericError)));
+    }
+  }
+
   /// Hides the entry at once; it is deleted on the server after [undoDuration] unless
   /// "undo" is pressed. A timer decides, not the snack bar: snack bars with an action
   /// stay open until they are touched (accessibility), so they cannot be the trigger.
@@ -124,6 +146,18 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
           key: const Key('home-title'),
         ),
         actions: [
+          PopupMenuButton<String>(
+            key: const Key('diary-menu'),
+            tooltip: strings.moreOptions,
+            onSelected: (_) => _copyFromYesterday(day),
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                key: const Key('copy-yesterday'),
+                value: 'copy-yesterday',
+                child: Text(strings.copyYesterday),
+              ),
+            ],
+          ),
           if (kDebugMode)
             IconButton(
               key: const Key('open-debug'),
@@ -149,6 +183,7 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
                 child: _DiaryContent(
                   day: data.without(_hidden),
                   onAdd: _addFood,
+                  onCopyMeal: (meal) => _copyFromYesterday(day, meal: meal),
                   onEdit: (entry) => _edit(entry, data.energyUnit),
                   onDelete: _delete,
                 ),
@@ -182,9 +217,11 @@ class _DiaryContent extends StatelessWidget {
     required this.onAdd,
     required this.onEdit,
     required this.onDelete,
+    required this.onCopyMeal,
   });
 
   final DiaryDay day;
+  final ValueChanged<Meal> onCopyMeal;
   final ValueChanged<Meal> onAdd;
   final ValueChanged<DiaryEntry> onEdit;
   final ValueChanged<DiaryEntry> onDelete;
@@ -260,6 +297,7 @@ class _DiaryContent extends StatelessWidget {
             meal: meal,
             energyText: strings.energy(day.totalsOf(meal).kcal, unit),
             onAdd: () => onAdd(meal),
+            onCopyFromYesterday: () => onCopyMeal(meal),
             children: [
               for (final entry in day.entriesOf(meal))
                 Dismissible(

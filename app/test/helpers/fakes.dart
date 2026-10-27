@@ -248,6 +248,30 @@ class FakeDiaryRepository implements DiaryRepository {
     deleted.add(id);
     entries.removeWhere((entry) => entry.id == id);
   }
+
+  final List<String> copies = [];
+
+  @override
+  Future<int> copy({required DateTime from, required DateTime to, Meal? meal}) async {
+    copies.add('${dateKey(from)}>${dateKey(to)}:${meal?.name ?? 'all'}');
+    final source = [
+      for (final entry in entries)
+        if (dateKey(entry.date) == dateKey(from) && (meal == null || entry.meal == meal)) entry,
+    ];
+    for (final entry in source) {
+      entries.add(
+        diaryEntry(
+          id: '${entry.id}-copy',
+          date: to,
+          meal: entry.meal,
+          name: entry.foodName,
+          grams: entry.amountG,
+          kcal: entry.nutrients.kcal,
+        ),
+      );
+    }
+    return source.length;
+  }
 }
 
 /// A diary entry for tests; macros are derived from [kcal] in fixed shares.

@@ -234,4 +234,59 @@ void main() {
 
     expect(find.text('Haferflocken'), findsOneWidget);
   });
+
+  group('copy from yesterday', () {
+    final yesterday = DateTime(_today.year, _today.month, _today.day - 1);
+
+    FakeDiaryRepository diaryWithYesterday() => FakeDiaryRepository(
+          entries: [
+            diaryEntry(
+              id: 'y1',
+              date: yesterday,
+              meal: Meal.breakfast,
+              name: 'Müsli',
+              grams: 60,
+              kcal: 220,
+            ),
+            diaryEntry(id: 'y2', date: yesterday, meal: Meal.dinner, name: 'Suppe', grams: 300, kcal: 180),
+          ],
+        );
+
+    testWidgets('the menu copies the whole day', (tester) async {
+      final diary = diaryWithYesterday();
+      await _openDiary(tester, diary);
+
+      await tester.tap(find.byKey(const Key('diary-menu')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('copy-yesterday')));
+      await tester.pumpAndSettle();
+
+      expect(diary.copies, ['${dateKey(yesterday)}>${dateKey(_today)}:all']);
+      expect(find.text('2 entries copied'), findsOneWidget);
+      expect(find.text('Müsli'), findsOneWidget);
+      expect(find.text('Suppe'), findsOneWidget);
+    });
+
+    testWidgets('an empty meal offers to copy only that meal', (tester) async {
+      final diary = diaryWithYesterday();
+      await _openDiary(tester, diary);
+
+      await tester.tap(find.byKey(const Key('copy-breakfast')));
+      await tester.pumpAndSettle();
+
+      expect(diary.copies.single, endsWith(':breakfast'));
+      expect(find.text('Müsli'), findsOneWidget);
+      expect(find.text('Suppe'), findsNothing);
+      expect(find.byKey(const Key('copy-breakfast')), findsNothing);
+    });
+
+    testWidgets('nothing to copy says so', (tester) async {
+      await _openDiary(tester, FakeDiaryRepository());
+
+      await tester.tap(find.byKey(const Key('copy-lunch')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Nothing to copy from yesterday.'), findsOneWidget);
+    });
+  });
 }

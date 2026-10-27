@@ -239,6 +239,12 @@ class AppStrings {
     'ar': 'العربية',
   };
 
+  String get copyYesterday => text('copyYesterday');
+  String get copyMealFromYesterday => text('copyMealFromYesterday');
+  String get nothingToCopy => text('nothingToCopy');
+  String get moreOptions => text('moreOptions');
+  String entriesCopied(int count) => _fill('entriesCopied', {'count': count});
+
   /// Name of a meal.
   String meal(Meal meal) => switch (meal) {
         Meal.breakfast => text('mealBreakfast'),

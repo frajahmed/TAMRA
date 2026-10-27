@@ -40,6 +40,14 @@ class DiaryRepository {
 
   /// Deletes an entry.
   Future<void> delete(String id) => _api.deleteDiaryEntry(id);
+
+  /// Copies the entries of [from] (only [meal] when given) to [to]; returns how many.
+  Future<int> copy({required DateTime from, required DateTime to, Meal? meal}) =>
+      _api.copyDiary({
+        'from_date': dateKey(from),
+        'to_date': dateKey(to),
+        if (meal != null) 'meal': meal.name,
+      });
 }
 
 /// The [DiaryRepository] used by the diary screens (replaced by a fake in tests).

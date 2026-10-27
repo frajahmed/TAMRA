@@ -258,6 +258,13 @@ class ApiClient {
         await _dio.delete<dynamic>('/api/v1/diary/${Uri.encodeComponent(id)}/');
       });
 
+  /// POST `/diary/copy/` → copies a day (or one meal) to another day; returns the count.
+  Future<int> copyDiary(Map<String, dynamic> body) => _call(() async {
+        final response = await _dio.post<Map<String, dynamic>>('/api/v1/diary/copy/', data: body);
+        final copied = _map(response)['copied'];
+        return copied is int ? copied : 0;
+      });
+
   // --- Weight and water -------------------------------------------------------
 
   /// GET `/weight/?from=&to=` → weights, newest first.
