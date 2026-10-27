@@ -12,6 +12,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from activity.services import day_totals
 from profiles.models import Profile
 
 from .models import SNAPSHOT_FIELDS, DiaryEntry
@@ -104,6 +105,9 @@ class DiarySummaryView(APIView):
                 "meals": serializers.DictField(child=serializers.DictField()),
                 "targets": serializers.DictField(allow_null=True),
                 "energy_unit": serializers.CharField(),
+                "burned_kcal": serializers.CharField(),
+                "steps": serializers.IntegerField(),
+                "count_activity_kcal": serializers.BooleanField(),
             },
         ),
     )
@@ -112,6 +116,7 @@ class DiarySummaryView(APIView):
         day = required_date(request)
         entries = own_entries(request.user).filter(date=day)
         profile = Profile.objects.filter(user=request.user).first()
+        activity = day_totals(request.user, day)
         return Response(
             {
                 "date": day.isoformat(),
@@ -127,6 +132,10 @@ class DiarySummaryView(APIView):
                 },
                 # The diary header shows kcal or kJ; one request is enough for the whole header.
                 "energy_unit": profile.energy_unit if profile else Profile.EnergyUnit.KCAL,
+                # Sport of the day for the balance "target + sport - eaten" (steps only shown).
+                "burned_kcal": activity["burned_kcal"],
+                "steps": activity["steps"],
+                "count_activity_kcal": profile.count_activity_kcal if profile else True,
             }
         )
 

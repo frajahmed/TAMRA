@@ -61,6 +61,10 @@ class Profile(TimeStampedModel):
         max_length=4, choices=EnergyUnit.choices, default=EnergyUnit.KCAL
     )
     language = models.CharField(max_length=2, choices=Language.choices, default=Language.EN)
+    count_activity_kcal = models.BooleanField(
+        default=True,
+        help_text="Add the kcal of workouts to the day's budget (target + sport - eaten)",
+    )
 
     def __str__(self) -> str:
         return f"Profile of {self.user_id}"

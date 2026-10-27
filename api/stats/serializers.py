@@ -1,16 +1,23 @@
 from rest_framework import serializers
 
+from activity.serializers import ActivitySerializer
+
 
 class StatsDaySerializer(serializers.Serializer):
-    """Totals of one day; nutrients as decimal text, weight null when not logged."""
+    """Totals of one day (or averages of a week / month); decimals as text."""
 
-    date = serializers.DateField()
+    date = serializers.DateField(help_text="The day, or the first day of the week / month")
     kcal = serializers.CharField()
     protein = serializers.CharField()
     carbs = serializers.CharField()
     fat = serializers.CharField()
     water_ml = serializers.IntegerField()
     weight_kg = serializers.CharField(allow_null=True)
+    burned_kcal = serializers.CharField()
+    steps = serializers.IntegerField()
+    budget = serializers.CharField(allow_null=True)
+    balance = serializers.CharField(allow_null=True, help_text="eaten - budget")
+    logged_days = serializers.IntegerField(required=False, help_text="Only for week / month")
 
 
 class StatsAveragesSerializer(serializers.Serializer):
@@ -20,6 +27,7 @@ class StatsAveragesSerializer(serializers.Serializer):
     protein = serializers.CharField()
     carbs = serializers.CharField()
     fat = serializers.CharField()
+    burned_kcal = serializers.CharField()
     logged_days = serializers.IntegerField()
 
 
@@ -27,7 +35,9 @@ class StatsSummarySerializer(serializers.Serializer):
     """Answer of GET /api/v1/stats/summary/."""
 
     to = serializers.DateField()
+    group = serializers.CharField()
     kcal_target = serializers.IntegerField(allow_null=True)
+    count_activity_kcal = serializers.BooleanField()
     days = StatsDaySerializer(many=True)
     averages = StatsAveragesSerializer()
     weight_change_kg = serializers.CharField(allow_null=True)
@@ -37,3 +47,18 @@ class StatsSummarySerializer(serializers.Serializer):
         fields = super().get_fields()
         fields["from"] = serializers.DateField()
         return fields
+
+
+class StatsDayBalanceSerializer(serializers.Serializer):
+    """Answer of GET /api/v1/stats/day/: the calorie balance of one day."""
+
+    date = serializers.DateField()
+    eaten_kcal = serializers.CharField()
+    burned_kcal = serializers.CharField()
+    budget = serializers.CharField(allow_null=True)
+    remaining = serializers.CharField(allow_null=True)
+    protein = serializers.CharField()
+    carbs = serializers.CharField()
+    fat = serializers.CharField()
+    steps = serializers.IntegerField()
+    activities = ActivitySerializer(many=True)

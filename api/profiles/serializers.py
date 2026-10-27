@@ -37,6 +37,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             "weight_unit",
             "energy_unit",
             "language",
+            "count_activity_kcal",
             "is_complete",
             "updated_at",
         ]

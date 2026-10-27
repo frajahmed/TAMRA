@@ -170,6 +170,9 @@ class SummaryTests(DiaryTestCase):
             data["targets"], {"kcal": 2000, "protein_g": 150, "carbs_g": 200, "fat_g": 67}
         )
         self.assertEqual(data["energy_unit"], "kcal")
+        self.assertEqual(data["burned_kcal"], "0.0")
+        self.assertEqual(data["steps"], 0)
+        self.assertTrue(data["count_activity_kcal"])
 
     def test_empty_day_without_profile(self):
         response = self.client.get(reverse("diary-summary"), {"date": DAY})

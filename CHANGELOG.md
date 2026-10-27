@@ -12,6 +12,10 @@ Alle wichtigen Änderungen an TAMRA. Format: [Keep a Changelog](https://keepacha
 - API braucht jetzt PostgreSQL (lokal über `docker compose up`); SQLite wird nicht mehr unterstützt.
 
 ### Added
+- API Sport (T-50, T-51): Aktivitäten und Schritte (manuell und Import aus Gesundheits-Apps,
+  ohne Duplikate, gelöschte Importe bleiben gelöscht), Tagesbilanz `GET /stats/day/`
+  (Ziel + Sport − Gegessen), Verlauf nach Tag/Woche/Monat (`group=`), Schalter
+  `count_activity_kcal` im Profil; Tagebuch-Übersicht liefert Sport und Schritte mit.
 - App: „Gestern kopieren“ im Tagebuch-Menü und „Von gestern kopieren“ bei leeren Mahlzeiten (T-32).
 - App: Profil/Einstellungen (T-43): Tagesziel, Einheiten kg/lb und kcal/kJ, Sprache (bleibt nach
   Neustart), Daten-Export über das Teilen-Menü (`share_plus`), Einwilligung widerrufen, Abmelden,

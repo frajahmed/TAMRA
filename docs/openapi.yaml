@@ -4,6 +4,220 @@ info:
   version: 1.0.0
   description: API for the TAMRA nutrition tracker app.
 paths:
+  /api/v1/activities/:
+    get:
+      operationId: activities_list
+      description: Workouts of one day or a range, oldest first.
+      parameters:
+      - in: query
+        name: date
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: from
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: to
+        schema:
+          type: string
+          format: date
+      tags:
+      - activities
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Activity'
+          description: ''
+    post:
+      operationId: activities_create
+      description: 'GET: the user''s workouts (?date= or ?from=&to=). POST: a workout
+        entered by hand.'
+      tags:
+      - activities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActivityRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ActivityRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ActivityRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Activity'
+          description: ''
+  /api/v1/activities/{id}/:
+    get:
+      operationId: activities_retrieve
+      description: Read, change (manual workouts only) or delete one workout.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - activities
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Activity'
+          description: ''
+    put:
+      operationId: activities_update
+      description: Read, change (manual workouts only) or delete one workout.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - activities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActivityRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ActivityRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ActivityRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Activity'
+          description: ''
+    patch:
+      operationId: activities_partial_update
+      description: Read, change (manual workouts only) or delete one workout.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - activities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedActivityRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedActivityRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedActivityRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Activity'
+          description: ''
+    delete:
+      operationId: activities_destroy
+      description: Read, change (manual workouts only) or delete one workout.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - activities
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/activities/import/:
+    post:
+      operationId: activities_import_create
+      description: Insert or update the sent data; answers how many rows were created,
+        updated, skipped.
+      tags:
+      - activities
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ImportRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ImportRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImportResult'
+          description: ''
+  /api/v1/activities/summary/:
+    get:
+      operationId: activities_summary_retrieve
+      description: Totals of ?date=.
+      parameters:
+      - in: query
+        name: date
+        schema:
+          type: string
+          format: date
+        description: The user's local day (YYYY-MM-DD)
+        required: true
+      tags:
+      - activities
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivitySummary'
+          description: ''
   /api/v1/auth/login/:
     post:
       operationId: auth_login_create
@@ -584,11 +798,34 @@ paths:
               schema:
                 $ref: '#/components/schemas/TrialResult'
           description: ''
+  /api/v1/stats/day/:
+    get:
+      operationId: stats_day_retrieve
+      description: Balance of ?date= including the list of workouts.
+      parameters:
+      - in: query
+        name: date
+        schema:
+          type: string
+          format: date
+        description: The user's local day (YYYY-MM-DD)
+        required: true
+      tags:
+      - stats
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatsDayBalance'
+          description: ''
   /api/v1/stats/summary/:
     get:
       operationId: stats_summary_retrieve
-      description: Statistics from ?from= to ?to= (every day listed, empty days as
-        zeros).
+      description: Statistics from ?from= to ?to= (every period listed, empty ones
+        as zeros).
       parameters:
       - in: query
         name: from
@@ -596,6 +833,15 @@ paths:
           type: string
           format: date
         required: true
+      - in: query
+        name: group
+        schema:
+          type: string
+          enum:
+          - day
+          - month
+          - week
+        description: day (max 31 days) or week / month (max 366 days)
       - in: query
         name: to
         schema:
@@ -867,6 +1113,70 @@ paths:
           description: No response body
 components:
   schemas:
+    Activity:
+      type: object
+      description: A workout; source and external id are set by the server (manual)
+        or the import.
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        date:
+          type: string
+          format: date
+          description: The user's local day of the start
+        started_at:
+          type: string
+          format: date-time
+          nullable: true
+        kind:
+          $ref: '#/components/schemas/KindEnum'
+        title:
+          type: string
+          maxLength: 100
+        duration_min:
+          type: integer
+          maximum: 1440
+          minimum: 1
+        kcal:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,1})?$
+          description: Active energy burned by the workout
+        distance_m:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          nullable: true
+        source:
+          allOf:
+          - $ref: '#/components/schemas/ActivitySourceEnum'
+          readOnly: true
+        external_id:
+          type: string
+          readOnly: true
+        is_imported:
+          type: boolean
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - date
+      - duration_min
+      - external_id
+      - id
+      - is_imported
+      - kcal
+      - source
+      - updated_at
     ActivityLevelEnum:
       enum:
       - sedentary
@@ -881,6 +1191,78 @@ components:
         * `moderate` - Moderate
         * `active` - Active
         * `very_active` - Very Active
+    ActivityRequest:
+      type: object
+      description: A workout; source and external id are set by the server (manual)
+        or the import.
+      properties:
+        date:
+          type: string
+          format: date
+          description: The user's local day of the start
+        started_at:
+          type: string
+          format: date-time
+          nullable: true
+        kind:
+          $ref: '#/components/schemas/KindEnum'
+        title:
+          type: string
+          maxLength: 100
+        duration_min:
+          type: integer
+          maximum: 1440
+          minimum: 1
+        kcal:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,1})?$
+          description: Active energy burned by the workout
+        distance_m:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          nullable: true
+      required:
+      - date
+      - duration_min
+      - kcal
+    ActivitySourceEnum:
+      enum:
+      - manual
+      - apple_health
+      - health_connect
+      - strava
+      - garmin
+      - fitbit
+      - polar
+      type: string
+      description: |-
+        * `manual` - Manual
+        * `apple_health` - Apple Health
+        * `health_connect` - Health Connect
+        * `strava` - Strava
+        * `garmin` - Garmin
+        * `fitbit` - Fitbit
+        * `polar` - Polar
+    ActivitySummary:
+      type: object
+      description: 'Sport of one day: burned kcal, minutes and steps.'
+      properties:
+        date:
+          type: string
+          format: date
+        burned_kcal:
+          type: string
+        minutes:
+          type: integer
+        steps:
+          type: integer
+      required:
+      - burned_kcal
+      - date
+      - minutes
+      - steps
     BlankEnum:
       enum:
       - ''
@@ -946,7 +1328,7 @@ components:
           maxLength: 32
         source:
           allOf:
-          - $ref: '#/components/schemas/SourceEnum'
+          - $ref: '#/components/schemas/FoodSourceEnum'
           readOnly: true
           default: user
         is_custom:
@@ -1239,10 +1621,19 @@ components:
           nullable: true
         energy_unit:
           type: string
+        burned_kcal:
+          type: string
+        steps:
+          type: integer
+        count_activity_kcal:
+          type: boolean
       required:
+      - burned_kcal
+      - count_activity_kcal
       - date
       - energy_unit
       - meals
+      - steps
       - targets
       - totals
     EnergyUnitEnum:
@@ -1273,7 +1664,7 @@ components:
           maxLength: 32
         source:
           allOf:
-          - $ref: '#/components/schemas/SourceEnum'
+          - $ref: '#/components/schemas/FoodSourceEnum'
           readOnly: true
           default: user
         is_custom:
@@ -1344,6 +1735,16 @@ components:
       - name
       - source
       - updated_at
+    FoodSourceEnum:
+      enum:
+      - 'off'
+      - user
+      - tamra
+      type: string
+      description: |-
+        * `off` - Open Food Facts
+        * `user` - User
+        * `tamra` - TAMRA
     FoodSummary:
       type: object
       description: Short food info shown inside a diary entry.
@@ -1393,6 +1794,136 @@ components:
           type: string
       required:
       - status
+    ImportActivityRequest:
+      type: object
+      description: One workout from a health app; `external_id` is the id in that
+        app.
+      properties:
+        date:
+          type: string
+          format: date
+          description: The user's local day of the start
+        started_at:
+          type: string
+          format: date-time
+          nullable: true
+        kind:
+          $ref: '#/components/schemas/KindEnum'
+        title:
+          type: string
+          maxLength: 100
+        duration_min:
+          type: integer
+          maximum: 1440
+          minimum: 1
+        kcal:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,1})?$
+          description: Active energy burned by the workout
+        distance_m:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          nullable: true
+        source:
+          $ref: '#/components/schemas/ImportSourceEnum'
+        external_id:
+          type: string
+          minLength: 1
+          maxLength: 200
+      required:
+      - date
+      - duration_min
+      - external_id
+      - kcal
+      - source
+    ImportRequest:
+      type: object
+      description: 'Body of POST /activities/import/: workouts and daily steps from
+        Apple Health or Health Connect.'
+      properties:
+        activities:
+          type: array
+          items:
+            $ref: '#/components/schemas/ImportActivityRequest'
+        steps:
+          type: array
+          items:
+            $ref: '#/components/schemas/ImportStepsRequest'
+    ImportResult:
+      type: object
+      description: How many rows the import created, updated or skipped.
+      properties:
+        created:
+          type: integer
+        updated:
+          type: integer
+        skipped:
+          type: integer
+      required:
+      - created
+      - skipped
+      - updated
+    ImportSourceEnum:
+      enum:
+      - apple_health
+      - health_connect
+      - strava
+      - garmin
+      - fitbit
+      - polar
+      type: string
+      description: |-
+        * `apple_health` - Apple Health
+        * `health_connect` - Health Connect
+        * `strava` - Strava
+        * `garmin` - Garmin
+        * `fitbit` - Fitbit
+        * `polar` - Polar
+    ImportStepsRequest:
+      type: object
+      description: Steps of one day from a health app.
+      properties:
+        date:
+          type: string
+          format: date
+        steps:
+          type: integer
+          maximum: 200000
+          minimum: 0
+        source:
+          $ref: '#/components/schemas/ImportSourceEnum'
+      required:
+      - date
+      - source
+      - steps
+    KindEnum:
+      enum:
+      - walking
+      - running
+      - cycling
+      - swimming
+      - strength
+      - yoga
+      - hiit
+      - team_sport
+      - hiking
+      - dancing
+      - other
+      type: string
+      description: |-
+        * `walking` - Walking
+        * `running` - Running
+        * `cycling` - Cycling
+        * `swimming` - Swimming
+        * `strength` - Strength
+        * `yoga` - Yoga
+        * `hiit` - Hiit
+        * `team_sport` - Team Sport
+        * `hiking` - Hiking
+        * `dancing` - Dancing
+        * `other` - Other
     LanguageEnum:
       enum:
       - de
@@ -1442,6 +1973,38 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Food'
+    PatchedActivityRequest:
+      type: object
+      description: A workout; source and external id are set by the server (manual)
+        or the import.
+      properties:
+        date:
+          type: string
+          format: date
+          description: The user's local day of the start
+        started_at:
+          type: string
+          format: date-time
+          nullable: true
+        kind:
+          $ref: '#/components/schemas/KindEnum'
+        title:
+          type: string
+          maxLength: 100
+        duration_min:
+          type: integer
+          maximum: 1440
+          minimum: 1
+        kcal:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,6}(?:\.\d{0,1})?$
+          description: Active energy burned by the workout
+        distance_m:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          nullable: true
     PatchedDiaryEntryRequest:
       type: object
       description: A diary entry; nutrients are calculated by the server, never sent
@@ -1499,6 +2062,10 @@ components:
           $ref: '#/components/schemas/EnergyUnitEnum'
         language:
           $ref: '#/components/schemas/LanguageEnum'
+        count_activity_kcal:
+          type: boolean
+          description: Add the kcal of workouts to the day's budget (target + sport
+            - eaten)
     PatchedWeightLogRequest:
       type: object
       description: One weight per day in kg (30-300).
@@ -1559,6 +2126,10 @@ components:
           $ref: '#/components/schemas/EnergyUnitEnum'
         language:
           $ref: '#/components/schemas/LanguageEnum'
+        count_activity_kcal:
+          type: boolean
+          description: Add the kcal of workouts to the day's budget (target + sport
+            - eaten)
         is_complete:
           type: boolean
           readOnly: true
@@ -1622,16 +2193,6 @@ components:
       description: |-
         * `female` - Female
         * `male` - Male
-    SourceEnum:
-      enum:
-      - 'off'
-      - user
-      - tamra
-      type: string
-      description: |-
-        * `off` - Open Food Facts
-        * `user` - User
-        * `tamra` - TAMRA
     StatsAverages:
       type: object
       description: Averages over the days that have at least one diary entry.
@@ -1644,9 +2205,12 @@ components:
           type: string
         fat:
           type: string
+        burned_kcal:
+          type: string
         logged_days:
           type: integer
       required:
+      - burned_kcal
       - carbs
       - fat
       - kcal
@@ -1654,12 +2218,13 @@ components:
       - protein
     StatsDay:
       type: object
-      description: Totals of one day; nutrients as decimal text, weight null when
-        not logged.
+      description: Totals of one day (or averages of a week / month); decimals as
+        text.
       properties:
         date:
           type: string
           format: date
+          description: The day, or the first day of the week / month
         kcal:
           type: string
         protein:
@@ -1673,14 +2238,72 @@ components:
         weight_kg:
           type: string
           nullable: true
+        burned_kcal:
+          type: string
+        steps:
+          type: integer
+        budget:
+          type: string
+          nullable: true
+        balance:
+          type: string
+          nullable: true
+          description: eaten - budget
+        logged_days:
+          type: integer
+          description: Only for week / month
       required:
+      - balance
+      - budget
+      - burned_kcal
       - carbs
       - date
       - fat
       - kcal
       - protein
+      - steps
       - water_ml
       - weight_kg
+    StatsDayBalance:
+      type: object
+      description: 'Answer of GET /api/v1/stats/day/: the calorie balance of one day.'
+      properties:
+        date:
+          type: string
+          format: date
+        eaten_kcal:
+          type: string
+        burned_kcal:
+          type: string
+        budget:
+          type: string
+          nullable: true
+        remaining:
+          type: string
+          nullable: true
+        protein:
+          type: string
+        carbs:
+          type: string
+        fat:
+          type: string
+        steps:
+          type: integer
+        activities:
+          type: array
+          items:
+            $ref: '#/components/schemas/Activity'
+      required:
+      - activities
+      - budget
+      - burned_kcal
+      - carbs
+      - date
+      - eaten_kcal
+      - fat
+      - protein
+      - remaining
+      - steps
     StatsSummary:
       type: object
       description: Answer of GET /api/v1/stats/summary/.
@@ -1688,9 +2311,13 @@ components:
         to:
           type: string
           format: date
+        group:
+          type: string
         kcal_target:
           type: integer
           nullable: true
+        count_activity_kcal:
+          type: boolean
         days:
           type: array
           items:
@@ -1705,8 +2332,10 @@ components:
           format: date
       required:
       - averages
+      - count_activity_kcal
       - days
       - from
+      - group
       - kcal_target
       - to
       - weight_change_kg

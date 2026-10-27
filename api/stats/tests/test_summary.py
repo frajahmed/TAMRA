@@ -90,7 +90,14 @@ class StatsSummaryTests(APITestCase):
         averages = self.get("2026-10-20", "2026-10-26").data["averages"]
         self.assertEqual(
             averages,
-            {"kcal": "0.00", "protein": "0.00", "carbs": "0.00", "fat": "0.00", "logged_days": 0},
+            {
+                "kcal": "0.00",
+                "protein": "0.00",
+                "carbs": "0.00",
+                "fat": "0.00",
+                "burned_kcal": "0.00",
+                "logged_days": 0,
+            },
         )
 
     def test_water_and_weight(self):

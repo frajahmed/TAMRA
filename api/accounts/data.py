@@ -10,6 +10,7 @@ from django.db import transaction
 from django.utils import timezone
 from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, OutstandingToken
 
+from activity.models import Activity, StepDay
 from diary.models import DiaryEntry
 from foods.models import Food
 from profiles.models import Consent, Profile
@@ -55,6 +56,7 @@ def _profile(user) -> list[dict[str, Any]]:
         "weight_unit",
         "energy_unit",
         "language",
+        "count_activity_kcal",
         "updated_at",
     ]
     return _rows(Profile.all_objects.filter(user=user), fields)
@@ -120,6 +122,28 @@ def _water(user) -> list[dict[str, Any]]:
     return _rows(WaterLog.all_objects.filter(user=user).order_by("date", "created_at"), fields)
 
 
+def _activities(user) -> list[dict[str, Any]]:
+    fields = [
+        "id",
+        "date",
+        "started_at",
+        "kind",
+        "title",
+        "duration_min",
+        "kcal",
+        "distance_m",
+        "source",
+        "created_at",
+        "deleted_at",
+    ]
+    return _rows(Activity.all_objects.filter(user=user).order_by("date", "created_at"), fields)
+
+
+def _steps(user) -> list[dict[str, Any]]:
+    fields = ["date", "steps", "source", "deleted_at"]
+    return _rows(StepDay.all_objects.filter(user=user).order_by("date"), fields)
+
+
 EXPORTERS: dict[str, Callable[[Any], Any]] = {
     "account": _account,
     "profile": _profile,
@@ -128,6 +152,8 @@ EXPORTERS: dict[str, Callable[[Any], Any]] = {
     "diary_entries": _diary,
     "weight_logs": _weights,
     "water_logs": _water,
+    "activities": _activities,
+    "step_days": _steps,
 }
 
 
@@ -153,6 +179,8 @@ def delete_account(user) -> None:
     custom_foods.filter(pk__in=used_by_others).update(created_by=None)
     custom_foods.exclude(pk__in=used_by_others).delete()
     WeightLog.all_objects.filter(user=user).delete()
+    Activity.all_objects.filter(user=user).delete()
+    StepDay.all_objects.filter(user=user).delete()
     WaterLog.all_objects.filter(user=user).delete()
     Consent.all_objects.filter(user=user).delete()
     Profile.all_objects.filter(user=user).delete()

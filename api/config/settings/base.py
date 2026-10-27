@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "billing",
     "tracking",
     "stats",
+    "activity",
 ]
 
 MIDDLEWARE = [
@@ -173,6 +174,12 @@ SPECTACULAR_SETTINGS = {
     "SERVE_INCLUDE_SCHEMA": False,
     "SCHEMA_PATH_PREFIX": r"/api/v1",
     "COMPONENT_SPLIT_REQUEST": True,
+    # Several models have a field "source" with different choices: give each enum its own name.
+    "ENUM_NAME_OVERRIDES": {
+        "FoodSourceEnum": "foods.models.Food.Source",
+        "ActivitySourceEnum": "activity.models.Source",
+        "ImportSourceEnum": "activity.serializers.IMPORT_SOURCES",
+    },
 }
 
 # Celery

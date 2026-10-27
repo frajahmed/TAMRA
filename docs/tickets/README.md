@@ -25,8 +25,8 @@ Tickets marked **[Claude]** are done by Claude, not by Qwen.
 | 4 | T-42 | Statistics (7 days) | api + app | done (Claude) |
 | 4 | T-43 | Settings, data export, delete account | api + app | done (Claude) |
 | 4 | T-44 | Accessibility, RTL and store texts **[Claude]** | app | open |
-| 5 | T-50 | Activity model, CRUD and import | api | open |
-| 5 | T-51 | Calorie balance and history | api | open |
+| 5 | T-50 | Activity model, CRUD and import | api | done (Claude) |
+| 5 | T-51 | Calorie balance and history | api | done (Claude) |
 | 5 | T-52 | App: activities and manual sport entry | app | open |
 | 5 | T-53 | App: connect Apple Health and Health Connect **[Claude]** | app | open |
 | 5 | T-54 | App: balance dashboard and history | app | open |

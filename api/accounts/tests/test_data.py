@@ -6,6 +6,7 @@ from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 
+from activity.models import Activity, StepDay
 from diary.models import DiaryEntry
 from foods.models import Food
 from profiles.models import Consent, Profile
@@ -45,6 +46,8 @@ class PersonalDataTestCase(APITestCase):
         for user in (self.user, self.other):
             WeightLog.objects.create(user=user, date="2026-10-23", weight_kg=Decimal("70.0"))
             WaterLog.objects.create(user=user, date="2026-10-23", amount_ml=250)
+            Activity.objects.create(user=user, date="2026-10-23", duration_min=30, kcal=200)
+            StepDay.objects.create(user=user, date="2026-10-23", steps=8000)
 
 
 class ExportTests(PersonalDataTestCase):
@@ -70,6 +73,8 @@ class ExportTests(PersonalDataTestCase):
         self.assertEqual(data["weight_logs"][0]["weight_kg"], "70.0")
         self.assertEqual(data["water_logs"][0]["amount_ml"], 250)
         self.assertEqual(len(data["weight_logs"]), 1)
+        self.assertEqual(data["activities"][0]["kcal"], "200.0")
+        self.assertEqual(data["step_days"][0]["steps"], 8000)
         self.assertNotIn("b@example.com", response.content.decode())
 
 
@@ -101,6 +106,9 @@ class DeleteAccountTests(PersonalDataTestCase):
         self.assertFalse(WeightLog.all_objects.filter(user_id=self.user.pk).exists())
         self.assertFalse(WaterLog.all_objects.filter(user_id=self.user.pk).exists())
         self.assertEqual(WeightLog.objects.filter(user=self.other).count(), 1)
+        self.assertFalse(Activity.all_objects.filter(user_id=self.user.pk).exists())
+        self.assertFalse(StepDay.all_objects.filter(user_id=self.user.pk).exists())
+        self.assertEqual(Activity.objects.filter(user=self.other).count(), 1)
         # still used by the other user's diary → kept, but no longer linked to the account
         self.assertIsNone(Food.all_objects.get(pk=self.mine.pk).created_by)
 
