@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -33,6 +35,9 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
   /// Entries deleted on screen whose delete can still be undone.
   final Set<String> _hidden = {};
 
+  /// Deletes waiting for [undoDuration]: the timer and the action that deletes on the server.
+  final Map<String, ({Timer timer, Future<void> Function() commit})> _pending = {};
+
   Future<void> _reload(DateTime day) async {
     ref.invalidate(diaryDayProvider(day));
     await ref.read(diaryDayProvider(day).future);
@@ -56,7 +61,9 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
     if (saved == true && mounted) ref.invalidate(diaryDayProvider(entry.date));
   }
 
-  /// Hides the entry at once and deletes it on the server only when "undo" was not pressed.
+  /// Hides the entry at once; it is deleted on the server after [undoDuration] unless
+  /// "undo" is pressed. A timer decides, not the snack bar: snack bars with an action
+  /// stay open until they are touched (accessibility), so they cannot be the trigger.
   void _delete(DiaryEntry entry) {
     final strings = AppStrings.of(context);
     final repository = ref.read(diaryRepositoryProvider);
@@ -68,15 +75,16 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
         key: const Key('undo-snackbar'),
         content: Text(strings.entryDeleted),
         duration: undoDuration,
-        action: SnackBarAction(label: strings.undo, onPressed: () {}),
+        action: SnackBarAction(label: strings.undo, onPressed: () => _undo(entry.id)),
       ),
     );
 
-    snackBar.closed.then((reason) async {
-      if (reason == SnackBarClosedReason.action) {
-        if (mounted) setState(() => _hidden.remove(entry.id));
-        return;
-      }
+    var snackBarOpen = true;
+    snackBar.closed.then((_) => snackBarOpen = false);
+
+    Future<void> commit() async {
+      _pending.remove(entry.id);
+      if (snackBarOpen) snackBar.close();
       try {
         await repository.delete(entry.id);
         if (mounted) await _reload(entry.date);
@@ -84,7 +92,25 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
         // Deleting failed: show the entry again so nothing is lost silently.
       }
       if (mounted) setState(() => _hidden.remove(entry.id));
-    });
+    }
+
+    _pending[entry.id] = (timer: Timer(undoDuration, commit), commit: commit);
+  }
+
+  /// Restores an entry whose delete is still pending.
+  void _undo(String id) {
+    _pending.remove(id)?.timer.cancel();
+    if (mounted) setState(() => _hidden.remove(id));
+  }
+
+  @override
+  void dispose() {
+    // Leaving the screen confirms pending deletes instead of dropping them.
+    for (final pending in [..._pending.values]) {
+      pending.timer.cancel();
+      pending.commit();
+    }
+    super.dispose();
   }
 
   @override
