@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:tamra_app/app/app.dart';
 import 'package:tamra_app/app/locale_provider.dart';
 import 'package:tamra_app/core/api/api_client.dart';
@@ -465,6 +466,13 @@ class FakeFileSharer implements FileSharer {
     sharedNames.add(fileName);
     sharedContents.add(content);
   }
+}
+
+/// A tall phone screen so long lists (diary, profile) are built completely in tests.
+void useTallView(WidgetTester tester) {
+  tester.view.physicalSize = const Size(1200, 4000);
+  tester.view.devicePixelRatio = 2;
+  addTearDown(tester.view.reset);
 }
 
 const loggedInComplete = AuthState(status: AuthStatus.loggedIn);

@@ -115,6 +115,7 @@ void main() {
   });
 
   testWidgets('the + of a meal in the diary opens the food search', (tester) async {
+    useTallView(tester);
     await tester.pumpWidget(
       testApp(overrides: [foodRepositoryProvider.overrideWithValue(FakeFoodRepository())]),
     );

@@ -7,6 +7,7 @@ import '../helpers/fakes.dart';
 
 void main() {
   testWidgets('diary start screen shows German texts, left-to-right', (tester) async {
+    useTallView(tester);
     await tester.pumpWidget(testApp(locale: const Locale('de')));
     await tester.pumpAndSettle();
 
@@ -17,6 +18,7 @@ void main() {
   });
 
   testWidgets('Arabic switches the layout to right-to-left', (tester) async {
+    useTallView(tester);
     await tester.pumpWidget(testApp(locale: const Locale('ar')));
     await tester.pumpAndSettle();
 
@@ -45,6 +47,7 @@ void main() {
   });
 
   testWidgets('logout returns to the login screen', (tester) async {
+    useTallView(tester);
     await tester.pumpWidget(testApp());
     await tester.pumpAndSettle();
 
