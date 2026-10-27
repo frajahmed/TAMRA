@@ -94,14 +94,18 @@ void main() {
     expect(find.byKey(const Key('calorie-formula')), findsNothing);
   });
 
-  testWidgets('German and Arabic render the diary', (tester) async {
+  testWidgets('German renders the diary', (tester) async {
     await _openDiary(tester, _diaryWithTwoEntries(), locale: const Locale('de'));
     expect(find.text('Mittagessen'), findsOneWidget);
     expect(find.text('übrig'), findsOneWidget);
+  });
 
+  testWidgets('Arabic renders the diary right-to-left', (tester) async {
     await _openDiary(tester, _diaryWithTwoEntries(), locale: const Locale('ar'));
     expect(find.text('الغداء'), findsOneWidget);
     expect(find.text('متبقية'), findsOneWidget);
+    final direction = Directionality.of(tester.element(find.byKey(const Key('diary-list'))));
+    expect(direction, TextDirection.rtl);
   });
 
   testWidgets('add flow: + → search → amount → saved and shown', (tester) async {

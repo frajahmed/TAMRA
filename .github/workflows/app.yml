@@ -34,7 +34,7 @@ jobs:
           flutter analyze 2>&1 | tee analyze.txt
       - name: Report analyze result
         if: steps.analyze.outcome == 'failure'
-        run: bash ../.github/scripts/annotate.sh analyze.txt "flutter analyze"
+        run: python3 ../.github/scripts/annotate_flutter.py analyze.txt "flutter analyze"
       - name: Tests with coverage
         id: tests
         continue-on-error: true
@@ -43,7 +43,7 @@ jobs:
           flutter test --coverage --reporter expanded 2>&1 | tee test.txt
       - name: Report test result
         if: steps.tests.outcome == 'failure'
-        run: bash ../.github/scripts/annotate.sh test.txt "flutter test"
+        run: python3 ../.github/scripts/annotate_flutter.py test.txt "flutter test"
       - name: Fail if analyze or tests failed
         if: steps.analyze.outcome == 'failure' || steps.tests.outcome == 'failure'
         run: |
