@@ -12,6 +12,9 @@ Alle wichtigen Änderungen an TAMRA. Format: [Keep a Changelog](https://keepacha
 - API braucht jetzt PostgreSQL (lokal über `docker compose up`); SQLite wird nicht mehr unterstützt.
 
 ### Added
+- App offline (T-33): Tagebuch-Tage werden auf dem Handy gespeichert; ohne Internet bleibt das
+  Tagebuch nutzbar (Hinweis „Offline“), Änderungen kommen in eine Warteschlange und werden später
+  in Reihenfolge gesendet; Abmelden und Konto löschen leeren den Speicher.
 - App: Apple Health / Health Connect verbinden (T-53): Trainings und Schritte der letzten 30 Tage,
   danach seit dem letzten Abgleich, beim App-Start automatisch und per „Jetzt abgleichen“; Import
   seitenweise (500), ohne Duplikate; Plattform-Berechtigungen per `configure_platforms.py`.

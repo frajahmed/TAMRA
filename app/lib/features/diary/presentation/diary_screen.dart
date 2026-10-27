@@ -242,6 +242,20 @@ class _DiaryContent extends StatelessWidget {
       key: const Key('diary-list'),
       padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 32),
       children: [
+        if (day.offline)
+          Padding(
+            padding: const EdgeInsetsDirectional.only(bottom: 8),
+            child: Row(
+              key: const Key('diary-offline'),
+              children: [
+                Icon(Icons.cloud_off, size: 18, color: colors.textSecondary),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(strings.offlineHint, style: TextStyle(color: colors.textSecondary)),
+                ),
+              ],
+            ),
+          ),
         Card(
           child: Padding(
             padding: const EdgeInsetsDirectional.all(16),

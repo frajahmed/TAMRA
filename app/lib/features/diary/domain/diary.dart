@@ -1,3 +1,4 @@
+import '../../../core/ids.dart';
 import '../../../core/json.dart';
 import '../../../core/nutrition/nutrition.dart';
 
@@ -79,6 +80,40 @@ class DiaryEntry {
     );
   }
 
+  /// The entry in the API format (used for the offline cache).
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'date': dateKey(date),
+        'meal': meal.name,
+        'food': foodId,
+        'food_detail': {'id': foodId, 'name': foodName, 'brand': foodBrand},
+        'amount_g': amountG.toStringAsFixed(2),
+        'unit_label': unitLabel,
+        'kcal': nutrients.kcal.toStringAsFixed(2),
+        'protein': nutrients.protein.toStringAsFixed(2),
+        'carbs': nutrients.carbs.toStringAsFixed(2),
+        'fat': nutrients.fat.toStringAsFixed(2),
+        'sugar': nutrients.sugar.toStringAsFixed(2),
+        'fiber': nutrients.fiber.toStringAsFixed(2),
+        'salt': nutrients.salt.toStringAsFixed(2),
+      };
+
+  /// The same entry with another amount and/or meal; nutrients scale with the amount.
+  DiaryEntry changed({double? amountG, Meal? meal}) {
+    final amount = amountG ?? this.amountG;
+    return DiaryEntry(
+      id: id,
+      date: date,
+      meal: meal ?? this.meal,
+      foodId: foodId,
+      foodName: foodName,
+      foodBrand: foodBrand,
+      unitLabel: unitLabel,
+      amountG: amount,
+      nutrients: per100g.forGrams(amount),
+    );
+  }
+
   /// Reads one entry of GET /api/v1/diary/.
   factory DiaryEntry.fromJson(Map<String, dynamic> json) {
     final food = json['food_detail'];
@@ -122,6 +157,10 @@ class DayTargets {
   /// Fat target in grams.
   final int? fatG;
 
+  /// The targets in the API format (used for the offline cache).
+  Map<String, dynamic> toJson() =>
+      {'kcal': kcal, 'protein_g': proteinG, 'carbs_g': carbsG, 'fat_g': fatG};
+
   /// Reads `targets` of GET /api/v1/diary/summary/.
   factory DayTargets.fromJson(Object? json) {
     if (json is! Map<String, dynamic>) return const DayTargets();
@@ -145,10 +184,14 @@ class DiaryDay {
     this.burnedKcal = 0,
     this.steps = 0,
     this.countActivityKcal = true,
+    this.offline = false,
   });
 
   /// The day.
   final DateTime date;
+
+  /// True when the day comes from the phone's cache because the server was not reached.
+  final bool offline;
 
   /// All entries of the day.
   final List<DiaryEntry> entries;
@@ -188,6 +231,48 @@ class DiaryDay {
   NutrientAmounts totalsOf(Meal meal) =>
       NutrientAmounts.sum(entriesOf(meal).map((entry) => entry.nutrients));
 
+  /// The day in a stored form (offline cache): entries plus the summary fields.
+  Map<String, dynamic> toJson() => {
+        'date': dateKey(date),
+        'entries': [for (final entry in entries) entry.toJson()],
+        'targets': targets.toJson(),
+        'energy_unit': energyUnit.name,
+        'burned_kcal': burnedKcal,
+        'steps': steps,
+        'count_activity_kcal': countActivityKcal,
+      };
+
+  /// Reads the stored form; [offline] marks it as coming from the cache.
+  factory DiaryDay.fromJson(Map<String, dynamic> json, {bool offline = false}) {
+    final entries = json['entries'];
+    return DiaryDay(
+      date: DateTime.tryParse(json['date']?.toString() ?? '') ?? DateTime(1970),
+      entries: [
+        if (entries is List)
+          for (final entry in entries)
+            if (entry is Map<String, dynamic>) DiaryEntry.fromJson(entry),
+      ],
+      targets: DayTargets.fromJson(json['targets']),
+      energyUnit: EnergyUnit.fromApi(json['energy_unit']),
+      burnedKcal: jsonDouble(json['burned_kcal']) ?? 0,
+      steps: jsonInt(json['steps']) ?? 0,
+      countActivityKcal: json['count_activity_kcal'] != false,
+      offline: offline,
+    );
+  }
+
+  /// The same day with other entries (e.g. after an offline change).
+  DiaryDay withEntries(List<DiaryEntry> entries) => DiaryDay(
+        date: date,
+        entries: entries,
+        targets: targets,
+        energyUnit: energyUnit,
+        burnedKcal: burnedKcal,
+        steps: steps,
+        countActivityKcal: countActivityKcal,
+        offline: offline,
+      );
+
   /// The same day without the entries in [ids] (hidden while a delete can still be undone).
   DiaryDay without(Set<String> ids) => ids.isEmpty
       ? this
@@ -199,18 +284,33 @@ class DiaryDay {
           burnedKcal: burnedKcal,
           steps: steps,
           countActivityKcal: countActivityKcal,
+          offline: offline,
         );
 }
 
 /// A new diary entry; the server calculates the nutrients.
 class NewDiaryEntry {
-  /// Creates the data for POST /api/v1/diary/.
-  const NewDiaryEntry({
+  /// Creates the data for POST /api/v1/diary/. [id] is made on the phone so the entry keeps
+  /// it when it is saved offline and sent later; [foodName] and [per100g] let the app show
+  /// the entry before the server has answered.
+  NewDiaryEntry({
     required this.date,
     required this.meal,
     required this.foodId,
     required this.amountG,
-  });
+    String? id,
+    this.foodName = '',
+    this.per100g,
+  }) : id = id ?? newUuid();
+
+  /// Entry id (UUID made on the phone).
+  final String id;
+
+  /// Name of the food (for showing the entry offline).
+  final String foodName;
+
+  /// Nutrients of the food per 100 g (for showing the entry offline).
+  final NutritionPer100g? per100g;
 
   /// The day the food was eaten.
   final DateTime date;
@@ -226,9 +326,22 @@ class NewDiaryEntry {
 
   /// Body for POST /api/v1/diary/.
   Map<String, dynamic> toJson() => {
+        'id': id,
         'date': dateKey(date),
         'meal': meal.name,
         'food': foodId,
         'amount_g': amountG.toStringAsFixed(2),
       };
+
+  /// The entry as the app shows it before the server answered (nutrients from [per100g]).
+  DiaryEntry toLocalEntry() => DiaryEntry(
+        id: id,
+        date: date,
+        meal: meal,
+        foodId: foodId,
+        foodName: foodName,
+        amountG: amountG,
+        nutrients: (per100g ?? const NutritionPer100g(kcal: 0, protein: 0, carbs: 0, fat: 0))
+            .forGrams(amountG),
+      );
 }

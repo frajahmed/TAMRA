@@ -118,7 +118,14 @@ class _EntryEditorScreenState extends ConsumerState<EntryEditorScreen> {
         );
       } else {
         await repository.add(
-          NewDiaryEntry(date: args.date, meal: _meal, foodId: args.food!.id, amountG: amount),
+          NewDiaryEntry(
+            date: args.date,
+            meal: _meal,
+            foodId: args.food!.id,
+            amountG: amount,
+            foodName: args.name,
+            per100g: args.per100g,
+          ),
         );
       }
       if (mounted) context.pop(true);

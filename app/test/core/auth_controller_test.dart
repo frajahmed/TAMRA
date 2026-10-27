@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tamra_app/core/api/api_client.dart';
 import 'package:tamra_app/core/auth/auth_controller.dart';
 import 'package:tamra_app/core/auth/token_storage.dart';
+import 'package:tamra_app/core/offline/local_store.dart';
 
 import '../helpers/fakes.dart';
 
@@ -15,6 +16,7 @@ void main() {
       overrides: [
         apiClientProvider.overrideWithValue(api),
         tokenStorageProvider.overrideWithValue(storage),
+        localStoreProvider.overrideWithValue(MemoryLocalStore()),
       ],
     );
     addTearDown(container.dispose);

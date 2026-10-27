@@ -8,7 +8,7 @@ Full version: Claude doc "TAMRA – Architektur & Projektsteuerung (Mobile)".
 | E1 | Mobile first (iOS + Android), web later |
 | E2 | Flutter, one codebase |
 | E3 | Django REST Framework API |
-| E4 | Offline first (drift + sync queue, ticket T-33 by Claude) |
+| E4 | Offline first: diary cached as JSON files on the phone + outbox of offline changes, replayed through the normal endpoints (T-33); no code generation (E10), no extra sync endpoint |
 | E5 | Subscriptions via RevenueCat (phase 2) |
 | E6 | Hosting in the EU (Frankfurt) |
 | E7 | OpenAPI contract `docs/openapi.yaml` from drf-spectacular; the Dart client is written by hand in `app/lib/core/api/api_client.dart` (no code generation, easier for the coding agent) |
@@ -38,7 +38,6 @@ Full version: Claude doc "TAMRA – Architektur & Projektsteuerung (Mobile)".
 | GET, POST | /api/v1/me/consents/ · /me/consents/<type>/withdraw/ | T-12 |
 | GET, POST | /api/v1/foods/?q= · /foods/barcode/<code>/ · /foods/<id>/ | T-20–22 |
 | GET, POST, PATCH, DELETE | /api/v1/diary/ · /diary/summary/ · /diary/copy/ | T-30, T-32 |
-| GET, POST | /api/v1/sync/ | T-33 |
 | CRUD | /api/v1/weight/ · /api/v1/water/ | T-40 |
 | GET | /api/v1/stats/summary/?from&to&group=day\|week\|month | T-42, T-51 |
 | GET | /api/v1/stats/day/?date= | T-51 |
@@ -67,6 +66,15 @@ Full version: Claude doc "TAMRA – Architektur & Projektsteuerung (Mobile)".
 - Store rules: HealthKit and Health Connect data never for ads, only for the user's own features,
   named in the privacy policy; Google Play needs the Health Connect declaration form.
 - Health data consent (`health_data`) also covers activity data; disconnecting can delete imported data.
+
+## Offline (T-33)
+- `OfflineDiaryRepository` wraps the API: every loaded day is cached (`FileLocalStore`, app sandbox).
+- Without a connection the cached day is shown with an "offline" hint; add / change / delete change
+  the cache at once and go into the `Outbox` (stored, survives restarts).
+- The outbox is sent in order before every load and after every successful change. Ids are UUIDs
+  made on the phone, so a repeated request is harmless (400 "id already used" / 404 = done).
+- Conflict rule: the server keeps the newest change (last write wins). Copying days needs the server.
+- Logout and account deletion clear the cache and the outbox (no health data stays on the phone).
 
 ## Error format
 `{"code": "validation_error", "message": "Invalid input.", "fields": {"email": ["..."]}}` – for every error.

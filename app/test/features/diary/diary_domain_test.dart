@@ -53,12 +53,21 @@ void main() {
 
   test('NewDiaryEntry.toJson uses the API field names', () {
     final json = NewDiaryEntry(
+      id: 'e1',
       date: DateTime(2026, 1, 5),
       meal: Meal.snack,
       foodId: 'f1',
       amountG: 12.5,
     ).toJson();
-    expect(json, {'date': '2026-01-05', 'meal': 'snack', 'food': 'f1', 'amount_g': '12.50'});
+    expect(json, {
+      'id': 'e1',
+      'date': '2026-01-05',
+      'meal': 'snack',
+      'food': 'f1',
+      'amount_g': '12.50',
+    });
+    final generated = NewDiaryEntry(date: DateTime(2026), meal: Meal.lunch, foodId: 'f', amountG: 1);
+    expect(generated.id, matches(RegExp(r'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$')));
   });
 
   test('DayTargets and Meal handle missing or unknown values', () {

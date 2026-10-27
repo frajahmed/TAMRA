@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../api/api_client.dart';
+import '../offline/local_store.dart';
 import 'token_storage.dart';
 
 /// Whether the user is logged in; `unknown` while stored tokens are checked at start.
@@ -98,7 +99,18 @@ class AuthController extends Notifier<AuthState> {
       }
     }
     await _storage.clear();
+    await _clearOfflineData();
     state = const AuthState.loggedOut();
+  }
+
+  /// Deletes cached diary days and waiting offline changes from the phone.
+  /// A failure here must never block logging out.
+  Future<void> _clearOfflineData() async {
+    try {
+      await ref.read(localStoreProvider).clear();
+    } catch (_) {
+      // The cache lives in the app sandbox and is replaced on the next login.
+    }
   }
 
   /// Called by the AuthInterceptor when the refresh token is no longer valid.
@@ -114,6 +126,7 @@ class AuthController extends Notifier<AuthState> {
   /// (the server already blacklisted them).
   Future<void> accountDeleted() async {
     await _storage.clear();
+    await _clearOfflineData();
     state = const AuthState.loggedOut();
   }
 

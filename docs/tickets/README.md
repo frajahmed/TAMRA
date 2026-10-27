@@ -19,7 +19,7 @@ Tickets marked **[Claude]** are done by Claude, not by Qwen.
 | 3 | T-30 | Diary entries and day summary | api | done (Claude) |
 | 3 | T-31 | App: diary screen and add entry | app | done (Claude) |
 | 3 | T-32 | Copy meal or day | api + app | done (Claude) |
-| 3 | T-33 | Offline storage and sync **[Claude]** | api + app | open |
+| 3 | T-33 | Offline storage and sync **[Claude]** | app | done (Claude; outbox instead of drift, see ARCHITECTURE) |
 | 4 | T-40 | Weight and water logs | api | done (Qwen, reviewed and fixed by Claude) |
 | 4 | T-41 | App: weight and water | app | done (Claude) |
 | 4 | T-42 | Statistics (7 days) | api + app | done (Claude) |

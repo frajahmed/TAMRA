@@ -295,6 +295,7 @@ class AppStrings {
       };
 
   String get healthTitle => text('healthTitle');
+  String get offlineHint => text('offlineHint');
   String get healthConnect => text('healthConnect');
   String get healthDisconnect => text('healthDisconnect');
   String get healthSyncNow => text('healthSyncNow');

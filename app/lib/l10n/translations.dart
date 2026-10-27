@@ -198,6 +198,7 @@ const Map<String, Map<String, String>> translations = {
     'healthSynced': '{count} new entries imported',
     'healthDenied': 'No access. Allow TAMRA in {app} to read workouts and steps.',
     'healthUnsupported': 'Not available on this device.',
+    'offlineHint': 'Offline – changes are saved on the phone and sent later.',
   },
   'de': {
     'appName': 'TAMRA',
@@ -394,6 +395,7 @@ const Map<String, Map<String, String>> translations = {
     'healthSynced': '{count} neue Einträge übernommen',
     'healthDenied': 'Kein Zugriff. Erlaube TAMRA in {app}, Trainings und Schritte zu lesen.',
     'healthUnsupported': 'Auf diesem Gerät nicht verfügbar.',
+    'offlineHint': 'Offline – Änderungen werden auf dem Handy gespeichert und später gesendet.',
   },
   'fr': {
     'appName': 'TAMRA',
@@ -590,6 +592,7 @@ const Map<String, Map<String, String>> translations = {
     'healthSynced': '{count} nouvelles entrées importées',
     'healthDenied': 'Pas d’accès. Autorise TAMRA dans {app} à lire les entraînements et les pas.',
     'healthUnsupported': 'Non disponible sur cet appareil.',
+    'offlineHint': 'Hors ligne – les modifications sont enregistrées sur le téléphone et envoyées plus tard.',
   },
   'it': {
     'appName': 'TAMRA',
@@ -785,6 +788,7 @@ const Map<String, Map<String, String>> translations = {
     'healthSynced': '{count} nuove voci importate',
     'healthDenied': 'Nessun accesso. Consenti a TAMRA in {app} di leggere allenamenti e passi.',
     'healthUnsupported': 'Non disponibile su questo dispositivo.',
+    'offlineHint': 'Offline – le modifiche vengono salvate sul telefono e inviate più tardi.',
   },
   'ar': {
     'appName': 'تمرة',
@@ -978,5 +982,6 @@ const Map<String, Map<String, String>> translations = {
     'healthSynced': 'تم استيراد {count} إدخالات جديدة',
     'healthDenied': 'لا يوجد وصول. اسمح لتمرة في {app} بقراءة التمارين والخطوات.',
     'healthUnsupported': 'غير متاح على هذا الجهاز.',
+    'offlineHint': 'غير متصل – تُحفظ التغييرات على الهاتف وتُرسل لاحقًا.',
   },
 };

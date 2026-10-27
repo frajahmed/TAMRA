@@ -2,8 +2,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/api/api_client.dart';
 import '../../../core/json.dart';
+import '../../../core/offline/local_store.dart';
+import '../../../core/offline/outbox.dart';
 import '../../../core/nutrition/nutrition.dart';
 import '../domain/diary.dart';
+import 'offline_diary_repository.dart';
 
 /// Diary entries of the logged-in user from the TAMRA API.
 class DiaryRepository {
@@ -53,9 +56,15 @@ class DiaryRepository {
       });
 }
 
-/// The [DiaryRepository] used by the diary screens (replaced by a fake in tests).
+/// The diary used by the screens: online with an offline cache and outbox
+/// (replaced by a fake in tests).
 final diaryRepositoryProvider = Provider<DiaryRepository>((ref) {
-  return DiaryRepository(ref.watch(apiClientProvider));
+  final store = ref.watch(localStoreProvider);
+  return OfflineDiaryRepository(
+    remote: DiaryRepository(ref.watch(apiClientProvider)),
+    store: store,
+    outbox: Outbox(store),
+  );
 });
 
 /// The day shown in the diary (starts with today).
