@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "diary",
     "billing",
     "tracking",
+    "stats",
 ]
 
 MIDDLEWARE = [
