@@ -14,6 +14,7 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.textPrimary,
     required this.textSecondary,
     required this.brand,
+    required this.onBrand,
     required this.progress,
     required this.carbs,
     required this.fat,
@@ -38,6 +39,9 @@ class AppColors extends ThemeExtension<AppColors> {
   /// TAMRA date brown: primary buttons, logo, selected navigation item.
   final Color brand;
 
+  /// Text and icons on [brand] (white in light mode, near black in dark mode for contrast).
+  final Color onBrand;
+
   /// Progress blue: calorie arc, charts, goal lines.
   final Color progress;
 
@@ -56,11 +60,12 @@ class AppColors extends ThemeExtension<AppColors> {
     surface: Color(0xFFFFFFFF),
     border: Color(0xFFE5E7EB),
     textPrimary: Color(0xFF111827),
-    textSecondary: Color(0xFF6B7280),
+    textSecondary: Color(0xFF636B78),
     brand: Color(0xFF7A4B2A),
+    onBrand: Color(0xFFFFFFFF),
     progress: Color(0xFF2563EB),
-    carbs: Color(0xFFF97316),
-    fat: Color(0xFF84CC16),
+    carbs: Color(0xFFEA580C),
+    fat: Color(0xFF5C9A0B),
     protein: Color(0xFF3B82F6),
   );
 
@@ -72,6 +77,7 @@ class AppColors extends ThemeExtension<AppColors> {
     textPrimary: Color(0xFFF9FAFB),
     textSecondary: Color(0xFF9CA3AF),
     brand: Color(0xFFC08A5B),
+    onBrand: Color(0xFF0F1117),
     progress: Color(0xFF3B82F6),
     carbs: Color(0xFFFB923C),
     fat: Color(0xFFA3E635),
@@ -90,6 +96,7 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? textPrimary,
     Color? textSecondary,
     Color? brand,
+    Color? onBrand,
     Color? progress,
     Color? carbs,
     Color? fat,
@@ -102,6 +109,7 @@ class AppColors extends ThemeExtension<AppColors> {
       textPrimary: textPrimary ?? this.textPrimary,
       textSecondary: textSecondary ?? this.textSecondary,
       brand: brand ?? this.brand,
+      onBrand: onBrand ?? this.onBrand,
       progress: progress ?? this.progress,
       carbs: carbs ?? this.carbs,
       fat: fat ?? this.fat,
@@ -119,6 +127,7 @@ class AppColors extends ThemeExtension<AppColors> {
       textPrimary: Color.lerp(textPrimary, other.textPrimary, t)!,
       textSecondary: Color.lerp(textSecondary, other.textSecondary, t)!,
       brand: Color.lerp(brand, other.brand, t)!,
+      onBrand: Color.lerp(onBrand, other.onBrand, t)!,
       progress: Color.lerp(progress, other.progress, t)!,
       carbs: Color.lerp(carbs, other.carbs, t)!,
       fat: Color.lerp(fat, other.fat, t)!,
@@ -141,6 +150,7 @@ abstract final class AppTheme {
   static ThemeData _build(AppColors colors, Brightness brightness) {
     final scheme = ColorScheme.fromSeed(seedColor: seed, brightness: brightness).copyWith(
       primary: colors.brand,
+      onPrimary: colors.onBrand,
       secondary: colors.progress,
       surface: colors.surface,
       onSurface: colors.textPrimary,
@@ -174,7 +184,7 @@ abstract final class AppTheme {
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           backgroundColor: colors.brand,
-          foregroundColor: Colors.white,
+          foregroundColor: colors.onBrand,
           padding: const EdgeInsetsDirectional.symmetric(horizontal: 24, vertical: 16),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         ),

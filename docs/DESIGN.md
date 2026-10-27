@@ -20,16 +20,19 @@ tokens, never raw colour values.
 | surface | #FFFFFF | #1A1D26 | cards, sheets, navigation dock |
 | border | #E5E7EB | #2D313E | card border, dividers |
 | textPrimary | #111827 | #F9FAFB | main text |
-| textSecondary | #6B7280 | #9CA3AF | labels, hints |
+| textSecondary | #636B78 | #9CA3AF | labels, hints |
 | **brand** (date brown) | #7A4B2A | #C08A5B | primary buttons, logo, selected tab |
+| onBrand | #FFFFFF | #0F1117 | text and icons on brand |
 | **progress** (blue) | #2563EB | #3B82F6 | calorie arc, charts, goal lines |
-| carbs | #F97316 | #FB923C | carbohydrates everywhere |
-| fat | #84CC16 | #A3E635 | fat everywhere |
+| carbs | #EA580C | #FB923C | carbohydrates everywhere |
+| fat | #5C9A0B | #A3E635 | fat everywhere |
 | protein | #3B82F6 | #60A5FA | protein everywhere |
 
 Decision 26.10.2026: brown stays the brand colour (identity, buttons), blue is the progress colour.
 Dark mode: no pure black for cards, borders instead of heavy shadows, slightly brighter accents.
-Contrast: text tokens meet WCAG AA on background and surface (checked in T-44).
+Contrast (T-44, tested in `test/app/theme_test.dart`): text ≥ 4.5:1 on background and cards,
+macro / progress / brand colours ≥ 3:1 on cards. Light-mode secondary text, carbs and fat were
+darkened slightly from the concept to pass; dark-mode buttons use dark text on brown.
 
 ## Components (build once in `app/lib/core/widgets/`, reuse everywhere)
 | Component | Description | First used in |

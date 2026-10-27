@@ -12,6 +12,10 @@ Alle wichtigen Änderungen an TAMRA. Format: [Keep a Changelog](https://keepacha
 - API braucht jetzt PostgreSQL (lokal über `docker compose up`); SQLite wird nicht mehr unterstützt.
 
 ### Added
+- Barrierefreiheit (T-44): Kontraste geprüft und per Test abgesichert (Grau, Orange, Grün im
+  Hellmodus etwas dunkler, dunkle Schrift auf Braun im Dunkelmodus), Screenreader-Texte für
+  Wochenleiste und Kalorienbogen, Tests für 200 % Schrift (DE, AR, FR) und Mindestgröße der
+  Tippflächen; Store-Texte in 5 Sprachen (`docs/store/listing.md`).
 - App offline (T-33): Tagebuch-Tage werden auf dem Handy gespeichert; ohne Internet bleibt das
   Tagebuch nutzbar (Hinweis „Offline“), Änderungen kommen in eine Warteschlange und werden später
   in Reihenfolge gesendet; Abmelden und Konto löschen leeren den Speicher.

@@ -108,7 +108,7 @@ class NavDock extends StatelessWidget {
                   iconSize: 30,
                   style: IconButton.styleFrom(
                     backgroundColor: colors.brand,
-                    foregroundColor: Colors.white,
+                    foregroundColor: colors.onBrand,
                     fixedSize: const Size(56, 56),
                   ),
                   icon: const Icon(Icons.add),

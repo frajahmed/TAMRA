@@ -90,9 +90,15 @@ class _DayCell extends StatelessWidget {
   Widget build(BuildContext context) {
     final isSelected = DateUtils.isSameDay(day, selected);
     final isToday = DateUtils.isSameDay(day, today);
-    final textColor = isSelected ? Colors.white : colors.textPrimary;
+    final textColor = isSelected ? colors.onBrand : colors.textPrimary;
 
-    return InkWell(
+    // Screen readers hear the full date ("Wednesday, 28 October 2026"), not "W 28".
+    return Semantics(
+      button: true,
+      selected: isSelected,
+      label: MaterialLocalizations.of(context).formatFullDate(day),
+      excludeSemantics: true,
+      child: InkWell(
       key: Key('day-${dateKey(day)}'),
       borderRadius: BorderRadius.circular(14),
       onTap: () => onTap(day),
@@ -109,7 +115,7 @@ class _DayCell extends StatelessWidget {
           children: [
             Text(
               weekdayLabel,
-              style: TextStyle(color: isSelected ? Colors.white : colors.textSecondary),
+              style: TextStyle(color: isSelected ? colors.onBrand : colors.textSecondary),
             ),
             const SizedBox(height: 4),
             Text(
@@ -118,6 +124,7 @@ class _DayCell extends StatelessWidget {
             ),
           ],
         ),
+      ),
       ),
     );
   }

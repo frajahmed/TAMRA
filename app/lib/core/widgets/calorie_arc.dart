@@ -29,7 +29,10 @@ class CalorieArc extends StatelessWidget {
     final colors = AppColors.of(context);
     final textTheme = Theme.of(context).textTheme;
 
-    return SizedBox(
+    return Semantics(
+      label: '$value $label',
+      excludeSemantics: true,
+      child: SizedBox(
       width: 220,
       height: 170,
       child: CustomPaint(
@@ -51,6 +54,7 @@ class CalorieArc extends StatelessWidget {
             ],
           ),
         ),
+      ),
       ),
     );
   }
