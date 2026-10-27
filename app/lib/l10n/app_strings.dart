@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 
 import '../core/json.dart';
 import '../core/nutrition/nutrition.dart';
+import '../features/activity/domain/activity.dart';
 import '../features/diary/domain/diary.dart';
 import 'translations.dart';
 
@@ -185,7 +186,6 @@ class AppStrings {
   String get dateLabel => text('dateLabel');
   String get delete => text('delete');
   String get cancel => text('cancel');
-  String get statsLast7Days => text('statsLast7Days');
   String get statsAverage => text('statsAverage');
   String get statsWeightChange => text('statsWeightChange');
   String get statsNoWeightChange => text('statsNoWeightChange');
@@ -244,6 +244,55 @@ class AppStrings {
   String get nothingToCopy => text('nothingToCopy');
   String get moreOptions => text('moreOptions');
   String entriesCopied(int count) => _fill('entriesCopied', {'count': count});
+
+  // --- Activity and balance -------------------------------------------------------
+  String get activityAdd => text('activityAdd');
+  String get activityEmpty => text('activityEmpty');
+  String get durationLabel => text('durationLabel');
+  String get distanceLabel => text('distanceLabel');
+  String get kcalBurnedLabel => text('kcalBurnedLabel');
+  String get kcalSuggestion => text('kcalSuggestion');
+  String get importedHint => text('importedHint');
+  String get activityHint => text('activityHint');
+  String get countSport => text('countSport');
+  String get countSportHint => text('countSportHint');
+  String get statsRange7 => text('statsRange7');
+  String get statsRange4w => text('statsRange4w');
+  String get statsRange12m => text('statsRange12m');
+  String get statsEaten => text('statsEaten');
+  String get statsSportAverage => text('statsSportAverage');
+  String activityBurned(String value) => _fill('activityBurned', {'value': value});
+  String minutesValue(int value) => _fill('minutesValue', {'value': value});
+  String stepsValue(int value) => _fill('stepsValue', {'value': value});
+
+  /// The visible budget formula when sport counts (values already formatted).
+  String calorieFormulaSport({
+    required String target,
+    required String sport,
+    required String eaten,
+    required String remaining,
+  }) =>
+      _fill('calorieFormulaSport', {
+        'target': target,
+        'sport': sport,
+        'eaten': eaten,
+        'remaining': remaining,
+      });
+
+  /// Name of a type of sport.
+  String activityKind(ActivityKind kind) => switch (kind) {
+        ActivityKind.walking => text('kindWalking'),
+        ActivityKind.running => text('kindRunning'),
+        ActivityKind.cycling => text('kindCycling'),
+        ActivityKind.swimming => text('kindSwimming'),
+        ActivityKind.strength => text('kindStrength'),
+        ActivityKind.yoga => text('kindYoga'),
+        ActivityKind.hiit => text('kindHiit'),
+        ActivityKind.teamSport => text('kindTeamSport'),
+        ActivityKind.hiking => text('kindHiking'),
+        ActivityKind.dancing => text('kindDancing'),
+        ActivityKind.other => text('kindOther'),
+      };
 
   /// Name of a meal.
   String meal(Meal meal) => switch (meal) {

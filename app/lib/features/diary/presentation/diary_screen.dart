@@ -234,7 +234,9 @@ class _DiaryContent extends StatelessWidget {
     final unit = day.energyUnit;
     final targets = day.targets;
     final target = targets.kcal;
-    final remaining = target == null ? null : target - totals.kcal;
+    final budget = day.budget;
+    final remaining = budget == null ? null : budget - totals.kcal;
+    final sport = day.countedSportKcal;
 
     return ListView(
       key: const Key('diary-list'),
@@ -246,7 +248,7 @@ class _DiaryContent extends StatelessWidget {
             child: Column(
               children: [
                 CalorieArc(
-                  progress: target == null || target <= 0 ? 0 : totals.kcal / target,
+                  progress: budget == null || budget <= 0 ? 0 : totals.kcal / budget,
                   value: strings.energy(remaining?.abs() ?? totals.kcal, unit),
                   label: remaining == null
                       ? ''
@@ -254,11 +256,18 @@ class _DiaryContent extends StatelessWidget {
                 ),
                 if (target != null && remaining != null)
                   Text(
-                    strings.calorieFormula(
-                      target: strings.energy(target.toDouble(), unit),
-                      eaten: strings.energy(totals.kcal, unit),
-                      remaining: strings.energy(remaining, unit),
-                    ),
+                    sport > 0
+                        ? strings.calorieFormulaSport(
+                            target: strings.energy(target.toDouble(), unit),
+                            sport: strings.energy(sport, unit),
+                            eaten: strings.energy(totals.kcal, unit),
+                            remaining: strings.energy(remaining, unit),
+                          )
+                        : strings.calorieFormula(
+                            target: strings.energy(target.toDouble(), unit),
+                            eaten: strings.energy(totals.kcal, unit),
+                            remaining: strings.energy(remaining, unit),
+                          ),
                     key: const Key('calorie-formula'),
                     textAlign: TextAlign.center,
                     style: TextStyle(color: colors.textSecondary),
@@ -289,6 +298,17 @@ class _DiaryContent extends StatelessWidget {
             ),
           ),
         ),
+        if (day.burnedKcal > 0 || day.steps > 0) ...[
+          const SizedBox(height: 12),
+          Card(
+            child: ListTile(
+              key: const Key('diary-sport'),
+              leading: Icon(Icons.directions_run, color: colors.brand),
+              title: Text(strings.activityBurned(strings.energy(day.burnedKcal, unit))),
+              trailing: Text(strings.stepsValue(day.steps)),
+            ),
+          ),
+        ],
         const SizedBox(height: 12),
         WaterCard(day: day.date),
         for (final meal in Meal.values) ...[

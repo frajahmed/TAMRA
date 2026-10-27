@@ -78,7 +78,9 @@ void main() {
     await tester.tap(find.byKey(const Key('nav-stats')));
     await tester.pumpAndSettle();
 
-    final range = stats.calls.single.split('..');
+    final call = stats.calls.single;
+    expect(call, endsWith(':day'));
+    final range = call.split(':').first.split('..');
     final from = DateTime.parse(range[0]);
     final to = DateTime.parse(range[1]);
     expect(to.difference(from).inDays, 6);
@@ -152,6 +154,29 @@ void main() {
       expect(mealForTime(DateTime(2026, 1, 1, 12)), Meal.lunch);
       expect(mealForTime(DateTime(2026, 1, 1, 19)), Meal.dinner);
       expect(mealForTime(DateTime(2026, 1, 1, 23)), Meal.snack);
+    });
+  });
+
+  group('ranges', () {
+    testWidgets('4 weeks and 12 months ask for weekly and monthly groups', (tester) async {
+      final stats = FakeStatsRepository();
+      await _pumpApp(tester, stats: stats);
+      await tester.tap(find.byKey(const Key('nav-stats')));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('4 weeks'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('12 months'));
+      await tester.pumpAndSettle();
+
+      expect(stats.calls.map((call) => call.split(':').last), ['day', 'week', 'month']);
+    });
+
+    test('range starts: 7 days, Monday 3 weeks back, first of the month 11 months back', () {
+      final wednesday = DateTime(2026, 10, 28);
+      expect(StatsRange.days7.start(wednesday), DateTime(2026, 10, 22));
+      expect(StatsRange.weeks4.start(wednesday), DateTime(2026, 10, 5));
+      expect(StatsRange.months12.start(wednesday), DateTime(2025, 11));
     });
   });
 }

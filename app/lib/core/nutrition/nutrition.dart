@@ -136,6 +136,18 @@ int dailyCalorieTarget({
   return (adjusted < floor ? floor : adjusted).round();
 }
 
+/// Energy burned by a workout: MET × body weight (kg) × hours.
+///
+/// MET (metabolic equivalent) says how many times more energy an activity uses than
+/// sitting still; e.g. running ≈ 9.8, walking ≈ 3.5. The result is a suggestion the
+/// user can change.
+double activityKcal({required double met, required double weightKg, required int minutes}) {
+  if (met < 0 || weightKg < 0 || minutes < 0) {
+    throw ArgumentError('MET, weight and minutes must not be negative');
+  }
+  return met * weightKg * minutes / 60;
+}
+
 /// How energy is shown (stored is always kcal); the user chooses it in the profile.
 enum EnergyUnit {
   /// Kilocalories (default).

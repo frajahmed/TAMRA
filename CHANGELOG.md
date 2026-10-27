@@ -12,6 +12,10 @@ Alle wichtigen Änderungen an TAMRA. Format: [Keep a Changelog](https://keepacha
 - API braucht jetzt PostgreSQL (lokal über `docker compose up`); SQLite wird nicht mehr unterstützt.
 
 ### Added
+- App Sport (T-52, T-54): Aktivität-Tab mit Wochenleiste, Sport eintragen (kcal-Vorschlag aus
+  MET × Gewicht × Zeit, änderbar), importierte Trainings nur löschbar; Tagebuch rechnet
+  Ziel + Sport − Gegessen (Schalter im Profil); Statistik mit 7 Tagen / 4 Wochen / 12 Monaten und
+  Sport als zweitem Balken; Hinweis im Onboarding „Alltag ohne Sport“.
 - API Sport (T-50, T-51): Aktivitäten und Schritte (manuell und Import aus Gesundheits-Apps,
   ohne Duplikate, gelöschte Importe bleiben gelöscht), Tagesbilanz `GET /stats/day/`
   (Ziel + Sport − Gegessen), Verlauf nach Tag/Woche/Monat (`group=`), Schalter

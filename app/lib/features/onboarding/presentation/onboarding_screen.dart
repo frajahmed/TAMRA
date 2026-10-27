@@ -211,6 +211,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       case _Step.activity:
         return _Choice<ActivityLevel>(
           question: strings.activityQuestion,
+          hint: strings.activityHint,
           value: _activity,
           options: {
             ActivityLevel.sedentary: strings.activitySedentary,
@@ -242,9 +243,11 @@ class _Choice<T> extends StatelessWidget {
     required this.value,
     required this.options,
     required this.onChanged,
+    this.hint,
   });
 
   final String question;
+  final String? hint;
   final T? value;
   final Map<T, String> options;
   final ValueChanged<T> onChanged;
@@ -255,6 +258,10 @@ class _Choice<T> extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(question, style: Theme.of(context).textTheme.titleLarge),
+        if (hint != null) ...[
+          const SizedBox(height: 4),
+          Text(hint!, key: const Key('choice-hint')),
+        ],
         const SizedBox(height: 16),
         for (final entry in options.entries)
           Card(

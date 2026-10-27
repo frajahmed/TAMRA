@@ -142,6 +142,9 @@ class DiaryDay {
     required this.entries,
     this.targets = const DayTargets(),
     this.energyUnit = EnergyUnit.kcal,
+    this.burnedKcal = 0,
+    this.steps = 0,
+    this.countActivityKcal = true,
   });
 
   /// The day.
@@ -155,6 +158,24 @@ class DiaryDay {
 
   /// kcal or kJ, as chosen in the profile.
   final EnergyUnit energyUnit;
+
+  /// Active kcal of the day's workouts.
+  final double burnedKcal;
+
+  /// Steps of the day (shown only, never added).
+  final int steps;
+
+  /// Whether workouts are added to the budget (profile switch).
+  final bool countActivityKcal;
+
+  /// Sport that counts for the budget: [burnedKcal] or 0 when switched off.
+  double get countedSportKcal => countActivityKcal ? burnedKcal : 0;
+
+  /// The day's budget: target plus counted sport; null without a target.
+  double? get budget {
+    final target = targets.kcal;
+    return target == null ? null : target + countedSportKcal;
+  }
 
   /// Entries of one meal, in the order the server sent them.
   List<DiaryEntry> entriesOf(Meal meal) =>
@@ -175,6 +196,9 @@ class DiaryDay {
           entries: [for (final entry in entries) if (!ids.contains(entry.id)) entry],
           targets: targets,
           energyUnit: energyUnit,
+          burnedKcal: burnedKcal,
+          steps: steps,
+          countActivityKcal: countActivityKcal,
         );
 }
 

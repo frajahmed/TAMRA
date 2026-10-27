@@ -15,11 +15,15 @@ class BarChart extends StatelessWidget {
     required this.labels,
     required this.semanticLabel,
     this.target,
+    this.secondaryValues,
     this.height = 180,
   });
 
   /// Height of each bar in data units.
   final List<double> values;
+
+  /// Optional second, thinner bar per label (e.g. burned kcal next to eaten kcal).
+  final List<double>? secondaryValues;
 
   /// Text under each bar (e.g. the weekday).
   final List<String> labels;
@@ -48,6 +52,8 @@ class BarChart extends StatelessWidget {
               child: CustomPaint(
                 painter: _BarPainter(
                   values: values,
+                  secondary: secondaryValues,
+                  secondaryColor: colors.brand,
                   target: target,
                   bar: colors.progress,
                   targetLine: colors.brand,
@@ -78,6 +84,8 @@ class BarChart extends StatelessWidget {
 class _BarPainter extends CustomPainter {
   _BarPainter({
     required this.values,
+    required this.secondary,
+    required this.secondaryColor,
     required this.target,
     required this.bar,
     required this.targetLine,
@@ -85,6 +93,8 @@ class _BarPainter extends CustomPainter {
   });
 
   final List<double> values;
+  final List<double>? secondary;
+  final Color secondaryColor;
   final double? target;
   final Color bar;
   final Color targetLine;
@@ -99,24 +109,33 @@ class _BarPainter extends CustomPainter {
     );
     if (values.isEmpty) return;
 
-    final highest = [...values, target ?? 0].reduce(math.max);
+    final extra = secondary;
+    final highest = [...values, ...?extra, target ?? 0].reduce(math.max);
     final maxY = highest <= 0 ? 1.0 : highest * 1.15;
     final slot = size.width / values.length;
-    final barWidth = slot * 0.55;
-    final paint = Paint()..color = bar;
+    final mainWidth = slot * (extra == null ? 0.55 : 0.38);
+    final extraWidth = slot * 0.18;
+    final groupWidth = mainWidth + (extra == null ? 0 : extraWidth + 2);
 
-    for (var index = 0; index < values.length; index++) {
-      final barHeight = (values[index].clamp(0, maxY) / maxY) * size.height;
-      if (barHeight <= 0) continue;
-      final left = slot * index + (slot - barWidth) / 2;
+    void drawBar(double left, double width, double value, Color color) {
+      final barHeight = (value.clamp(0, maxY) / maxY) * size.height;
+      if (barHeight <= 0) return;
       canvas.drawRRect(
         RRect.fromRectAndCorners(
-          Rect.fromLTWH(left, size.height - barHeight, barWidth, barHeight),
+          Rect.fromLTWH(left, size.height - barHeight, width, barHeight),
           topLeft: const Radius.circular(6),
           topRight: const Radius.circular(6),
         ),
-        paint,
+        Paint()..color = color,
       );
+    }
+
+    for (var index = 0; index < values.length; index++) {
+      final left = slot * index + (slot - groupWidth) / 2;
+      drawBar(left, mainWidth, values[index], bar);
+      if (extra != null && index < extra.length) {
+        drawBar(left + mainWidth + 2, extraWidth, extra[index], secondaryColor);
+      }
     }
 
     final goal = target;
@@ -133,7 +152,10 @@ class _BarPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_BarPainter old) =>
-      old.values != values || old.target != target || old.bar != bar;
+      old.values != values ||
+      old.secondary != secondary ||
+      old.target != target ||
+      old.bar != bar;
 }
 
 /// Line chart for a value over time (e.g. weight); works with 0, 1 or many points.

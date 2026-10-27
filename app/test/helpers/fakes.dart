@@ -7,6 +7,8 @@ import 'package:tamra_app/core/api/api_client.dart';
 import 'package:tamra_app/core/auth/auth_controller.dart';
 import 'package:tamra_app/core/json.dart';
 import 'package:tamra_app/core/nutrition/nutrition.dart';
+import 'package:tamra_app/features/activity/data/activity_repository.dart';
+import 'package:tamra_app/features/activity/domain/activity.dart';
 import 'package:tamra_app/features/diary/data/diary_repository.dart';
 import 'package:tamra_app/features/diary/domain/diary.dart';
 import 'package:tamra_app/features/onboarding/data/profile_repository.dart';
@@ -140,6 +142,9 @@ class FakeProfileRepository implements ProfileRepository {
           ? EnergyUnit.fromApi(changes['energy_unit'])
           : old.energyUnit,
       language: changes['language']?.toString() ?? old.language,
+      countActivityKcal: changes.containsKey('count_activity_kcal')
+          ? changes['count_activity_kcal'] == true
+          : old.countActivityKcal,
     );
     return result!;
   }
@@ -342,6 +347,56 @@ class FakeTrackingRepository implements TrackingRepository {
   }
 }
 
+/// Workouts and steps kept in memory; records every call.
+class FakeActivityRepository implements ActivityRepository {
+  final List<Activity> activities = [];
+  final Map<String, int> stepsByDay = {};
+  final List<NewActivity> added = [];
+  final List<String> deleted = [];
+  final List<Map<String, dynamic>> imported = [];
+  var _nextId = 0;
+
+  @override
+  Future<ActivityDay> day(DateTime date) async => ActivityDay(
+        date: dateOnly(date),
+        activities: [
+          for (final activity in activities)
+            if (dateKey(activity.date) == dateKey(date)) activity,
+        ],
+        steps: stepsByDay[dateKey(date)] ?? 0,
+      );
+
+  @override
+  Future<Activity> add(NewActivity activity) async {
+    added.add(activity);
+    final saved = Activity(
+      id: 'a${_nextId++}',
+      date: activity.date,
+      kind: activity.kind,
+      durationMin: activity.durationMin,
+      kcal: activity.kcal,
+      distanceM: activity.distanceM,
+    );
+    activities.add(saved);
+    return saved;
+  }
+
+  @override
+  Future<void> delete(String id) async {
+    deleted.add(id);
+    activities.removeWhere((activity) => activity.id == id);
+  }
+
+  @override
+  Future<int> importData({
+    required List<Map<String, dynamic>> activities,
+    required List<Map<String, dynamic>> steps,
+  }) async {
+    imported.add({'activities': activities, 'steps': steps});
+    return activities.length + steps.length;
+  }
+}
+
 /// Statistics with a fixed answer.
 class FakeStatsRepository implements StatsRepository {
   FakeStatsRepository([this.result]);
@@ -350,8 +405,8 @@ class FakeStatsRepository implements StatsRepository {
   final List<String> calls = [];
 
   @override
-  Future<StatsSummary> summary(DateTime from, DateTime to) async {
-    calls.add('${dateKey(from)}..${dateKey(to)}');
+  Future<StatsSummary> summary(DateTime from, DateTime to, {String group = 'day'}) async {
+    calls.add('${dateKey(from)}..${dateKey(to)}:$group');
     return result ??
         StatsSummary(
           days: [
@@ -390,6 +445,7 @@ Widget testApp({
   FakeTrackingRepository? tracking,
   FakeStatsRepository? stats,
   FakeFileSharer? sharer,
+  FakeActivityRepository? activity,
   MemoryLanguageStorage? languageStorage,
   List<Override> overrides = const [],
 }) {
@@ -402,6 +458,7 @@ Widget testApp({
       trackingRepositoryProvider.overrideWithValue(tracking ?? FakeTrackingRepository()),
       statsRepositoryProvider.overrideWithValue(stats ?? FakeStatsRepository()),
       fileSharerProvider.overrideWithValue(sharer ?? FakeFileSharer()),
+      activityRepositoryProvider.overrideWithValue(activity ?? FakeActivityRepository()),
       languageStorageProvider.overrideWithValue(languageStorage ?? MemoryLanguageStorage()),
       ...overrides,
     ],

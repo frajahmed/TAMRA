@@ -18,6 +18,7 @@ class Profile {
     this.weightUnit = WeightUnit.kg,
     this.energyUnit = EnergyUnit.kcal,
     this.language,
+    this.countActivityKcal = true,
   });
 
   final String? sex;
@@ -41,6 +42,9 @@ class Profile {
   /// Language chosen in the app settings (`de`, `en`, `fr`, `it`, `ar`); null = device.
   final String? language;
 
+  /// Whether workouts are added to the day's budget.
+  final bool countActivityKcal;
+
   factory Profile.fromJson(Map<String, dynamic> json) {
     final sex = json['sex'] as String?;
     return Profile(
@@ -58,6 +62,7 @@ class Profile {
       weightUnit: WeightUnit.fromApi(json['weight_unit']),
       energyUnit: EnergyUnit.fromApi(json['energy_unit']),
       language: json['language']?.toString(),
+      countActivityKcal: json['count_activity_kcal'] != false,
     );
   }
 }

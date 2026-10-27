@@ -34,7 +34,7 @@ class ProfileScreen extends ConsumerWidget {
     ref
       ..invalidate(profileProvider)
       ..invalidate(diaryDayProvider)
-      ..invalidate(weekStatsProvider);
+      ..invalidate(statsProvider);
   }
 
   void _setLanguage(BuildContext context, WidgetRef ref, String? code) {
@@ -172,6 +172,16 @@ class ProfileScreen extends ConsumerWidget {
                   ),
                 ),
               ],
+            ),
+          ),
+          const SizedBox(height: 12),
+          Card(
+            child: SwitchListTile(
+              key: const Key('count-sport'),
+              title: Text(strings.countSport),
+              subtitle: Text(strings.countSportHint),
+              value: profile.countActivityKcal,
+              onChanged: (value) => _update(context, ref, {'count_activity_kcal': value}),
             ),
           ),
           const SizedBox(height: 12),

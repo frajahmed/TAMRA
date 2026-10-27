@@ -22,6 +22,9 @@ class DiaryRepository {
       entries: [for (final item in entries) DiaryEntry.fromJson(item)],
       targets: DayTargets.fromJson(summary['targets']),
       energyUnit: EnergyUnit.fromApi(summary['energy_unit']),
+      burnedKcal: jsonDouble(summary['burned_kcal']) ?? 0,
+      steps: jsonInt(summary['steps']) ?? 0,
+      countActivityKcal: summary['count_activity_kcal'] != false,
     );
   }
 

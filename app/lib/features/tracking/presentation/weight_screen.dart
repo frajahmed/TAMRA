@@ -52,7 +52,7 @@ class WeightScreen extends ConsumerWidget {
     ref
       ..invalidate(weightsProvider)
       ..invalidate(profileProvider)
-      ..invalidate(weekStatsProvider);
+      ..invalidate(statsProvider);
   }
 
   @override

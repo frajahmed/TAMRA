@@ -27,9 +27,9 @@ Tickets marked **[Claude]** are done by Claude, not by Qwen.
 | 4 | T-44 | Accessibility, RTL and store texts **[Claude]** | app | open |
 | 5 | T-50 | Activity model, CRUD and import | api | done (Claude) |
 | 5 | T-51 | Calorie balance and history | api | done (Claude) |
-| 5 | T-52 | App: activities and manual sport entry | app | open |
+| 5 | T-52 | App: activities and manual sport entry | app | done (Claude) |
 | 5 | T-53 | App: connect Apple Health and Health Connect **[Claude]** | app | open |
-| 5 | T-54 | App: balance dashboard and history | app | open |
+| 5 | T-54 | App: balance dashboard and history | app | done (Claude) |
 
 Design system and screen plan: `docs/DESIGN.md`. Ideas for later: `docs/tickets/backlog.md`
 (AI photo scan T-60, fasting T-61, recipes T-62, streaks T-63, cloud connections T-64).

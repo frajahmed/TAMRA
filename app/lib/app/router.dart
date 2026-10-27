@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../core/auth/auth_controller.dart';
 import '../features/activity/presentation/activity_screen.dart';
+import '../features/activity/presentation/add_activity_screen.dart';
 import '../features/auth/presentation/login_screen.dart';
 import '../features/auth/presentation/register_screen.dart';
 import '../features/auth/presentation/splash_screen.dart';
@@ -38,6 +39,7 @@ abstract final class AppRoutes {
   static const activity = '/activity';
   static const profile = '/profile';
   static const weight = '/weight';
+  static const activityAdd = '/activity/add';
 }
 
 /// Where the user may go, based on the login state. Pure function, unit-tested.
@@ -138,6 +140,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         ],
       ),
       GoRoute(path: AppRoutes.weight, builder: (context, state) => const WeightScreen()),
+      GoRoute(
+        path: AppRoutes.activityAdd,
+        builder: (context, state) => const AddActivityScreen(),
+      ),
       GoRoute(
         path: AppRoutes.diaryEntry,
         builder: (context, state) {

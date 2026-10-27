@@ -314,13 +314,54 @@ class ApiClient {
         await _dio.delete<dynamic>('/api/v1/water/${Uri.encodeComponent(id)}/');
       });
 
+  // --- Activity ---------------------------------------------------------------
+
+  /// GET `/activities/?date=` → workouts of one day.
+  Future<List<Map<String, dynamic>>> listActivities(String date) => _call(() async {
+        final response = await _dio.get<List<dynamic>>(
+          '/api/v1/activities/',
+          queryParameters: {'date': date},
+        );
+        return _list(response.data);
+      });
+
+  /// GET `/activities/summary/?date=` → burned kcal, minutes and steps of one day.
+  Future<Map<String, dynamic>> activitySummary(String date) => _call(() async {
+        final response = await _dio.get<Map<String, dynamic>>(
+          '/api/v1/activities/summary/',
+          queryParameters: {'date': date},
+        );
+        return _map(response);
+      });
+
+  /// POST `/activities/` → a workout entered by hand.
+  Future<Map<String, dynamic>> createActivity(Map<String, dynamic> data) => _call(() async {
+        final response = await _dio.post<Map<String, dynamic>>('/api/v1/activities/', data: data);
+        return _map(response);
+      });
+
+  /// DELETE `/activities/<id>/`.
+  Future<void> deleteActivity(String id) => _call(() async {
+        await _dio.delete<dynamic>('/api/v1/activities/${Uri.encodeComponent(id)}/');
+      });
+
+  /// POST `/activities/import/` → workouts and steps from a health app (safe to repeat).
+  Future<Map<String, dynamic>> importActivities(Map<String, dynamic> body) => _call(() async {
+        final response = await _dio.post<Map<String, dynamic>>(
+          '/api/v1/activities/import/',
+          data: body,
+        );
+        return _map(response);
+      });
+
   // --- Statistics -------------------------------------------------------------
 
-  /// GET `/stats/summary/?from=&to=` → totals per day, averages and weight change.
-  Future<Map<String, dynamic>> statsSummary(String from, String to) => _call(() async {
+  /// GET `/stats/summary/?from=&to=&group=` → totals per day / week / month and averages.
+  Future<Map<String, dynamic>> statsSummary(String from, String to, {String group = 'day'}) =>
+      _call(() async {
         final response = await _dio.get<Map<String, dynamic>>(
           '/api/v1/stats/summary/',
-          queryParameters: {'from': from, 'to': to},
+          queryParameters: {'from': from, 'to': to, 'group': group},
         );
         return _map(response);
       });
