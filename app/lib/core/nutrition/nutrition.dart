@@ -148,6 +148,24 @@ enum EnergyUnit {
   static EnergyUnit fromApi(Object? value) => value == 'kj' ? EnergyUnit.kj : EnergyUnit.kcal;
 }
 
+/// How body weight is shown (stored is always kg).
+enum WeightUnit {
+  /// Kilograms (default).
+  kg,
+
+  /// Pounds.
+  lb;
+
+  /// The unit from the API value `kg` or `lb`; unknown values fall back to kg.
+  static WeightUnit fromApi(Object? value) => value == 'lb' ? WeightUnit.lb : WeightUnit.kg;
+
+  /// [kg] converted to this unit for display.
+  double fromKg(double kg) => this == WeightUnit.lb ? Units.kgToLb(kg) : kg;
+
+  /// A value typed in this unit converted to kg for storing.
+  double toKg(double value) => this == WeightUnit.lb ? Units.lbToKg(value) : value;
+}
+
 /// Unit conversions for display only.
 abstract final class Units {
   static const double _kgPerLb = 0.45359237;

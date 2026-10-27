@@ -12,6 +12,9 @@ Alle wichtigen Änderungen an TAMRA. Format: [Keep a Changelog](https://keepacha
 - API braucht jetzt PostgreSQL (lokal über `docker compose up`); SQLite wird nicht mehr unterstützt.
 
 ### Added
+- App: Navigations-Dock (Tagebuch, Statistik, Plus-Knopf, Aktivität, Profil), Wasser-Karte im
+  Tagebuch, Gewichtsverlauf mit Diagramm (kg/lb), Statistik der letzten 7 Tage (T-41, T-42 App).
+  Diagramme selbst gezeichnet, ohne zusätzliches Paket.
 - API: Statistik `GET /api/v1/stats/summary/?from=&to=` (T-42): Summen je Tag inkl. leerer Tage,
   Durchschnitt über Tage mit Einträgen, Wasser, Gewicht und Gewichtsveränderung, max. 31 Tage.
 - App: Tagebuch als Startbildschirm (T-31): Wochenleiste, Kalorienbogen mit sichtbarer Formel,

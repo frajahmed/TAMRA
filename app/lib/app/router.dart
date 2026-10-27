@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/auth/auth_controller.dart';
+import '../features/activity/presentation/activity_screen.dart';
 import '../features/auth/presentation/login_screen.dart';
 import '../features/auth/presentation/register_screen.dart';
 import '../features/auth/presentation/splash_screen.dart';
@@ -15,6 +16,10 @@ import '../features/food/presentation/custom_food_screen.dart';
 import '../features/food/presentation/food_search_screen.dart';
 import '../features/onboarding/presentation/consent_screen.dart';
 import '../features/onboarding/presentation/onboarding_screen.dart';
+import '../features/settings/presentation/profile_screen.dart';
+import '../features/stats/presentation/stats_screen.dart';
+import '../features/tracking/presentation/weight_screen.dart';
+import 'shell.dart';
 
 /// Route paths. Add new screens here, never use raw strings in features.
 abstract final class AppRoutes {
@@ -29,6 +34,10 @@ abstract final class AppRoutes {
   static const foodCustom = '/food/custom';
   static const foodScan = '/food/scan';
   static const diaryEntry = '/diary/entry';
+  static const stats = '/stats';
+  static const activity = '/activity';
+  static const profile = '/profile';
+  static const weight = '/weight';
 }
 
 /// Where the user may go, based on the login state. Pure function, unit-tested.
@@ -100,7 +109,35 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.onboarding,
         builder: (context, state) => const OnboardingScreen(),
       ),
-      GoRoute(path: AppRoutes.home, builder: (context, state) => const DiaryScreen()),
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) => AppShell(navigationShell: navigationShell),
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(path: AppRoutes.home, builder: (context, state) => const DiaryScreen()),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(path: AppRoutes.stats, builder: (context, state) => const StatsScreen()),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.activity,
+                builder: (context, state) => const ActivityScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(path: AppRoutes.profile, builder: (context, state) => const ProfileScreen()),
+            ],
+          ),
+        ],
+      ),
+      GoRoute(path: AppRoutes.weight, builder: (context, state) => const WeightScreen()),
       GoRoute(
         path: AppRoutes.diaryEntry,
         builder: (context, state) {

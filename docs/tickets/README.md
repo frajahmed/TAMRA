@@ -21,8 +21,8 @@ Tickets marked **[Claude]** are done by Claude, not by Qwen.
 | 3 | T-32 | Copy meal or day | api + app | api done (Claude), app open |
 | 3 | T-33 | Offline storage and sync **[Claude]** | api + app | open |
 | 4 | T-40 | Weight and water logs | api | done (Qwen, reviewed and fixed by Claude) |
-| 4 | T-41 | App: weight and water | app | open |
-| 4 | T-42 | Statistics (7 days) | api + app | api done (Claude), app open |
+| 4 | T-41 | App: weight and water | app | done (Claude) |
+| 4 | T-42 | Statistics (7 days) | api + app | done (Claude) |
 | 4 | T-43 | Settings, data export, delete account | api + app | api done (Claude), app open |
 | 4 | T-44 | Accessibility, RTL and store texts **[Claude]** | app | open |
 | 5 | T-50 | Activity model, CRUD and import | api | open |

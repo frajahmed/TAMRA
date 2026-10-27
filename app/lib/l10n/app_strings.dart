@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
+import '../core/json.dart';
 import '../core/nutrition/nutrition.dart';
 import '../features/diary/domain/diary.dart';
 import 'translations.dart';
@@ -168,6 +169,48 @@ class AppStrings {
   /// The visible calorie formula under the arc (values already formatted).
   String calorieFormula({required String target, required String eaten, required String remaining}) =>
       _fill('calorieFormula', {'target': target, 'eaten': eaten, 'remaining': remaining});
+
+  // --- Navigation, weight, water, statistics ---------------------------------------
+  String get navDiary => text('navDiary');
+  String get navStats => text('navStats');
+  String get navActivity => text('navActivity');
+  String get navProfile => text('navProfile');
+  String get comingSoon => text('comingSoon');
+  String get water => text('water');
+  String get waterAdd => text('waterAdd');
+  String get waterRemove => text('waterRemove');
+  String get weightTitle => text('weightTitle');
+  String get weightAdd => text('weightAdd');
+  String get weightEmpty => text('weightEmpty');
+  String get dateLabel => text('dateLabel');
+  String get delete => text('delete');
+  String get cancel => text('cancel');
+  String get statsLast7Days => text('statsLast7Days');
+  String get statsAverage => text('statsAverage');
+  String get statsWeightChange => text('statsWeightChange');
+  String get statsNoWeightChange => text('statsNoWeightChange');
+  String get statsTarget => text('statsTarget');
+  String get openWeight => text('openWeight');
+  String get kcalChartLabel => text('kcalChartLabel');
+  String get weightChartLabel => text('weightChartLabel');
+  String waterProgress(int value, int goal) => _fill('waterProgress', {'value': value, 'goal': goal});
+  /// "5 of 7 days logged" in the statistics.
+  String statsLoggedDays(int count, int total) =>
+      _fill('statsLoggedDays', {'count': count, 'total': total});
+
+  /// Label of the weight input in the user's unit.
+  String weightLabel(WeightUnit unit) =>
+      unit == WeightUnit.lb ? text('weightLabelLb') : text('weightLabelKg');
+
+  /// [kg] shown in the user's unit with one decimal, e.g. "75.5 kg" or "166.4 lb".
+  String weight(double kg, WeightUnit unit, {bool signed = false}) {
+    final value = double.parse(unit.fromKg(kg).toStringAsFixed(1));
+    final number = formatAmount(value);
+    final shown = signed && value > 0 ? '+$number' : number;
+    return unit == WeightUnit.lb
+        ? _fill('weightValueLb', {'value': shown})
+        : _fill('weightValueKg', {'value': shown});
+  }
 
   /// Name of a meal.
   String meal(Meal meal) => switch (meal) {

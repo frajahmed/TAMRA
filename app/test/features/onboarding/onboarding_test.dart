@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tamra_app/core/auth/auth_controller.dart';
 import 'package:tamra_app/core/nutrition/nutrition.dart';
-import 'package:tamra_app/features/onboarding/data/profile_repository.dart';
 import 'package:tamra_app/features/onboarding/domain/profile.dart';
 import 'package:tamra_app/l10n/app_strings.dart';
 
@@ -18,7 +17,7 @@ void main() {
       await tester.pumpWidget(
         testApp(
           controller: controller,
-          overrides: [profileRepositoryProvider.overrideWithValue(repository)],
+          profile: repository,
         ),
       );
       await tester.pumpAndSettle();
@@ -57,7 +56,7 @@ void main() {
         testApp(
           locale: locale,
           auth: const AuthState(status: AuthStatus.loggedIn, needsProfile: true),
-          overrides: [profileRepositoryProvider.overrideWithValue(repository)],
+          profile: repository,
         ),
       );
       await tester.pumpAndSettle();

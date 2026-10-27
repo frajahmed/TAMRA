@@ -15,6 +15,9 @@ class Profile {
     this.carbsG,
     this.fatG,
     this.isComplete = false,
+    this.weightUnit = WeightUnit.kg,
+    this.energyUnit = EnergyUnit.kcal,
+    this.language,
   });
 
   final String? sex;
@@ -28,6 +31,15 @@ class Profile {
   final int? carbsG;
   final int? fatG;
   final bool isComplete;
+
+  /// kg or lb for showing weights.
+  final WeightUnit weightUnit;
+
+  /// kcal or kJ for showing energy.
+  final EnergyUnit energyUnit;
+
+  /// Language chosen in the app settings (`de`, `en`, `fr`, `it`, `ar`); null = device.
+  final String? language;
 
   factory Profile.fromJson(Map<String, dynamic> json) {
     final sex = json['sex'] as String?;
@@ -43,6 +55,9 @@ class Profile {
       carbsG: jsonInt(json['carbs_g']),
       fatG: jsonInt(json['fat_g']),
       isComplete: json['is_complete'] == true,
+      weightUnit: WeightUnit.fromApi(json['weight_unit']),
+      energyUnit: EnergyUnit.fromApi(json['energy_unit']),
+      language: json['language']?.toString(),
     );
   }
 }

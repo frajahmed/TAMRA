@@ -25,3 +25,8 @@ class ProfileRepository {
 final profileRepositoryProvider = Provider<ProfileRepository>((ref) {
   return ProfileRepository(ref.watch(apiClientProvider));
 });
+
+/// The logged-in user's profile (units, targets); invalidate after changing it.
+final profileProvider = FutureProvider.autoDispose<Profile>((ref) {
+  return ref.watch(profileRepositoryProvider).getProfile();
+});

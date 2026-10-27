@@ -11,6 +11,10 @@ import 'package:tamra_app/features/diary/data/diary_repository.dart';
 import 'package:tamra_app/features/diary/domain/diary.dart';
 import 'package:tamra_app/features/onboarding/data/profile_repository.dart';
 import 'package:tamra_app/features/onboarding/domain/profile.dart';
+import 'package:tamra_app/features/stats/data/stats_repository.dart';
+import 'package:tamra_app/features/stats/domain/stats.dart';
+import 'package:tamra_app/features/tracking/data/tracking_repository.dart';
+import 'package:tamra_app/features/tracking/domain/tracking.dart';
 
 /// Fixed language for widget tests.
 class FixedLocale extends LocaleNotifier {
@@ -207,6 +211,78 @@ DiaryEntry diaryEntry({
   );
 }
 
+/// Weight and water kept in memory; records every call.
+class FakeTrackingRepository implements TrackingRepository {
+  final List<WeightLog> weightLogs = [];
+  final Map<String, List<WaterLog>> waterByDay = {};
+  final List<String> calls = [];
+  var _nextId = 0;
+
+  @override
+  Future<List<WeightLog>> weights({required DateTime from}) async =>
+      [...weightLogs]..sort((a, b) => a.date.compareTo(b.date));
+
+  @override
+  Future<WeightLog> saveWeight(DateTime date, double weightKg) async {
+    calls.add('weight:${dateKey(date)}:$weightKg');
+    weightLogs.removeWhere((log) => dateKey(log.date) == dateKey(date));
+    final log = WeightLog(id: 'w${_nextId++}', date: dateOnly(date), weightKg: weightKg);
+    weightLogs.add(log);
+    return log;
+  }
+
+  @override
+  Future<void> deleteWeight(String id) async {
+    calls.add('delete-weight:$id');
+    weightLogs.removeWhere((log) => log.id == id);
+  }
+
+  @override
+  Future<WaterDay> water(DateTime date) async =>
+      WaterDay(date: dateOnly(date), entries: [...?waterByDay[dateKey(date)]]);
+
+  @override
+  Future<void> addWater(DateTime date, {int amountMl = glassMl}) async {
+    calls.add('water+$amountMl');
+    waterByDay.putIfAbsent(dateKey(date), () => []).insert(
+          0,
+          WaterLog(id: 'water${_nextId++}', amountMl: amountMl),
+        );
+  }
+
+  @override
+  Future<void> removeWater(String id) async {
+    calls.add('water-$id');
+    for (final entries in waterByDay.values) {
+      entries.removeWhere((entry) => entry.id == id);
+    }
+  }
+}
+
+/// Statistics with a fixed answer.
+class FakeStatsRepository implements StatsRepository {
+  FakeStatsRepository([this.result]);
+
+  StatsSummary? result;
+  final List<String> calls = [];
+
+  @override
+  Future<StatsSummary> summary(DateTime from, DateTime to) async {
+    calls.add('${dateKey(from)}..${dateKey(to)}');
+    return result ??
+        StatsSummary(
+          days: [
+            for (var offset = 0; offset <= to.difference(from).inDays; offset++)
+              StatsDay(
+                date: DateTime(from.year, from.month, from.day + offset),
+                nutrients: const NutrientAmounts(),
+              ),
+          ],
+          averages: const NutrientAmounts(),
+        );
+  }
+}
+
 const loggedInComplete = AuthState(status: AuthStatus.loggedIn);
 
 /// The whole app with a fixed language and auth state.
@@ -215,6 +291,9 @@ Widget testApp({
   AuthState auth = loggedInComplete,
   FakeAuthController? controller,
   FakeDiaryRepository? diary,
+  FakeProfileRepository? profile,
+  FakeTrackingRepository? tracking,
+  FakeStatsRepository? stats,
   List<Override> overrides = const [],
 }) {
   return ProviderScope(
@@ -222,6 +301,9 @@ Widget testApp({
       localeProvider.overrideWith(() => FixedLocale(locale)),
       authControllerProvider.overrideWith(() => controller ?? FakeAuthController(auth)),
       diaryRepositoryProvider.overrideWithValue(diary ?? FakeDiaryRepository()),
+      profileRepositoryProvider.overrideWithValue(profile ?? FakeProfileRepository()),
+      trackingRepositoryProvider.overrideWithValue(tracking ?? FakeTrackingRepository()),
+      statsRepositoryProvider.overrideWithValue(stats ?? FakeStatsRepository()),
       ...overrides,
     ],
     child: const TamraApp(),

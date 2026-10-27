@@ -14,8 +14,10 @@ import '../../../core/widgets/date_strip.dart';
 import '../../../core/widgets/macro_bar.dart';
 import '../../../l10n/app_strings.dart';
 import '../../food/domain/food.dart';
+import '../../tracking/presentation/water_card.dart';
 import '../data/diary_repository.dart';
 import '../domain/diary.dart';
+import 'add_food_flow.dart';
 import 'entry_editor_screen.dart';
 import 'meal_card.dart';
 
@@ -43,14 +45,10 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
     await ref.read(diaryDayProvider(day).future);
   }
 
-  Future<void> _addFood(DateTime day, Meal meal, EnergyUnit unit) async {
+  Future<void> _addFood(Meal meal) async {
     final food = await context.push<Food>(AppRoutes.foodSearch);
     if (food == null || !mounted) return;
-    final saved = await context.push<bool>(
-      AppRoutes.diaryEntry,
-      extra: EntryEditorArgs.add(food: food, meal: meal, date: day, energyUnit: unit),
-    );
-    if (saved == true && mounted) ref.invalidate(diaryDayProvider(day));
+    await addFoodToDiary(context, ref, food: food, meal: meal);
   }
 
   Future<void> _edit(DiaryEntry entry, EnergyUnit unit) async {
@@ -157,7 +155,7 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
                 onRefresh: () => _reload(day),
                 child: _DiaryContent(
                   day: data.without(_hidden),
-                  onAdd: (meal) => _addFood(day, meal, data.energyUnit),
+                  onAdd: _addFood,
                   onEdit: (entry) => _edit(entry, data.energyUnit),
                   onDelete: _delete,
                 ),
@@ -261,6 +259,8 @@ class _DiaryContent extends StatelessWidget {
             ),
           ),
         ),
+        const SizedBox(height: 12),
+        WaterCard(day: day.date),
         for (final meal in Meal.values) ...[
           const SizedBox(height: 12),
           MealCard(

@@ -238,6 +238,71 @@ class ApiClient {
   Future<void> deleteDiaryEntry(String id) => _call(() async {
         await _dio.delete<dynamic>('/api/v1/diary/${Uri.encodeComponent(id)}/');
       });
+
+  // --- Weight and water -------------------------------------------------------
+
+  /// GET `/weight/?from=&to=` → weights, newest first.
+  Future<List<Map<String, dynamic>>> listWeights({String? from, String? to}) =>
+      _call(() async {
+        final response = await _dio.get<List<dynamic>>(
+          '/api/v1/weight/',
+          queryParameters: {if (from != null) 'from': from, if (to != null) 'to': to},
+        );
+        return _list(response.data);
+      });
+
+  /// POST `/weight/` → saves the weight of a day (a second POST for the same day updates it).
+  Future<Map<String, dynamic>> saveWeight(String date, double weightKg) => _call(() async {
+        final response = await _dio.post<Map<String, dynamic>>(
+          '/api/v1/weight/',
+          data: {'date': date, 'weight_kg': weightKg.toStringAsFixed(1)},
+        );
+        return _map(response);
+      });
+
+  /// DELETE `/weight/<id>/`.
+  Future<void> deleteWeight(String id) => _call(() async {
+        await _dio.delete<dynamic>('/api/v1/weight/${Uri.encodeComponent(id)}/');
+      });
+
+  /// GET `/water/?date=` → water entries of one day, newest first.
+  Future<List<Map<String, dynamic>>> listWater(String date) => _call(() async {
+        final response = await _dio.get<List<dynamic>>(
+          '/api/v1/water/',
+          queryParameters: {'date': date},
+        );
+        return _list(response.data);
+      });
+
+  /// POST `/water/` → one glass or bottle.
+  Future<Map<String, dynamic>> addWater(String date, int amountMl) => _call(() async {
+        final response = await _dio.post<Map<String, dynamic>>(
+          '/api/v1/water/',
+          data: {'date': date, 'amount_ml': amountMl},
+        );
+        return _map(response);
+      });
+
+  /// DELETE `/water/<id>/`.
+  Future<void> deleteWater(String id) => _call(() async {
+        await _dio.delete<dynamic>('/api/v1/water/${Uri.encodeComponent(id)}/');
+      });
+
+  // --- Statistics -------------------------------------------------------------
+
+  /// GET `/stats/summary/?from=&to=` → totals per day, averages and weight change.
+  Future<Map<String, dynamic>> statsSummary(String from, String to) => _call(() async {
+        final response = await _dio.get<Map<String, dynamic>>(
+          '/api/v1/stats/summary/',
+          queryParameters: {'from': from, 'to': to},
+        );
+        return _map(response);
+      });
+
+  List<Map<String, dynamic>> _list(List<dynamic>? data) => [
+        for (final item in data ?? const <dynamic>[])
+          if (item is Map<String, dynamic>) item,
+      ];
 }
 
 BaseOptions _baseOptions() => BaseOptions(
