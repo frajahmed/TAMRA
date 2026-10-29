@@ -28,32 +28,7 @@ class StatsScreen extends ConsumerWidget {
     final range = ref.watch(statsRangeProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(strings.navStats),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(56),
-          child: Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
-            child: SegmentedButton<StatsRange>(
-              key: const Key('stats-range'),
-              showSelectedIcon: false,
-              segments: [
-                ButtonSegment(value: StatsRange.days7, label: Text(strings.statsRange7)),
-                ButtonSegment(value: StatsRange.weeks4, label: Text(strings.statsRange4w)),
-                ButtonSegment(
-                  value: StatsRange.months12,
-                  // Marked for the later PRO plan; still free while there is no payment.
-                  icon: const Icon(Icons.lock_outline, size: 16),
-                  label: Text(strings.statsRange12m),
-                ),
-              ],
-              selected: {range},
-              onSelectionChanged: (selection) =>
-                  ref.read(statsRangeProvider.notifier).select(selection.first),
-            ),
-          ),
-        ),
-      ),
+      appBar: AppBar(title: Text(strings.navStats)),
       body: stats.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stack) => Center(
@@ -75,6 +50,7 @@ class StatsScreen extends ConsumerWidget {
           child: _StatsContent(
             summary: summary,
             range: range,
+            onRangeSelected: (selected) => ref.read(statsRangeProvider.notifier).select(selected),
             energyUnit: energyUnit,
             weightUnit: weightUnit,
           ),
@@ -88,12 +64,14 @@ class _StatsContent extends StatelessWidget {
   const _StatsContent({
     required this.summary,
     required this.range,
+    required this.onRangeSelected,
     required this.energyUnit,
     required this.weightUnit,
   });
 
   final StatsSummary summary;
   final StatsRange range;
+  final ValueChanged<StatsRange> onRangeSelected;
   final EnergyUnit energyUnit;
   final WeightUnit weightUnit;
 
@@ -118,6 +96,25 @@ class _StatsContent extends StatelessWidget {
       key: const Key('stats-list'),
       padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 32),
       children: [
+        Padding(
+          padding: const EdgeInsetsDirectional.only(bottom: 8),
+          child: SegmentedButton<StatsRange>(
+            key: const Key('stats-range'),
+            showSelectedIcon: false,
+            segments: [
+              ButtonSegment(value: StatsRange.days7, label: Text(strings.statsRange7)),
+              ButtonSegment(value: StatsRange.weeks4, label: Text(strings.statsRange4w)),
+              ButtonSegment(
+                value: StatsRange.months12,
+                // Marked for the later PRO plan; still free while there is no payment.
+                icon: const Icon(Icons.lock_outline, size: 16),
+                label: Text(strings.statsRange12m),
+              ),
+            ],
+            selected: {range},
+            onSelectionChanged: (selection) => onRangeSelected(selection.first),
+          ),
+        ),
         Card(
           child: Padding(
             padding: const EdgeInsetsDirectional.all(16),

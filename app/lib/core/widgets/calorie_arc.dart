@@ -43,15 +43,19 @@ class CalorieArc extends StatelessWidget {
         ),
         child: Padding(
           padding: const EdgeInsetsDirectional.only(top: 56),
-          child: Column(
-            children: [
-              Text(
-                value,
-                key: const Key('calorie-value'),
-                style: textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
-              ),
-              Text(label, style: textTheme.bodyMedium?.copyWith(color: colors.textSecondary)),
-            ],
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.topCenter,
+            child: Column(
+              children: [
+                Text(
+                  value,
+                  key: const Key('calorie-value'),
+                  style: textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
+                ),
+                Text(label, style: textTheme.bodyMedium?.copyWith(color: colors.textSecondary)),
+              ],
+            ),
           ),
         ),
       ),

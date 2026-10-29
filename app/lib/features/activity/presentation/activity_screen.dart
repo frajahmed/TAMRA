@@ -74,27 +74,34 @@ class ActivityScreen extends ConsumerWidget {
                   Card(
                     child: Padding(
                       padding: const EdgeInsetsDirectional.all(16),
-                      child: Row(
+                      child: Wrap(
+                        spacing: 8,
+                        runSpacing: 4,
+                        crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  strings.activityBurned(strings.energy(data.burnedKcal, energyUnit)),
-                                  key: const Key('activity-burned'),
-                                  style: Theme.of(context).textTheme.titleLarge,
-                                ),
-                                Text(
-                                  strings.minutesValue(data.minutes),
-                                  style: TextStyle(color: colors.textSecondary),
-                                ),
-                              ],
-                            ),
+                          Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                strings.activityBurned(strings.energy(data.burnedKcal, energyUnit)),
+                                key: const Key('activity-burned'),
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
+                              Text(
+                                strings.minutesValue(data.minutes),
+                                style: TextStyle(color: colors.textSecondary),
+                              ),
+                            ],
                           ),
-                          Icon(Icons.directions_walk, color: colors.textSecondary),
-                          const SizedBox(width: 4),
-                          Text(strings.stepsValue(data.steps), key: const Key('activity-steps')),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.directions_walk, color: colors.textSecondary),
+                              const SizedBox(width: 4),
+                              Text(strings.stepsValue(data.steps), key: const Key('activity-steps')),
+                            ],
+                          ),
                         ],
                       ),
                     ),
