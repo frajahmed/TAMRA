@@ -128,3 +128,23 @@ Files to change: `app/lib/core/widgets/nav_dock.dart`, `app/test/features/stats/
 `app/test/accessibility/accessibility_test.dart` (one line), `.github/workflows/autofix.yml`
 (commit only), `AGENTS.md` (commit only, Claude updated §1), this ticket file (commit only).
 Commit: `fix(app): nav dock tap targets, outdated test, clearer overflow report (FIX-01)`.
+
+---
+
+## Review 3 (Claude, 31.10.2026) – last failure, same branch
+
+CI on `cc1407c`: 169 tests pass, 1 fails. Review 2 is correct (tap targets and the outdated
+test are fixed). The failing test now names the widget:
+
+`all tabs fit on a small phone with 200 % text (de)` – "A RenderFlex overflowed by 15 pixels
+on the right", widget `Row` at `app/lib/features/activity/presentation/activity_screen.dart:97`
+(icon + `stepsValue` text inside the `Wrap`). The card is 296 px wide; icon (24) + gap (4) +
+"0 Schritte" at 200 % does not fit. German only, because "Schritte" is the longest word.
+
+Fix: in that `Row`, wrap the steps `Text` (key `activity-steps`) in `Flexible(child: ...)` so it
+can break onto a second line. Nothing else.
+
+Files to change: `app/lib/features/activity/presentation/activity_screen.dart`, this ticket
+file (commit only).
+Commit: `fix(app): steps text wraps with large text (FIX-01)`.
+Upload with the normal `1-github-hochladen.bat` (no bot commits any more).

@@ -99,7 +99,12 @@ class ActivityScreen extends ConsumerWidget {
                             children: [
                               Icon(Icons.directions_walk, color: colors.textSecondary),
                               const SizedBox(width: 4),
-                              Text(strings.stepsValue(data.steps), key: const Key('activity-steps')),
+                              Flexible(
+                                child: Text(
+                                  strings.stepsValue(data.steps),
+                                  key: const Key('activity-steps'),
+                                ),
+                              ),
                             ],
                           ),
                         ],
