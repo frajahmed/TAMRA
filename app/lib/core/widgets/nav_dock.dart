@@ -60,18 +60,22 @@ class NavDock extends StatelessWidget {
             key: Key(item.keyName),
             borderRadius: BorderRadius.circular(20),
             onTap: () => onSelected(index),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(item.icon, color: color),
-                const SizedBox(height: 2),
-                Text(
-                  item.label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(color: color, fontSize: 11),
-                ),
-              ],
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minHeight: 48),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(item.icon, color: color),
+                  const SizedBox(height: 2),
+                  Text(
+                    item.label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: color, fontSize: 11),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

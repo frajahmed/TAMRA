@@ -437,11 +437,13 @@ class FakeStatsRepository implements StatsRepository {
   FakeStatsRepository([this.result]);
 
   StatsSummary? result;
+  Object? error;
   final List<String> calls = [];
 
   @override
   Future<StatsSummary> summary(DateTime from, DateTime to, {String group = 'day'}) async {
     calls.add('${dateKey(from)}..${dateKey(to)}:$group');
+    if (error != null) throw error!;
     return result ??
         StatsSummary(
           days: [

@@ -28,12 +28,11 @@ class StatsScreen extends ConsumerWidget {
     final range = ref.watch(statsRangeProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(strings.navStats),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(56),
-          child: Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+      appBar: AppBar(title: Text(strings.navStats)),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
             child: SegmentedButton<StatsRange>(
               key: const Key('stats-range'),
               showSelectedIcon: false,
@@ -52,33 +51,35 @@ class StatsScreen extends ConsumerWidget {
                   ref.read(statsRangeProvider.notifier).select(selection.first),
             ),
           ),
-        ),
-      ),
-      body: stats.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(strings.genericError, key: const Key('stats-error')),
-              const SizedBox(height: 12),
-              OutlinedButton(
-                key: const Key('stats-retry'),
-                onPressed: () => ref.invalidate(statsProvider),
-                child: Text(strings.retry),
+          Expanded(
+            child: stats.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (error, stack) => Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(strings.genericError, key: const Key('stats-error')),
+                    const SizedBox(height: 12),
+                    OutlinedButton(
+                      key: const Key('stats-retry'),
+                      onPressed: () => ref.invalidate(statsProvider),
+                      child: Text(strings.retry),
+                    ),
+                  ],
+                ),
               ),
-            ],
+              data: (summary) => RefreshIndicator(
+                onRefresh: () => ref.refresh(statsProvider.future),
+                child: _StatsContent(
+                  summary: summary,
+                  range: range,
+                  energyUnit: energyUnit,
+                  weightUnit: weightUnit,
+                ),
+              ),
+            ),
           ),
-        ),
-        data: (summary) => RefreshIndicator(
-          onRefresh: () => ref.refresh(statsProvider.future),
-          child: _StatsContent(
-            summary: summary,
-            range: range,
-            energyUnit: energyUnit,
-            weightUnit: weightUnit,
-          ),
-        ),
+        ],
       ),
     );
   }

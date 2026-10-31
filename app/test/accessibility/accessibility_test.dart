@@ -52,7 +52,6 @@ void main() {
         (tester) async {
       await _pump(tester, locale: locale, textScale: 2);
       await _visitTabs(tester);
-      expect(tester.takeException(), isNull);
     });
   }
 

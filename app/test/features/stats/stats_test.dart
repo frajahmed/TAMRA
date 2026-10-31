@@ -86,6 +86,16 @@ void main() {
     expect(to.difference(from).inDays, 6);
   });
 
+  testWidgets('range switch stays visible when statistics fail', (tester) async {
+    final stats = FakeStatsRepository()..error = Exception('failed');
+    await _pumpApp(tester, stats: stats);
+    await tester.tap(find.byKey(const Key('nav-stats')));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('stats-retry')), findsOneWidget);
+    expect(find.byKey(const Key('stats-range')), findsOneWidget);
+  });
+
   test('StatsSummary.fromJson reads the API format', () {
     final summary = StatsSummary.fromJson({
       'from': '2026-10-20',
@@ -116,7 +126,7 @@ void main() {
 
       await tester.tap(find.byKey(const Key('nav-activity')));
       await tester.pumpAndSettle();
-      expect(find.byKey(const Key('activity-coming')), findsOneWidget);
+      expect(find.byKey(const Key('activity-add')), findsOneWidget);
 
       await tester.tap(find.byKey(const Key('nav-profile')));
       await tester.pumpAndSettle();

@@ -159,8 +159,9 @@ class ProfileScreen extends ConsumerWidget {
                 ),
                 ListTile(
                   title: Text(strings.languageLabel),
-                  trailing: DropdownButton<String?>(
+                  subtitle: DropdownButton<String?>(
                     key: const Key('language'),
+                    isExpanded: true,
                     value: language,
                     underline: const SizedBox.shrink(),
                     items: [
