@@ -1,10 +1,15 @@
 name: Autofix
 
-# Formats code on every pull request and pushes the result back to the branch.
-# Qwen works in a chat and cannot run formatters; this keeps the style consistent.
+# Formats code after a merge to main and pushes the result to main.
+# It no longer pushes into pull-request branches: Codex works in a local clone, and a bot commit
+# on the branch made the next upload fail (non-fast-forward) and caused merge conflicts.
+# Only formatters run here (no `dart fix`, no `ruff --fix`), so the pushed commit never changes
+# behaviour. `git add -u` stages only tracked files (no new pubspec.lock or build output).
+# Pushes made with GITHUB_TOKEN do not trigger other workflows, so this cannot loop.
 
 on:
-  pull_request:
+  push:
+    branches: [main]
     paths: ["api/**", "app/**"]
 
 permissions:
@@ -12,13 +17,11 @@ permissions:
 
 jobs:
   format:
-    # Only for branches in this repository (not forks).
-    if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}
+          ref: main
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -26,7 +29,6 @@ jobs:
         run: |
           pip install ruff
           cd api
-          ruff check --fix --exit-zero .
           ruff format .
       - uses: subosito/flutter-action@v2
         with:
@@ -36,13 +38,12 @@ jobs:
         run: |
           cd app
           flutter pub get
-          dart fix --apply || true
           dart format lib test
       - name: Commit changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A api app
+          git add -u api app
           if git diff --cached --quiet; then
             echo "Already formatted"
           else

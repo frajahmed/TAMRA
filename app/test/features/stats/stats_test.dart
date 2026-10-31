@@ -126,7 +126,7 @@ void main() {
 
       await tester.tap(find.byKey(const Key('nav-activity')));
       await tester.pumpAndSettle();
-      expect(find.byKey(const Key('activity-coming')), findsOneWidget);
+      expect(find.byKey(const Key('activity-add')), findsOneWidget);
 
       await tester.tap(find.byKey(const Key('nav-profile')));
       await tester.pumpAndSettle();

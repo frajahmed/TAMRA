@@ -19,11 +19,14 @@ you edit the files directly, as described below.
    If another file must change, ask first.
 5. Write tests for everything you add. A ticket without tests is not done.
 6. Run the checks you can (see §3). Never claim a check passed if you did not run it.
-7. Commit on the branch (Conventional Commits, ticket number at the end), e.g.
+7. Commit with the git identity configured in this repo (Ahmed). Never set `--author`,
+   `-c user.*` or `GIT_AUTHOR_*`. Commit on the branch (Conventional Commits, ticket number at the end), e.g.
    `feat(api): streaks and badges (T-63)`. Several small commits are fine. Never commit to `main`,
    never push, never merge, never rewrite history.
 8. Finish with a short report: what you changed, which checks you ran and their result,
    which checks you could not run, and open questions.
+   GitHub CI no longer pushes into your branch (Autofix formats only after the merge to
+   `main`), so you never need to pull your own branch.
 9. Ahmed then double-clicks `1-github-hochladen.bat` (pushes the current branch) and opens the
    pull request. Claude reviews it. If Claude sends a bug report, fix only what it lists, on the
    same branch, and commit again.

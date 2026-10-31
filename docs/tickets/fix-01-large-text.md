@@ -92,3 +92,39 @@ Files to change: `stats_screen.dart`, `app/test/features/stats/stats_test.dart`,
 (only if needed), `QWEN-UEBERGABE.md` (delete), this ticket file (commit it as it is).
 Commit: `fix(app): range switch stays visible while statistics load (FIX-01)`.
 The 200 % accessibility tests must stay green.
+
+---
+
+## Review 2 (Claude, 31.10.2026) – CI found 3 more failures, same branch
+
+Review 1 (`97734aa`) is correct. GitHub CI on `3127948` showed three more failures that the
+first overflows had hidden. Do NOT pull or rebase: the bot commit `8852d11` on GitHub is only
+formatting and will be replaced by the upload (Ahmed uses `1b-hochladen-ueberschreiben.bat`).
+
+1. **Tap target of the navigation dock is too small** (`androidTapTargetGuideline`):
+   tab "Diary" is 65.5 × 42 px, minimum is 48 × 48.
+   File `app/lib/core/widgets/nav_dock.dart`, function `tab()`: wrap the `Column` in
+   `ConstrainedBox(constraints: const BoxConstraints(minHeight: 48), child: ...)` and give the
+   `Column` `mainAxisAlignment: MainAxisAlignment.center`. Keep `mainAxisSize: MainAxisSize.min`.
+2. **Outdated test** `app/test/features/stats/stats_test.dart`, test
+   "tabs switch between diary, statistics, activity and profile": it still expects the old
+   placeholder key `activity-coming`, which was removed in T-52. Expect `activity-add`
+   (the "Add sport" button) instead. My mistake from T-52, not yours.
+3. **Large text, German only:** "A RenderFlex overflowed by 15 pixels on the right" in
+   `all tabs fit on a small phone with 200 % text (de)`. French and Arabic pass. The CI message
+   does not name the widget because the test swallows the error with `tester.takeException()`.
+   In `app/test/accessibility/accessibility_test.dart`, in the 200 % test (the loop over de, ar, fr), delete the line
+   `expect(tester.takeException(), isNull);`. Flutter then fails the test by itself and prints
+   the full error including "The relevant error-causing widget was: … file:line". This is the
+   only allowed change to that file. Do not guess a layout fix for this point; Claude will
+   name the exact widget after the next CI run.
+4. **Autofix workflow:** commit the new `.github/workflows/autofix.yml` exactly as it is in the
+   folder (Claude wrote it; it now formats only after a merge to `main`).
+5. **Commit author:** this repo now has `user.name "Ahmed"` and `user.email` set in
+   `.git/config`. Commit with that identity. Do not set `--author`, `-c user.*` or
+   `GIT_AUTHOR_*` yourself.
+
+Files to change: `app/lib/core/widgets/nav_dock.dart`, `app/test/features/stats/stats_test.dart`,
+`app/test/accessibility/accessibility_test.dart` (one line), `.github/workflows/autofix.yml`
+(commit only), `AGENTS.md` (commit only, Claude updated §1), this ticket file (commit only).
+Commit: `fix(app): nav dock tap targets, outdated test, clearer overflow report (FIX-01)`.
