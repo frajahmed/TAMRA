@@ -14,7 +14,8 @@ final _today = dateOnly(DateTime.now());
 
 /// Two entries today: breakfast 300 kcal, lunch 260 kcal (total 560).
 FakeDiaryRepository _diaryWithTwoEntries({
-  DayTargets targets = const DayTargets(kcal: 2000, proteinG: 150, carbsG: 200, fatG: 67),
+  DayTargets targets =
+      const DayTargets(kcal: 2000, proteinG: 150, carbsG: 200, fatG: 67),
   EnergyUnit unit = EnergyUnit.kcal,
 }) {
   return FakeDiaryRepository(
@@ -29,7 +30,13 @@ FakeDiaryRepository _diaryWithTwoEntries({
         grams: 80,
         kcal: 300,
       ),
-      diaryEntry(id: 'l1', date: _today, meal: Meal.lunch, name: 'Reis', grams: 200, kcal: 260),
+      diaryEntry(
+          id: 'l1',
+          date: _today,
+          meal: Meal.lunch,
+          name: 'Reis',
+          grams: 200,
+          kcal: 260),
     ],
   );
 }
@@ -59,12 +66,14 @@ String _text(WidgetTester tester, String key) =>
     tester.widget<Text>(find.byKey(Key(key))).data ?? '';
 
 void main() {
-  testWidgets('shows remaining calories, the formula, macros and the meals', (tester) async {
+  testWidgets('shows remaining calories, the formula, macros and the meals',
+      (tester) async {
     await _openDiary(tester, _diaryWithTwoEntries());
 
     expect(_text(tester, 'calorie-value'), '1440 kcal');
     expect(find.text('left'), findsOneWidget);
-    expect(_text(tester, 'calorie-formula'), 'Target 2000 kcal − eaten 560 kcal = 1440 kcal');
+    expect(_text(tester, 'calorie-formula'),
+        'Target 2000 kcal − eaten 560 kcal = 1440 kcal');
     expect(find.text('70 / 200 g'), findsOneWidget); // carbs = 560 / 8
     expect(find.text('Haferflocken'), findsOneWidget);
     expect(find.text('80 g'), findsOneWidget);
@@ -80,14 +89,17 @@ void main() {
     expect(_text(tester, 'calorie-value'), '6025 kJ'); // 1440 kcal × 4.184
   });
 
-  testWidgets('going over the target says "over" without alarm', (tester) async {
-    await _openDiary(tester, _diaryWithTwoEntries(targets: const DayTargets(kcal: 500)));
+  testWidgets('going over the target says "over" without alarm',
+      (tester) async {
+    await _openDiary(
+        tester, _diaryWithTwoEntries(targets: const DayTargets(kcal: 500)));
 
     expect(_text(tester, 'calorie-value'), '60 kcal');
     expect(find.text('over'), findsOneWidget);
   });
 
-  testWidgets('without targets only the eaten calories are shown', (tester) async {
+  testWidgets('without targets only the eaten calories are shown',
+      (tester) async {
     await _openDiary(tester, _diaryWithTwoEntries(targets: const DayTargets()));
 
     expect(_text(tester, 'calorie-value'), '560 kcal');
@@ -95,22 +107,27 @@ void main() {
   });
 
   testWidgets('German renders the diary', (tester) async {
-    await _openDiary(tester, _diaryWithTwoEntries(), locale: const Locale('de'));
+    await _openDiary(tester, _diaryWithTwoEntries(),
+        locale: const Locale('de'));
     expect(find.text('Mittagessen'), findsOneWidget);
     expect(find.text('übrig'), findsOneWidget);
   });
 
   testWidgets('Arabic renders the diary right-to-left', (tester) async {
-    await _openDiary(tester, _diaryWithTwoEntries(), locale: const Locale('ar'));
+    await _openDiary(tester, _diaryWithTwoEntries(),
+        locale: const Locale('ar'));
     expect(find.text('الغداء'), findsOneWidget);
     expect(find.text('متبقية'), findsOneWidget);
-    final direction = Directionality.of(tester.element(find.byKey(const Key('diary-list'))));
+    final direction =
+        Directionality.of(tester.element(find.byKey(const Key('diary-list'))));
     expect(direction, TextDirection.rtl);
   });
 
-  testWidgets('add flow: + → search → amount → saved and shown', (tester) async {
+  testWidgets('add flow: + → search → amount → saved and shown',
+      (tester) async {
     final diary = FakeDiaryRepository();
-    await _openDiary(tester, diary, foods: FakeFoodRepository()..results = [apple]);
+    await _openDiary(tester, diary,
+        foods: FakeFoodRepository()..results = [apple]);
 
     await tester.tap(find.byKey(const Key('add-lunch')));
     await tester.pumpAndSettle();
@@ -139,7 +156,8 @@ void main() {
 
   testWidgets('an invalid amount is not saved', (tester) async {
     final diary = FakeDiaryRepository();
-    await _openDiary(tester, diary, foods: FakeFoodRepository()..results = [apple]);
+    await _openDiary(tester, diary,
+        foods: FakeFoodRepository()..results = [apple]);
     await tester.tap(find.byKey(const Key('add-snack')));
     await tester.pumpAndSettle();
     await tester.enterText(find.byKey(const Key('food-search-field')), 'apfel');
@@ -175,7 +193,8 @@ void main() {
     expect(diary.updated, ['b1:40.0:snack']);
   });
 
-  testWidgets('swipe deletes; undo keeps the entry and calls no DELETE', (tester) async {
+  testWidgets('swipe deletes; undo keeps the entry and calls no DELETE',
+      (tester) async {
     final diary = _diaryWithTwoEntries();
     await _openDiary(tester, diary);
 
@@ -193,7 +212,8 @@ void main() {
     expect(diary.deleted, isEmpty);
   });
 
-  testWidgets('swipe without undo deletes on the server after 4 seconds', (tester) async {
+  testWidgets('swipe without undo deletes on the server after 4 seconds',
+      (tester) async {
     final diary = _diaryWithTwoEntries();
     await _openDiary(tester, diary);
 
@@ -248,7 +268,13 @@ void main() {
               grams: 60,
               kcal: 220,
             ),
-            diaryEntry(id: 'y2', date: yesterday, meal: Meal.dinner, name: 'Suppe', grams: 300, kcal: 180),
+            diaryEntry(
+                id: 'y2',
+                date: yesterday,
+                meal: Meal.dinner,
+                name: 'Suppe',
+                grams: 300,
+                kcal: 180),
           ],
         );
 

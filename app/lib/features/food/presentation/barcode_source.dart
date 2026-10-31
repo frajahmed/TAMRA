@@ -35,7 +35,8 @@ class MobileBarcodeSource implements BarcodeSource {
 }
 
 class _CameraPreview extends StatefulWidget {
-  const _CameraPreview({required this.onCode, required this.onPermissionDenied});
+  const _CameraPreview(
+      {required this.onCode, required this.onPermissionDenied});
 
   final ValueChanged<String> onCode;
   final VoidCallback onPermissionDenied;
@@ -78,9 +79,11 @@ class _CameraPreviewState extends State<_CameraPreview> {
       controller: _controller,
       onDetect: _onDetect,
       errorBuilder: (context, error) {
-        if (error.errorCode == MobileScannerErrorCode.permissionDenied && !_deniedReported) {
+        if (error.errorCode == MobileScannerErrorCode.permissionDenied &&
+            !_deniedReported) {
           _deniedReported = true;
-          WidgetsBinding.instance.addPostFrameCallback((_) => widget.onPermissionDenied());
+          WidgetsBinding.instance
+              .addPostFrameCallback((_) => widget.onPermissionDenied());
         }
         return const ColoredBox(color: Colors.black);
       },
@@ -89,4 +92,5 @@ class _CameraPreviewState extends State<_CameraPreview> {
 }
 
 /// The camera scanner; widget tests override it with a fake.
-final barcodeSourceProvider = Provider<BarcodeSource>((ref) => const MobileBarcodeSource());
+final barcodeSourceProvider =
+    Provider<BarcodeSource>((ref) => const MobileBarcodeSource());

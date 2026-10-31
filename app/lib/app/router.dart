@@ -86,7 +86,8 @@ List<RouteBase> foodRoutes() => [
         builder: (context, state) {
           final extra = state.extra;
           return CustomFoodScreen(
-            prefill: extra is CustomFoodPrefill ? extra : const CustomFoodPrefill(),
+            prefill:
+                extra is CustomFoodPrefill ? extra : const CustomFoodPrefill(),
           );
         },
       ),
@@ -95,7 +96,8 @@ List<RouteBase> foodRoutes() => [
 /// The app's router; re-checks [authRedirect] whenever the login state changes.
 final routerProvider = Provider<GoRouter>((ref) {
   final refresh = ValueNotifier<int>(0);
-  ref.listen<AuthState>(authControllerProvider, (previous, next) => refresh.value++);
+  ref.listen<AuthState>(
+      authControllerProvider, (previous, next) => refresh.value++);
 
   final router = GoRouter(
     initialLocation: AppRoutes.splash,
@@ -103,25 +105,38 @@ final routerProvider = Provider<GoRouter>((ref) {
     redirect: (context, state) =>
         authRedirect(ref.read(authControllerProvider), state.matchedLocation),
     routes: [
-      GoRoute(path: AppRoutes.splash, builder: (context, state) => const SplashScreen()),
-      GoRoute(path: AppRoutes.login, builder: (context, state) => const LoginScreen()),
-      GoRoute(path: AppRoutes.register, builder: (context, state) => const RegisterScreen()),
-      GoRoute(path: AppRoutes.consent, builder: (context, state) => const ConsentScreen()),
+      GoRoute(
+          path: AppRoutes.splash,
+          builder: (context, state) => const SplashScreen()),
+      GoRoute(
+          path: AppRoutes.login,
+          builder: (context, state) => const LoginScreen()),
+      GoRoute(
+          path: AppRoutes.register,
+          builder: (context, state) => const RegisterScreen()),
+      GoRoute(
+          path: AppRoutes.consent,
+          builder: (context, state) => const ConsentScreen()),
       GoRoute(
         path: AppRoutes.onboarding,
         builder: (context, state) => const OnboardingScreen(),
       ),
       StatefulShellRoute.indexedStack(
-        builder: (context, state, navigationShell) => AppShell(navigationShell: navigationShell),
+        builder: (context, state, navigationShell) =>
+            AppShell(navigationShell: navigationShell),
         branches: [
           StatefulShellBranch(
             routes: [
-              GoRoute(path: AppRoutes.home, builder: (context, state) => const DiaryScreen()),
+              GoRoute(
+                  path: AppRoutes.home,
+                  builder: (context, state) => const DiaryScreen()),
             ],
           ),
           StatefulShellBranch(
             routes: [
-              GoRoute(path: AppRoutes.stats, builder: (context, state) => const StatsScreen()),
+              GoRoute(
+                  path: AppRoutes.stats,
+                  builder: (context, state) => const StatsScreen()),
             ],
           ),
           StatefulShellBranch(
@@ -134,12 +149,16 @@ final routerProvider = Provider<GoRouter>((ref) {
           ),
           StatefulShellBranch(
             routes: [
-              GoRoute(path: AppRoutes.profile, builder: (context, state) => const ProfileScreen()),
+              GoRoute(
+                  path: AppRoutes.profile,
+                  builder: (context, state) => const ProfileScreen()),
             ],
           ),
         ],
       ),
-      GoRoute(path: AppRoutes.weight, builder: (context, state) => const WeightScreen()),
+      GoRoute(
+          path: AppRoutes.weight,
+          builder: (context, state) => const WeightScreen()),
       GoRoute(
         path: AppRoutes.activityAdd,
         builder: (context, state) => const AddActivityScreen(),
@@ -149,10 +168,14 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final extra = state.extra;
           // Without arguments (e.g. an old deep link) there is nothing to edit: show the diary.
-          return extra is EntryEditorArgs ? EntryEditorScreen(args: extra) : const DiaryScreen();
+          return extra is EntryEditorArgs
+              ? EntryEditorScreen(args: extra)
+              : const DiaryScreen();
         },
       ),
-      GoRoute(path: AppRoutes.debug, builder: (context, state) => const DebugScreen()),
+      GoRoute(
+          path: AppRoutes.debug,
+          builder: (context, state) => const DebugScreen()),
       ...foodRoutes(),
     ],
   );

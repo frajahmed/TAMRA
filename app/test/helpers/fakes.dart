@@ -54,7 +54,8 @@ class FakeAuthController extends AuthController {
   Future<void> register(String email, String password) async {
     calls.add('register:$email');
     if (loginError != null) throw loginError!;
-    state = const AuthState(status: AuthStatus.loggedIn, needsConsent: true, needsProfile: true);
+    state = const AuthState(
+        status: AuthStatus.loggedIn, needsConsent: true, needsProfile: true);
   }
 
   @override
@@ -94,7 +95,8 @@ class FakeApiClient extends ApiClient {
   }
 
   @override
-  Future<void> logout(String refreshToken) async => calls.add('logout:$refreshToken');
+  Future<void> logout(String refreshToken) async =>
+      calls.add('logout:$refreshToken');
 
   @override
   Future<Map<String, dynamic>> getProfile() async {
@@ -108,7 +110,8 @@ class FakeApiClient extends ApiClient {
 
 /// Profile repository returning a fixed result.
 class FakeProfileRepository implements ProfileRepository {
-  FakeProfileRepository({this.result, this.fail = false, this.correctPassword = 'secret-pass-1'});
+  FakeProfileRepository(
+      {this.result, this.fail = false, this.correctPassword = 'secret-pass-1'});
 
   Profile? result;
   final bool fail;
@@ -156,7 +159,8 @@ class FakeProfileRepository implements ProfileRepository {
   Future<void> withdrawHealthConsent() async => withdrawCalls++;
 
   @override
-  Future<String> exportData() async => '{"account": {"email": "a@example.com"}}';
+  Future<String> exportData() async =>
+      '{"account": {"email": "a@example.com"}}';
 
   @override
   Future<void> deleteAccount(String password) async {
@@ -191,7 +195,8 @@ class FakeProfileRepository implements ProfileRepository {
 class FakeDiaryRepository implements DiaryRepository {
   FakeDiaryRepository({
     List<DiaryEntry>? entries,
-    this.targets = const DayTargets(kcal: 2000, proteinG: 150, carbsG: 200, fatG: 67),
+    this.targets =
+        const DayTargets(kcal: 2000, proteinG: 150, carbsG: 200, fatG: 67),
     this.energyUnit = EnergyUnit.kcal,
   }) : entries = entries ?? [];
 
@@ -260,11 +265,14 @@ class FakeDiaryRepository implements DiaryRepository {
   final List<String> copies = [];
 
   @override
-  Future<int> copy({required DateTime from, required DateTime to, Meal? meal}) async {
+  Future<int> copy(
+      {required DateTime from, required DateTime to, Meal? meal}) async {
     copies.add('${dateKey(from)}>${dateKey(to)}:${meal?.name ?? 'all'}');
     final source = [
       for (final entry in entries)
-        if (dateKey(entry.date) == dateKey(from) && (meal == null || entry.meal == meal)) entry,
+        if (dateKey(entry.date) == dateKey(from) &&
+            (meal == null || entry.meal == meal))
+          entry,
     ];
     for (final entry in source) {
       entries.add(
@@ -298,7 +306,8 @@ DiaryEntry diaryEntry({
     foodId: 'food-$id',
     foodName: name,
     amountG: grams,
-    nutrients: NutrientAmounts(kcal: kcal, protein: kcal / 20, carbs: kcal / 8, fat: kcal / 30),
+    nutrients: NutrientAmounts(
+        kcal: kcal, protein: kcal / 20, carbs: kcal / 8, fat: kcal / 30),
   );
 }
 
@@ -317,7 +326,8 @@ class FakeTrackingRepository implements TrackingRepository {
   Future<WeightLog> saveWeight(DateTime date, double weightKg) async {
     calls.add('weight:${dateKey(date)}:$weightKg');
     weightLogs.removeWhere((log) => dateKey(log.date) == dateKey(date));
-    final log = WeightLog(id: 'w${_nextId++}', date: dateOnly(date), weightKg: weightKg);
+    final log = WeightLog(
+        id: 'w${_nextId++}', date: dateOnly(date), weightKg: weightKg);
     weightLogs.add(log);
     return log;
   }
@@ -402,7 +412,10 @@ class FakeActivityRepository implements ActivityRepository {
 
 /// Health hub that returns prepared data and records permission requests.
 class FakeHealthSource implements HealthSource {
-  FakeHealthSource({this.supported = true, this.grant = true, this.data = const HealthImport()});
+  FakeHealthSource(
+      {this.supported = true,
+      this.grant = true,
+      this.data = const HealthImport()});
 
   final bool supported;
   bool grant;
@@ -426,7 +439,8 @@ class FakeHealthSource implements HealthSource {
   }
 
   @override
-  Future<HealthImport> read({required DateTime from, required DateTime to}) async {
+  Future<HealthImport> read(
+      {required DateTime from, required DateTime to}) async {
     reads.add('${dateKey(from)}..${dateKey(to)}');
     return data;
   }
@@ -441,7 +455,8 @@ class FakeStatsRepository implements StatsRepository {
   final List<String> calls = [];
 
   @override
-  Future<StatsSummary> summary(DateTime from, DateTime to, {String group = 'day'}) async {
+  Future<StatsSummary> summary(DateTime from, DateTime to,
+      {String group = 'day'}) async {
     calls.add('${dateKey(from)}..${dateKey(to)}:$group');
     if (error != null) throw error!;
     return result ??
@@ -498,16 +513,22 @@ Widget testApp({
   return ProviderScope(
     overrides: [
       localeProvider.overrideWith(() => FixedLocale(locale)),
-      authControllerProvider.overrideWith(() => controller ?? FakeAuthController(auth)),
+      authControllerProvider
+          .overrideWith(() => controller ?? FakeAuthController(auth)),
       diaryRepositoryProvider.overrideWithValue(diary ?? FakeDiaryRepository()),
-      profileRepositoryProvider.overrideWithValue(profile ?? FakeProfileRepository()),
-      trackingRepositoryProvider.overrideWithValue(tracking ?? FakeTrackingRepository()),
+      profileRepositoryProvider
+          .overrideWithValue(profile ?? FakeProfileRepository()),
+      trackingRepositoryProvider
+          .overrideWithValue(tracking ?? FakeTrackingRepository()),
       statsRepositoryProvider.overrideWithValue(stats ?? FakeStatsRepository()),
       fileSharerProvider.overrideWithValue(sharer ?? FakeFileSharer()),
-      activityRepositoryProvider.overrideWithValue(activity ?? FakeActivityRepository()),
+      activityRepositoryProvider
+          .overrideWithValue(activity ?? FakeActivityRepository()),
       healthSourceProvider.overrideWithValue(health ?? FakeHealthSource()),
-      healthStorageProvider.overrideWithValue(healthStorage ?? MemoryHealthSettingsStorage()),
-      languageStorageProvider.overrideWithValue(languageStorage ?? MemoryLanguageStorage()),
+      healthStorageProvider
+          .overrideWithValue(healthStorage ?? MemoryHealthSettingsStorage()),
+      languageStorageProvider
+          .overrideWithValue(languageStorage ?? MemoryLanguageStorage()),
       ...overrides,
     ],
     child: const TamraApp(),

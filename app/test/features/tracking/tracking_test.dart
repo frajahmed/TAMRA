@@ -42,7 +42,8 @@ String _text(WidgetTester tester, String key) =>
 
 void main() {
   group('water', () {
-    testWidgets('plus adds a glass, minus removes the newest one', (tester) async {
+    testWidgets('plus adds a glass, minus removes the newest one',
+        (tester) async {
       final tracking = FakeTrackingRepository();
       await _pumpApp(tester, tracking: tracking);
       expect(_text(tester, 'water-total'), '0 / 2000 ml');
@@ -62,7 +63,9 @@ void main() {
     test('glasses never go beyond the goal', () {
       final day = WaterDay(
         date: DateTime(2026),
-        entries: [for (var i = 0; i < 12; i++) WaterLog(id: '$i', amountMl: 250)],
+        entries: [
+          for (var i = 0; i < 12; i++) WaterLog(id: '$i', amountMl: 250)
+        ],
       );
       expect(day.totalMl, 3000);
       expect(day.glasses, 8);
@@ -76,7 +79,8 @@ void main() {
       expect(find.byKey(const Key('weight-empty')), findsOneWidget);
     });
 
-    testWidgets('adding a weight in kg shows it in the list and chart', (tester) async {
+    testWidgets('adding a weight in kg shows it in the list and chart',
+        (tester) async {
       final tracking = FakeTrackingRepository();
       await _pumpApp(tester, tracking: tracking);
       await _openWeight(tester);
@@ -93,7 +97,8 @@ void main() {
       await _pumpApp(
         tester,
         tracking: tracking,
-        profile: FakeProfileRepository(result: const Profile(weightUnit: WeightUnit.lb)),
+        profile: FakeProfileRepository(
+            result: const Profile(weightUnit: WeightUnit.lb)),
       );
       await _openWeight(tester);
 
@@ -110,7 +115,8 @@ void main() {
 
       await _addWeight(tester, '20');
 
-      expect(find.text('Please enter a value between 30 and 300.'), findsOneWidget);
+      expect(find.text('Please enter a value between 30 and 300.'),
+          findsOneWidget);
       expect(tracking.calls, isEmpty);
     });
 

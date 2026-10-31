@@ -88,7 +88,8 @@ class _AuthFormState extends State<AuthForm> {
               validator: (value) {
                 final text = value?.trim() ?? '';
                 if (text.isEmpty) return strings.fieldRequired;
-                final valid = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(text);
+                final valid =
+                    RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(text);
                 return valid ? null : strings.emailInvalid;
               },
             ),
@@ -98,7 +99,9 @@ class _AuthFormState extends State<AuthForm> {
               controller: _password,
               obscureText: true,
               autofillHints: [
-                widget.checkPasswordLength ? AutofillHints.newPassword : AutofillHints.password,
+                widget.checkPasswordLength
+                    ? AutofillHints.newPassword
+                    : AutofillHints.password,
               ],
               decoration: InputDecoration(labelText: strings.password),
               onFieldSubmitted: (_) => _submit(strings),

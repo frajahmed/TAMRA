@@ -24,7 +24,8 @@ String dateKey(DateTime day) =>
 String _twoDigits(int value) => value.toString().padLeft(2, '0');
 
 /// Only the calendar day of [moment] (time set to midnight, local time).
-DateTime dateOnly(DateTime moment) => DateTime(moment.year, moment.month, moment.day);
+DateTime dateOnly(DateTime moment) =>
+    DateTime(moment.year, moment.month, moment.day);
 
 /// A number typed by the user: accepts "3.5" and "3,5"; null for empty or invalid text.
 double? parseAmount(String? text) {
@@ -34,5 +35,6 @@ double? parseAmount(String? text) {
 }
 
 /// [value] without a useless ".0" (100.0 → "100", 12.5 → "12.5").
-String formatAmount(double value) =>
-    value == value.roundToDouble() ? value.round().toString() : value.toStringAsFixed(1);
+String formatAmount(double value) => value == value.roundToDouble()
+    ? value.round().toString()
+    : value.toStringAsFixed(1);

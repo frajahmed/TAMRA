@@ -26,17 +26,20 @@ class AppStrings {
 
   static const fallbackLocale = Locale('en');
 
-  static const LocalizationsDelegate<AppStrings> delegate = _AppStringsDelegate();
+  static const LocalizationsDelegate<AppStrings> delegate =
+      _AppStringsDelegate();
 
   /// The texts for the current language of [context].
   static AppStrings of(BuildContext context) {
     final strings = Localizations.of<AppStrings>(context, AppStrings);
-    assert(strings != null, 'AppStrings not found. Is AppStrings.delegate registered?');
+    assert(strings != null,
+        'AppStrings not found. Is AppStrings.delegate registered?');
     return strings!;
   }
 
   /// Picks the device language if supported, otherwise English.
-  static Locale resolveLocale(Locale? deviceLocale, Iterable<Locale> supported) {
+  static Locale resolveLocale(
+      Locale? deviceLocale, Iterable<Locale> supported) {
     if (deviceLocale == null) return fallbackLocale;
     for (final locale in supported) {
       if (locale.languageCode == deviceLocale.languageCode) return locale;
@@ -56,7 +59,8 @@ class AppStrings {
   /// Replaces {name} placeholders.
   String _fill(String key, Map<String, Object> values) {
     var result = text(key);
-    values.forEach((name, value) => result = result.replaceAll('{$name}', '$value'));
+    values.forEach(
+        (name, value) => result = result.replaceAll('{$name}', '$value'));
     return result;
   }
 
@@ -86,6 +90,7 @@ class AppStrings {
   String get consentCheckbox => text('consentCheckbox');
   String get continueButton => text('continueButton');
   String get onboardingTitle => text('onboardingTitle');
+
   /// "Step 2 of 6" in the onboarding.
   String stepOf(int current, int total) =>
       _fill('stepOf', {'current': current, 'total': total});
@@ -108,7 +113,8 @@ class AppStrings {
   String get next => text('next');
   String get back => text('back');
   String get save => text('save');
-  String invalidRange(num min, num max) => _fill('invalidRange', {'min': min, 'max': max});
+  String invalidRange(num min, num max) =>
+      _fill('invalidRange', {'min': min, 'max': max});
   String get resultTitle => text('resultTitle');
   String resultKcal(int kcal) => _fill('resultKcal', {'kcal': kcal});
   String get resultFormula => text('resultFormula');
@@ -121,7 +127,8 @@ class AppStrings {
   String get foodSearchTitle => text('foodSearchTitle');
   String get foodSearchHint => text('foodSearchHint');
   String get foodSearchMinChars => text('foodSearchMinChars');
-  String foodNoResults(String query) => _fill('foodNoResults', {'query': query});
+  String foodNoResults(String query) =>
+      _fill('foodNoResults', {'query': query});
   String get foodCreateCustom => text('foodCreateCustom');
   String get retry => text('retry');
   String kcalPer100g(int kcal) => _fill('kcalPer100g', {'kcal': kcal});
@@ -144,7 +151,8 @@ class AppStrings {
   String get scanTitle => text('scanTitle');
   String get scanHint => text('scanHint');
   String get scanNotFoundTitle => text('scanNotFoundTitle');
-  String scanNotFoundText(String code) => _fill('scanNotFoundText', {'code': code});
+  String scanNotFoundText(String code) =>
+      _fill('scanNotFoundText', {'code': code});
   String get scanAgain => text('scanAgain');
   String get cameraDeniedText => text('cameraDeniedText');
   String get openSettings => text('openSettings');
@@ -163,13 +171,19 @@ class AppStrings {
   String get previousWeek => text('previousWeek');
   String get nextWeek => text('nextWeek');
   String gramsValue(Object value) => _fill('gramsValue', {'value': value});
+
   /// "45 / 130 g" under a macro bar.
   String gramsProgress(num value, num target) =>
       _fill('gramsProgress', {'value': value, 'target': target});
   String oneServing(num grams) => _fill('oneServing', {'grams': grams});
+
   /// The visible calorie formula under the arc (values already formatted).
-  String calorieFormula({required String target, required String eaten, required String remaining}) =>
-      _fill('calorieFormula', {'target': target, 'eaten': eaten, 'remaining': remaining});
+  String calorieFormula(
+          {required String target,
+          required String eaten,
+          required String remaining}) =>
+      _fill('calorieFormula',
+          {'target': target, 'eaten': eaten, 'remaining': remaining});
 
   // --- Navigation, weight, water, statistics ---------------------------------------
   String get navDiary => text('navDiary');
@@ -193,7 +207,9 @@ class AppStrings {
   String get openWeight => text('openWeight');
   String get kcalChartLabel => text('kcalChartLabel');
   String get weightChartLabel => text('weightChartLabel');
-  String waterProgress(int value, int goal) => _fill('waterProgress', {'value': value, 'goal': goal});
+  String waterProgress(int value, int goal) =>
+      _fill('waterProgress', {'value': value, 'goal': goal});
+
   /// "5 of 7 days logged" in the statistics.
   String statsLoggedDays(int count, int total) =>
       _fill('statsLoggedDays', {'count': count, 'total': total});
@@ -261,7 +277,8 @@ class AppStrings {
   String get statsRange12m => text('statsRange12m');
   String get statsEaten => text('statsEaten');
   String get statsSportAverage => text('statsSportAverage');
-  String activityBurned(String value) => _fill('activityBurned', {'value': value});
+  String activityBurned(String value) =>
+      _fill('activityBurned', {'value': value});
   String minutesValue(int value) => _fill('minutesValue', {'value': value});
   String stepsValue(int value) => _fill('stepsValue', {'value': value});
 
@@ -300,7 +317,8 @@ class AppStrings {
   String get healthDisconnect => text('healthDisconnect');
   String get healthSyncNow => text('healthSyncNow');
   String get healthUnsupported => text('healthUnsupported');
-  String healthConnectHint(String app) => _fill('healthConnectHint', {'app': app});
+  String healthConnectHint(String app) =>
+      _fill('healthConnectHint', {'app': app});
   String healthLastSync(String time) => _fill('healthLastSync', {'time': time});
   String healthSynced(int count) => _fill('healthSynced', {'count': count});
   String healthDenied(String app) => _fill('healthDenied', {'app': app});
@@ -316,7 +334,8 @@ class AppStrings {
   /// [kcal] as "520 kcal" or, when the user chose kJ, "2176 kJ" (rounded to whole numbers).
   String energy(double kcal, EnergyUnit unit) => switch (unit) {
         EnergyUnit.kcal => _fill('kcalValue', {'value': kcal.round()}),
-        EnergyUnit.kj => _fill('kjValue', {'value': Units.kcalToKj(kcal).round()}),
+        EnergyUnit.kj =>
+          _fill('kjValue', {'value': Units.kcalToKj(kcal).round()}),
       };
 }
 
@@ -328,7 +347,8 @@ class _AppStringsDelegate extends LocalizationsDelegate<AppStrings> {
       .any((supported) => supported.languageCode == locale.languageCode);
 
   @override
-  Future<AppStrings> load(Locale locale) => SynchronousFuture(AppStrings(locale));
+  Future<AppStrings> load(Locale locale) =>
+      SynchronousFuture(AppStrings(locale));
 
   @override
   bool shouldReload(_AppStringsDelegate old) => false;

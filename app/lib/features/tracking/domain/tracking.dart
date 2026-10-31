@@ -9,7 +9,8 @@ const glassMl = 250;
 /// The weight of one day.
 class WeightLog {
   /// Creates a weight entry.
-  const WeightLog({required this.id, required this.date, required this.weightKg});
+  const WeightLog(
+      {required this.id, required this.date, required this.weightKg});
 
   /// Entry id (UUID).
   final String id;
@@ -23,7 +24,8 @@ class WeightLog {
   /// Reads one entry of GET /api/v1/weight/.
   factory WeightLog.fromJson(Map<String, dynamic> json) => WeightLog(
         id: json['id'].toString(),
-        date: DateTime.tryParse(json['date']?.toString() ?? '') ?? DateTime(1970),
+        date:
+            DateTime.tryParse(json['date']?.toString() ?? '') ?? DateTime(1970),
         weightKg: jsonDouble(json['weight_kg']) ?? 0,
       );
 }

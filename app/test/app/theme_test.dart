@@ -51,17 +51,23 @@ void main() {
       return (light + 0.05) / (dark + 0.05);
     }
 
-    for (final (name, colors) in [('light', AppColors.light), ('dark', AppColors.dark)]) {
+    for (final (name, colors) in [
+      ('light', AppColors.light),
+      ('dark', AppColors.dark)
+    ]) {
       test('$name: text needs 4.5:1 on background and cards', () {
         for (final text in [colors.textPrimary, colors.textSecondary]) {
           for (final back in [colors.background, colors.surface]) {
             expect(contrast(text, back), greaterThanOrEqualTo(4.5));
           }
         }
-        expect(contrast(colors.onBrand, colors.brand), greaterThanOrEqualTo(4.5));
+        expect(
+            contrast(colors.onBrand, colors.brand), greaterThanOrEqualTo(4.5));
       });
 
-      test('$name: macro, progress and brand colours need 3:1 on cards (graphics)', () {
+      test(
+          '$name: macro, progress and brand colours need 3:1 on cards (graphics)',
+          () {
         for (final graphic in [
           colors.carbs,
           colors.fat,

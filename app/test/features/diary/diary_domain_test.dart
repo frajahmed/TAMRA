@@ -38,9 +38,27 @@ void main() {
     final diary = DiaryDay(
       date: day,
       entries: [
-        diaryEntry(id: 'a', date: day, meal: Meal.breakfast, name: 'A', grams: 50, kcal: 200),
-        diaryEntry(id: 'b', date: day, meal: Meal.breakfast, name: 'B', grams: 50, kcal: 100),
-        diaryEntry(id: 'c', date: day, meal: Meal.dinner, name: 'C', grams: 50, kcal: 400),
+        diaryEntry(
+            id: 'a',
+            date: day,
+            meal: Meal.breakfast,
+            name: 'A',
+            grams: 50,
+            kcal: 200),
+        diaryEntry(
+            id: 'b',
+            date: day,
+            meal: Meal.breakfast,
+            name: 'B',
+            grams: 50,
+            kcal: 100),
+        diaryEntry(
+            id: 'c',
+            date: day,
+            meal: Meal.dinner,
+            name: 'C',
+            grams: 50,
+            kcal: 400),
       ],
     );
 
@@ -66,13 +84,18 @@ void main() {
       'food': 'f1',
       'amount_g': '12.50',
     });
-    final generated = NewDiaryEntry(date: DateTime(2026), meal: Meal.lunch, foodId: 'f', amountG: 1);
-    expect(generated.id, matches(RegExp(r'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$')));
+    final generated = NewDiaryEntry(
+        date: DateTime(2026), meal: Meal.lunch, foodId: 'f', amountG: 1);
+    expect(
+        generated.id,
+        matches(RegExp(
+            r'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$')));
   });
 
   test('DayTargets and Meal handle missing or unknown values', () {
     expect(DayTargets.fromJson(null).kcal, isNull);
-    expect(DayTargets.fromJson({'kcal': 1850, 'protein_g': '120'}).proteinG, 120);
+    expect(
+        DayTargets.fromJson({'kcal': 1850, 'protein_g': '120'}).proteinG, 120);
     expect(Meal.fromApi('brunch'), Meal.snack);
     expect(EnergyUnit.fromApi('kj'), EnergyUnit.kj);
     expect(EnergyUnit.fromApi(null), EnergyUnit.kcal);
@@ -98,6 +121,7 @@ void main() {
     final wednesday = DateTime(2026, 10, 28);
     expect(DateStrip.weekStart(wednesday, 0), DateTime(2026, 10, 25)); // Sunday
     expect(DateStrip.weekStart(wednesday, 1), DateTime(2026, 10, 26)); // Monday
-    expect(DateStrip.weekStart(wednesday, 6), DateTime(2026, 10, 24)); // Saturday
+    expect(
+        DateStrip.weekStart(wednesday, 6), DateTime(2026, 10, 24)); // Saturday
   });
 }

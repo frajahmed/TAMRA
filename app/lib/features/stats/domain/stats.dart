@@ -41,7 +41,8 @@ class StatsDay {
 
   /// Reads one item of `days`.
   factory StatsDay.fromJson(Map<String, dynamic> json) => StatsDay(
-        date: DateTime.tryParse(json['date']?.toString() ?? '') ?? DateTime(1970),
+        date:
+            DateTime.tryParse(json['date']?.toString() ?? '') ?? DateTime(1970),
         nutrients: _nutrients(json),
         waterMl: jsonInt(json['water_ml']) ?? 0,
         weightKg: jsonDouble(json['weight_kg']),
@@ -86,7 +87,8 @@ class StatsSummary {
   factory StatsSummary.fromJson(Map<String, dynamic> json) {
     final days = json['days'];
     final averages = json['averages'];
-    final averagesMap = averages is Map<String, dynamic> ? averages : const <String, dynamic>{};
+    final averagesMap =
+        averages is Map<String, dynamic> ? averages : const <String, dynamic>{};
     return StatsSummary(
       days: [
         if (days is List)
@@ -128,7 +130,8 @@ enum StatsRange {
   /// First day of the range that ends with [today].
   DateTime start(DateTime today) => switch (this) {
         StatsRange.days7 => DateTime(today.year, today.month, today.day - 6),
-        StatsRange.weeks4 => DateTime(today.year, today.month, today.day - (today.weekday - 1) - 21),
+        StatsRange.weeks4 => DateTime(
+            today.year, today.month, today.day - (today.weekday - 1) - 21),
         StatsRange.months12 => DateTime(today.year, today.month - 11),
       };
 }

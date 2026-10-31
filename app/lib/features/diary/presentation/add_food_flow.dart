@@ -26,10 +26,12 @@ Future<bool> addFoodToDiary(
   required Meal meal,
 }) async {
   final day = ref.read(selectedDayProvider);
-  final unit = ref.read(diaryDayProvider(day)).valueOrNull?.energyUnit ?? EnergyUnit.kcal;
+  final unit = ref.read(diaryDayProvider(day)).valueOrNull?.energyUnit ??
+      EnergyUnit.kcal;
   final saved = await context.push<bool>(
     AppRoutes.diaryEntry,
-    extra: EntryEditorArgs.add(food: food, meal: meal, date: day, energyUnit: unit),
+    extra: EntryEditorArgs.add(
+        food: food, meal: meal, date: day, energyUnit: unit),
   );
   if (saved == true) ref.invalidate(diaryDayProvider(day));
   return saved == true;

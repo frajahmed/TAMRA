@@ -148,7 +148,8 @@ abstract final class AppTheme {
   static ThemeData dark() => _build(AppColors.dark, Brightness.dark);
 
   static ThemeData _build(AppColors colors, Brightness brightness) {
-    final scheme = ColorScheme.fromSeed(seedColor: seed, brightness: brightness).copyWith(
+    final scheme =
+        ColorScheme.fromSeed(seedColor: seed, brightness: brightness).copyWith(
       primary: colors.brand,
       onPrimary: colors.onBrand,
       secondary: colors.progress,
@@ -185,8 +186,10 @@ abstract final class AppTheme {
         style: FilledButton.styleFrom(
           backgroundColor: colors.brand,
           foregroundColor: colors.onBrand,
-          padding: const EdgeInsetsDirectional.symmetric(horizontal: 24, vertical: 16),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          padding: const EdgeInsetsDirectional.symmetric(
+              horizontal: 24, vertical: 16),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(

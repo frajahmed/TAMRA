@@ -69,7 +69,8 @@ class BarChart extends StatelessWidget {
                     child: Text(
                       label,
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: colors.textSecondary, fontSize: 12),
+                      style:
+                          TextStyle(color: colors.textSecondary, fontSize: 12),
                     ),
                   ),
               ],
@@ -145,7 +146,8 @@ class _BarPainter extends CustomPainter {
         ..color = targetLine
         ..strokeWidth = 2;
       for (var x = 0.0; x < size.width; x += 10) {
-        canvas.drawLine(Offset(x, y), Offset(math.min(x + 6, size.width), y), dash);
+        canvas.drawLine(
+            Offset(x, y), Offset(math.min(x + 6, size.width), y), dash);
       }
     }
   }
@@ -187,7 +189,8 @@ class LineChart extends StatelessWidget {
         height: height,
         width: double.infinity,
         child: CustomPaint(
-          painter: _LinePainter(values: values, line: colors.progress, grid: colors.border),
+          painter: _LinePainter(
+              values: values, line: colors.progress, grid: colors.border),
         ),
       ),
     );
@@ -217,7 +220,9 @@ class _LinePainter extends CustomPainter {
     final range = span * 1.4;
 
     Offset point(int index) {
-      final x = values.length == 1 ? size.width / 2 : size.width * index / (values.length - 1);
+      final x = values.length == 1
+          ? size.width / 2
+          : size.width * index / (values.length - 1);
       final y = size.height - (values[index] - bottom) / range * size.height;
       return Offset(x, y);
     }
@@ -243,5 +248,6 @@ class _LinePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_LinePainter old) => old.values != values || old.line != line;
+  bool shouldRepaint(_LinePainter old) =>
+      old.values != values || old.line != line;
 }

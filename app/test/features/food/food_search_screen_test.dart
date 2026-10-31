@@ -10,7 +10,8 @@ import 'food_fakes.dart';
 
 final _field = find.byKey(const Key('food-search-field'));
 
-Future<void> _openSearch(WidgetTester tester, FakeFoodRepository repository, List<Food?> picked) async {
+Future<void> _openSearch(WidgetTester tester, FakeFoodRepository repository,
+    List<Food?> picked) async {
   await tester.pumpWidget(foodTestApp(repository, picked));
   await tester.tap(find.byKey(const Key('open')));
   await tester.pumpAndSettle();
@@ -23,7 +24,8 @@ Future<void> _waitForSearch(WidgetTester tester) async {
 }
 
 void main() {
-  testWidgets('typing fast sends only one request after the debounce', (tester) async {
+  testWidgets('typing fast sends only one request after the debounce',
+      (tester) async {
     final repository = FakeFoodRepository()..results = [apple];
     final picked = <Food?>[];
     await _openSearch(tester, repository, picked);
@@ -50,7 +52,8 @@ void main() {
     expect(find.text('Type at least 2 letters.'), findsOneWidget);
   });
 
-  testWidgets('results show name, brand and kcal; tap returns the food', (tester) async {
+  testWidgets('results show name, brand and kcal; tap returns the food',
+      (tester) async {
     final repository = FakeFoodRepository()..results = [apple];
     final picked = <Food?>[];
     await _openSearch(tester, repository, picked);
@@ -88,7 +91,8 @@ void main() {
     expect(find.byKey(const Key('food-result-f1')), findsOneWidget);
   });
 
-  testWidgets('empty result leads to the own-food form and returns the new food',
+  testWidgets(
+      'empty result leads to the own-food form and returns the new food',
       (tester) async {
     useTallScreen(tester);
     final repository = FakeFoodRepository();
@@ -102,7 +106,8 @@ void main() {
     await tester.tap(find.byKey(const Key('food-create-custom')));
     await tester.pumpAndSettle();
 
-    final nameField = tester.widget<TextFormField>(find.byKey(const Key('custom-name')));
+    final nameField =
+        tester.widget<TextFormField>(find.byKey(const Key('custom-name')));
     expect(nameField.controller?.text, 'Omas Kuchen');
 
     await tester.enterText(find.byKey(const Key('custom-kcal')), '380');
@@ -114,10 +119,13 @@ void main() {
     expect(find.byKey(const Key('open')), findsOneWidget);
   });
 
-  testWidgets('the + of a meal in the diary opens the food search', (tester) async {
+  testWidgets('the + of a meal in the diary opens the food search',
+      (tester) async {
     useTallView(tester);
     await tester.pumpWidget(
-      testApp(overrides: [foodRepositoryProvider.overrideWithValue(FakeFoodRepository())]),
+      testApp(overrides: [
+        foodRepositoryProvider.overrideWithValue(FakeFoodRepository())
+      ]),
     );
     await tester.pumpAndSettle();
 

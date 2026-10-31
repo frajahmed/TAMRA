@@ -49,12 +49,14 @@ class _AddActivityScreenState extends ConsumerState<AddActivityScreen> {
     super.dispose();
   }
 
-  double get _weightKg => ref.read(profileProvider).valueOrNull?.weightKg ?? defaultWeightKg;
+  double get _weightKg =>
+      ref.read(profileProvider).valueOrNull?.weightKg ?? defaultWeightKg;
 
   void _suggest() {
     if (_kcalEdited) return;
     final minutes = int.tryParse(_minutes.text) ?? 0;
-    final kcal = activityKcal(met: _kind.met, weightKg: _weightKg, minutes: minutes);
+    final kcal =
+        activityKcal(met: _kind.met, weightKg: _weightKg, minutes: minutes);
     _kcal.text = kcal.round().toString();
   }
 
@@ -82,7 +84,8 @@ class _AddActivityScreenState extends ConsumerState<AddActivityScreen> {
               kind: _kind,
               durationMin: minutes,
               kcal: kcal,
-              distanceM: distanceKm == null ? null : (distanceKm * 1000).round(),
+              distanceM:
+                  distanceKm == null ? null : (distanceKm * 1000).round(),
             ),
           );
       if (!mounted) return;
@@ -93,7 +96,8 @@ class _AddActivityScreenState extends ConsumerState<AddActivityScreen> {
     } on ApiError catch (error) {
       final messages = error.fieldMessages;
       if (mounted) {
-        setState(() => _error = messages.isEmpty ? strings.genericError : messages.join('\n'));
+        setState(() => _error =
+            messages.isEmpty ? strings.genericError : messages.join('\n'));
       }
     } catch (_) {
       if (mounted) setState(() => _error = strings.genericError);
@@ -143,7 +147,9 @@ class _AddActivityScreenState extends ConsumerState<AddActivityScreen> {
             key: const Key('activity-distance'),
             controller: _distance,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]'))],
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]'))
+            ],
             decoration: InputDecoration(labelText: strings.distanceLabel),
           ),
           const SizedBox(height: 12),
@@ -151,7 +157,9 @@ class _AddActivityScreenState extends ConsumerState<AddActivityScreen> {
             key: const Key('activity-kcal'),
             controller: _kcal,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]'))],
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]'))
+            ],
             decoration: InputDecoration(
               labelText: strings.kcalBurnedLabel,
               helperText: strings.kcalSuggestion,

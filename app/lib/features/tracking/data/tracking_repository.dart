@@ -32,7 +32,9 @@ class TrackingRepository {
   /// Water of [date].
   Future<WaterDay> water(DateTime date) async {
     final items = await _api.listWater(dateKey(date));
-    return WaterDay(date: dateOnly(date), entries: [for (final i in items) WaterLog.fromJson(i)]);
+    return WaterDay(
+        date: dateOnly(date),
+        entries: [for (final i in items) WaterLog.fromJson(i)]);
   }
 
   /// Adds [amountMl] (default one glass) to [date].
@@ -56,6 +58,7 @@ final weightsProvider = FutureProvider.autoDispose<List<WeightLog>>((ref) {
 });
 
 /// Water of one day.
-final waterDayProvider = FutureProvider.autoDispose.family<WaterDay, DateTime>((ref, day) {
+final waterDayProvider =
+    FutureProvider.autoDispose.family<WaterDay, DateTime>((ref, day) {
   return ref.watch(trackingRepositoryProvider).water(day);
 });

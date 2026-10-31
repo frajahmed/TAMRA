@@ -33,7 +33,8 @@ class FakeAdapter implements HttpClientAdapter {
 }
 
 ApiClient _client(FakeAdapter adapter) {
-  final dio = Dio(BaseOptions(baseUrl: 'http://test'))..httpClientAdapter = adapter;
+  final dio = Dio(BaseOptions(baseUrl: 'http://test'))
+    ..httpClientAdapter = adapter;
   return ApiClient(dio);
 }
 
@@ -45,7 +46,8 @@ void main() {
   });
 
   test('health returns false for any other status', () async {
-    expect(await _client(FakeAdapter(200, '{"status": "down"}')).health(), isFalse);
+    expect(await _client(FakeAdapter(200, '{"status": "down"}')).health(),
+        isFalse);
   });
 
   test('API errors are parsed into ApiError', () async {
@@ -76,21 +78,25 @@ void main() {
     expect(adapter.lastRequest?.path, '/api/v1/foods/');
     expect(adapter.lastRequest?.queryParameters['q'], 'apfel');
     expect(adapter.lastRequest?.queryParameters['limit'], 30);
-    expect(adapter.lastRequest?.queryParameters.containsKey('country'), isFalse);
+    expect(
+        adapter.lastRequest?.queryParameters.containsKey('country'), isFalse);
   });
 
   test('foodByBarcode turns 404 into ApiError', () async {
-    final adapter = FakeAdapter(404, '{"code": "not_found", "message": "Not found."}');
+    final adapter =
+        FakeAdapter(404, '{"code": "not_found", "message": "Not found."}');
     await expectLater(
       _client(adapter).foodByBarcode('4000417025005'),
-      throwsA(isA<ApiError>().having((error) => error.statusCode, 'statusCode', 404)),
+      throwsA(isA<ApiError>()
+          .having((error) => error.statusCode, 'statusCode', 404)),
     );
     expect(adapter.lastRequest?.path, '/api/v1/foods/barcode/4000417025005/');
   });
 
   test('createFood posts the data', () async {
     final adapter = FakeAdapter(201, '{"id": "f2", "name": "Brot"}');
-    final food = await _client(adapter).createFood({'name': 'Brot', 'kcal': 250});
+    final food =
+        await _client(adapter).createFood({'name': 'Brot', 'kcal': 250});
     expect(food['id'], 'f2');
     expect(adapter.lastRequest?.method, 'POST');
     expect(adapter.lastRequest?.path, '/api/v1/foods/');

@@ -30,7 +30,8 @@ class _SwitchableRemote extends FakeDiaryRepository {
   Future<DiaryEntry> add(NewDiaryEntry entry) async {
     _check();
     if (!knownIds.add(entry.id)) {
-      throw const ApiError(code: 'validation_error', message: 'id used', statusCode: 400);
+      throw const ApiError(
+          code: 'validation_error', message: 'id used', statusCode: 400);
     }
     final saved = entry.toLocalEntry();
     entries.add(saved);
@@ -48,7 +49,8 @@ class _SwitchableRemote extends FakeDiaryRepository {
   Future<void> delete(String id) async {
     _check();
     if (!entries.any((entry) => entry.id == id)) {
-      throw const ApiError(code: 'not_found', message: 'Not found.', statusCode: 404);
+      throw const ApiError(
+          code: 'not_found', message: 'Not found.', statusCode: 404);
     }
     return super.delete(id);
   }
@@ -76,7 +78,8 @@ void main() {
     remote = _SwitchableRemote();
     store = MemoryLocalStore();
     outbox = Outbox(store);
-    diary = OfflineDiaryRepository(remote: remote, store: store, outbox: outbox);
+    diary =
+        OfflineDiaryRepository(remote: remote, store: store, outbox: outbox);
   });
 
   test('a loaded day is cached and shown offline', () async {
@@ -126,7 +129,8 @@ void main() {
     await diary.day(_today);
 
     remote.online = false;
-    final changed = await diary.update(saved.id, amountG: 100, meal: Meal.lunch);
+    final changed =
+        await diary.update(saved.id, amountG: 100, meal: Meal.lunch);
     expect(changed.nutrients.kcal, 52);
     expect(changed.meal, Meal.lunch);
     await diary.delete(saved.id);
@@ -148,18 +152,21 @@ void main() {
     expect(await outbox.length, 2);
   });
 
-  test('server errors that are not network errors are shown, not queued', () async {
+  test('server errors that are not network errors are shown, not queued',
+      () async {
     final entry = _newApple();
     remote.knownIds.add(entry.id);
     await expectLater(
       diary.add(entry),
-      throwsA(isA<ApiError>().having((error) => error.statusCode, 'statusCode', 400)),
+      throwsA(isA<ApiError>()
+          .having((error) => error.statusCode, 'statusCode', 400)),
     );
     expect(await outbox.length, 0);
   });
 
   test('the outbox survives as a stored document', () async {
-    await outbox.add(const OutboxOperation(kind: 'diary.delete', payload: {'id': 'x'}));
+    await outbox
+        .add(const OutboxOperation(kind: 'diary.delete', payload: {'id': 'x'}));
     final again = Outbox(store);
     expect((await again.all()).single.payload['id'], 'x');
     await again.removeFirst();

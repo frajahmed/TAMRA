@@ -37,7 +37,8 @@ class SecureHealthSettingsStorage implements HealthSettingsStorage {
   final FlutterSecureStorage _storage;
 
   @override
-  Future<bool> isConnected() async => await _storage.read(key: _connectedKey) == 'true';
+  Future<bool> isConnected() async =>
+      await _storage.read(key: _connectedKey) == 'true';
 
   @override
   Future<void> setConnected(bool connected) =>
@@ -77,7 +78,8 @@ class MemoryHealthSettingsStorage implements HealthSettingsStorage {
 /// State of the health connection shown on the activity screen.
 class HealthStatus {
   /// Creates the status.
-  const HealthStatus({required this.supported, required this.connected, this.lastSync});
+  const HealthStatus(
+      {required this.supported, required this.connected, this.lastSync});
 
   /// False on devices without a health hub.
   final bool supported;
@@ -143,13 +145,17 @@ class HealthSync {
           'source': source.sourceApi,
         },
     ];
-    final workouts = [for (final workout in data.workouts) workout.toImportJson(source.sourceApi)];
+    final workouts = [
+      for (final workout in data.workouts)
+        workout.toImportJson(source.sourceApi)
+    ];
 
     var created = 0;
     var start = 0;
     do {
       final page = workouts.skip(start).take(importPageSize).toList();
-      created += await repository.importData(activities: page, steps: start == 0 ? steps : []);
+      created += await repository.importData(
+          activities: page, steps: start == 0 ? steps : []);
       start += importPageSize;
     } while (start < workouts.length);
 

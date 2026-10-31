@@ -22,7 +22,8 @@ class ProfileScreen extends ConsumerWidget {
   /// Creates the profile screen.
   const ProfileScreen({super.key});
 
-  Future<void> _update(BuildContext context, WidgetRef ref, Map<String, dynamic> changes) async {
+  Future<void> _update(
+      BuildContext context, WidgetRef ref, Map<String, dynamic> changes) async {
     final messenger = ScaffoldMessenger.of(context);
     final error = AppStrings.of(context).genericError;
     try {
@@ -38,7 +39,9 @@ class ProfileScreen extends ConsumerWidget {
   }
 
   void _setLanguage(BuildContext context, WidgetRef ref, String? code) {
-    ref.read(localeProvider.notifier).setLocale(code == null ? null : Locale(code));
+    ref
+        .read(localeProvider.notifier)
+        .setLocale(code == null ? null : Locale(code));
     if (code != null) _update(context, ref, {'language': code});
   }
 
@@ -89,7 +92,8 @@ class ProfileScreen extends ConsumerWidget {
       context: context,
       builder: (dialogContext) => const _DeleteAccountDialog(),
     );
-    if (deleted == true) await ref.read(authControllerProvider.notifier).accountDeleted();
+    if (deleted == true)
+      await ref.read(authControllerProvider.notifier).accountDeleted();
   }
 
   @override
@@ -112,7 +116,8 @@ class ProfileScreen extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(strings.settingsTarget, style: TextStyle(color: colors.textSecondary)),
+                  Text(strings.settingsTarget,
+                      style: TextStyle(color: colors.textSecondary)),
                   const SizedBox(height: 4),
                   Text(
                     target == null
@@ -139,8 +144,8 @@ class ProfileScreen extends ConsumerWidget {
                       ButtonSegment(value: WeightUnit.lb, label: Text('lb')),
                     ],
                     selected: {profile.weightUnit},
-                    onSelectionChanged: (selection) =>
-                        _update(context, ref, {'weight_unit': selection.first.name}),
+                    onSelectionChanged: (selection) => _update(
+                        context, ref, {'weight_unit': selection.first.name}),
                   ),
                 ),
                 ListTile(
@@ -149,12 +154,13 @@ class ProfileScreen extends ConsumerWidget {
                     key: const Key('unit-energy'),
                     showSelectedIcon: false,
                     segments: const [
-                      ButtonSegment(value: EnergyUnit.kcal, label: Text('kcal')),
+                      ButtonSegment(
+                          value: EnergyUnit.kcal, label: Text('kcal')),
                       ButtonSegment(value: EnergyUnit.kj, label: Text('kJ')),
                     ],
                     selected: {profile.energyUnit},
-                    onSelectionChanged: (selection) =>
-                        _update(context, ref, {'energy_unit': selection.first.name}),
+                    onSelectionChanged: (selection) => _update(
+                        context, ref, {'energy_unit': selection.first.name}),
                   ),
                 ),
                 ListTile(
@@ -167,7 +173,8 @@ class ProfileScreen extends ConsumerWidget {
                     items: [
                       DropdownMenuItem(child: Text(strings.languageDevice)),
                       for (final entry in AppStrings.languageNames.entries)
-                        DropdownMenuItem(value: entry.key, child: Text(entry.value)),
+                        DropdownMenuItem(
+                            value: entry.key, child: Text(entry.value)),
                     ],
                     onChanged: (code) => _setLanguage(context, ref, code),
                   ),
@@ -182,7 +189,8 @@ class ProfileScreen extends ConsumerWidget {
               title: Text(strings.countSport),
               subtitle: Text(strings.countSportHint),
               value: profile.countActivityKcal,
-              onChanged: (value) => _update(context, ref, {'count_activity_kcal': value}),
+              onChanged: (value) =>
+                  _update(context, ref, {'count_activity_kcal': value}),
             ),
           ),
           const SizedBox(height: 12),
@@ -223,11 +231,13 @@ class ProfileScreen extends ConsumerWidget {
                   key: const Key('profile-logout'),
                   leading: const Icon(Icons.logout),
                   title: Text(strings.logout),
-                  onTap: () => ref.read(authControllerProvider.notifier).logout(),
+                  onTap: () =>
+                      ref.read(authControllerProvider.notifier).logout(),
                 ),
                 ListTile(
                   key: const Key('delete-account'),
-                  leading: Icon(Icons.delete_forever_outlined, color: colors.textSecondary),
+                  leading: Icon(Icons.delete_forever_outlined,
+                      color: colors.textSecondary),
                   title: Text(strings.deleteAccount),
                   onTap: () => _deleteAccount(context, ref),
                 ),
@@ -259,7 +269,8 @@ class _DeleteAccountDialog extends ConsumerStatefulWidget {
   const _DeleteAccountDialog();
 
   @override
-  ConsumerState<_DeleteAccountDialog> createState() => _DeleteAccountDialogState();
+  ConsumerState<_DeleteAccountDialog> createState() =>
+      _DeleteAccountDialogState();
 }
 
 class _DeleteAccountDialogState extends ConsumerState<_DeleteAccountDialog> {
@@ -288,7 +299,8 @@ class _DeleteAccountDialogState extends ConsumerState<_DeleteAccountDialog> {
     } on ApiError catch (error) {
       final messages = error.fieldMessages;
       if (mounted) {
-        setState(() => _error = messages.isEmpty ? strings.genericError : messages.first);
+        setState(() =>
+            _error = messages.isEmpty ? strings.genericError : messages.first);
       }
     } catch (_) {
       if (mounted) setState(() => _error = strings.genericError);
@@ -313,7 +325,8 @@ class _DeleteAccountDialogState extends ConsumerState<_DeleteAccountDialog> {
             controller: _password,
             obscureText: true,
             autofillHints: const [AutofillHints.password],
-            decoration: InputDecoration(labelText: strings.password, errorText: _error),
+            decoration:
+                InputDecoration(labelText: strings.password, errorText: _error),
           ),
         ],
       ),
@@ -324,7 +337,8 @@ class _DeleteAccountDialogState extends ConsumerState<_DeleteAccountDialog> {
         ),
         FilledButton(
           key: const Key('delete-confirm'),
-          style: FilledButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.error),
+          style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error),
           onPressed: _busy ? null : () => _delete(strings),
           child: Text(strings.deleteConfirm),
         ),

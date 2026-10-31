@@ -23,7 +23,8 @@ Future<void> _pumpApp(
     testApp(
       activity: activity,
       diary: diary,
-      profile: profile ?? FakeProfileRepository(result: const Profile(weightKg: 80)),
+      profile:
+          profile ?? FakeProfileRepository(result: const Profile(weightKg: 80)),
     ),
   );
   await tester.pumpAndSettle();
@@ -41,9 +42,11 @@ String _fieldText(WidgetTester tester, String key) =>
 
 void main() {
   test('MET formula: MET × kg × hours', () {
-    expect(activityKcal(met: 9.8, weightKg: 70, minutes: 30), closeTo(343, 1e-9));
+    expect(
+        activityKcal(met: 9.8, weightKg: 70, minutes: 30), closeTo(343, 1e-9));
     expect(activityKcal(met: 3.5, weightKg: 80, minutes: 60), 280);
-    expect(() => activityKcal(met: 1, weightKg: 70, minutes: -1), throwsArgumentError);
+    expect(() => activityKcal(met: 1, weightKg: 70, minutes: -1),
+        throwsArgumentError);
   });
 
   test('Activity.fromJson and the API names', () {
@@ -65,7 +68,8 @@ void main() {
     expect(ActivityKind.fromApi('parkour'), ActivityKind.other);
   });
 
-  testWidgets('kcal are suggested from type, duration and weight', (tester) async {
+  testWidgets('kcal are suggested from type, duration and weight',
+      (tester) async {
     await _pumpApp(tester);
     await _openAdd(tester);
 
@@ -116,7 +120,8 @@ void main() {
     expect(activity.added, isEmpty);
   });
 
-  testWidgets('imported workouts show the hint and can be deleted', (tester) async {
+  testWidgets('imported workouts show the hint and can be deleted',
+      (tester) async {
     final activity = FakeActivityRepository()
       ..activities.add(
         Activity(
@@ -145,29 +150,40 @@ void main() {
   });
 
   group('diary balance', () {
-    FakeDiaryRepository diary({required double sport, bool count = true}) => _BalanceDiary(
+    FakeDiaryRepository diary({required double sport, bool count = true}) =>
+        _BalanceDiary(
           burned: sport,
           count: count,
           entries: [
-            diaryEntry(id: 'e1', date: _today, meal: Meal.lunch, name: 'Reis', grams: 300, kcal: 1500),
+            diaryEntry(
+                id: 'e1',
+                date: _today,
+                meal: Meal.lunch,
+                name: 'Reis',
+                grams: 300,
+                kcal: 1500),
           ],
         );
 
-    testWidgets('sport is added to the budget and shown in the formula', (tester) async {
+    testWidgets('sport is added to the budget and shown in the formula',
+        (tester) async {
       await _pumpApp(tester, diary: diary(sport: 300));
 
       expect(
         tester.widget<Text>(find.byKey(const Key('calorie-formula'))).data,
         'Target 2000 kcal + sport 300 kcal − eaten 1500 kcal = 800 kcal',
       );
-      expect(tester.widget<Text>(find.byKey(const Key('calorie-value'))).data, '800 kcal');
+      expect(tester.widget<Text>(find.byKey(const Key('calorie-value'))).data,
+          '800 kcal');
       expect(find.byKey(const Key('diary-sport')), findsOneWidget);
     });
 
-    testWidgets('with the switch off sport is shown but not added', (tester) async {
+    testWidgets('with the switch off sport is shown but not added',
+        (tester) async {
       await _pumpApp(tester, diary: diary(sport: 300, count: false));
 
-      expect(tester.widget<Text>(find.byKey(const Key('calorie-value'))).data, '500 kcal');
+      expect(tester.widget<Text>(find.byKey(const Key('calorie-value'))).data,
+          '500 kcal');
       expect(
         tester.widget<Text>(find.byKey(const Key('calorie-formula'))).data,
         'Target 2000 kcal − eaten 1500 kcal = 500 kcal',

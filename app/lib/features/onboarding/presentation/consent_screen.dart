@@ -50,12 +50,15 @@ class _ConsentScreenState extends ConsumerState<ConsentScreen> {
         child: ListView(
           padding: const EdgeInsetsDirectional.all(24),
           children: [
-            Text(strings.consentText, style: Theme.of(context).textTheme.bodyLarge),
+            Text(strings.consentText,
+                style: Theme.of(context).textTheme.bodyLarge),
             const SizedBox(height: 24),
             CheckboxListTile(
               key: const Key('consent-checkbox'),
               value: _accepted,
-              onChanged: _busy ? null : (value) => setState(() => _accepted = value ?? false),
+              onChanged: _busy
+                  ? null
+                  : (value) => setState(() => _accepted = value ?? false),
               title: Text(strings.consentCheckbox),
               controlAffinity: ListTileControlAffinity.leading,
               contentPadding: EdgeInsetsDirectional.zero,
@@ -71,7 +74,8 @@ class _ConsentScreenState extends ConsumerState<ConsentScreen> {
             const SizedBox(height: 24),
             FilledButton(
               key: const Key('consent-continue'),
-              onPressed: (_accepted && !_busy) ? () => _continue(strings) : null,
+              onPressed:
+                  (_accepted && !_busy) ? () => _continue(strings) : null,
               child: Text(strings.continueButton),
             ),
           ],

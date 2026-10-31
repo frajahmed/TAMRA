@@ -50,7 +50,8 @@ void main() {
     ];
     final c = container();
     await started(c);
-    expect(c.read(authControllerProvider), const AuthState(status: AuthStatus.loggedIn));
+    expect(c.read(authControllerProvider),
+        const AuthState(status: AuthStatus.loggedIn));
   });
 
   test('withdrawn consent means consent is needed again', () async {
@@ -86,14 +87,16 @@ void main() {
     final c = container();
     final controller = await started(c);
 
-    await expectLater(controller.login('a@b.de', 'x'), throwsA(isA<ApiError>()));
+    await expectLater(
+        controller.login('a@b.de', 'x'), throwsA(isA<ApiError>()));
     expect(storage.access, isNull);
     expect(c.read(authControllerProvider), const AuthState.loggedOut());
   });
 
   test('expired session on start logs out and clears tokens', () async {
     storage = MemoryTokenStorage(access: 'a', refresh: 'r');
-    api.profileError = const ApiError(code: 'token_not_valid', message: 'x', statusCode: 401);
+    api.profileError =
+        const ApiError(code: 'token_not_valid', message: 'x', statusCode: 401);
     final c = container();
     await started(c);
     expect(c.read(authControllerProvider), const AuthState.loggedOut());
@@ -102,7 +105,8 @@ void main() {
 
   test('offline start keeps the user logged in', () async {
     storage = MemoryTokenStorage(access: 'a', refresh: 'r');
-    api.profileError = const ApiError(code: 'network_error', message: 'offline');
+    api.profileError =
+        const ApiError(code: 'network_error', message: 'offline');
     final c = container();
     await started(c);
     expect(c.read(authControllerProvider).isLoggedIn, isTrue);
@@ -126,6 +130,7 @@ void main() {
     await controller.login('a@b.de', 'secret-123');
     controller.markConsentGiven();
     controller.markProfileComplete();
-    expect(c.read(authControllerProvider), const AuthState(status: AuthStatus.loggedIn));
+    expect(c.read(authControllerProvider),
+        const AuthState(status: AuthStatus.loggedIn));
   });
 }

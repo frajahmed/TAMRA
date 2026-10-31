@@ -11,14 +11,16 @@ class ProfileRepository {
   final ApiClient _api;
 
   /// The profile with the targets calculated by the server.
-  Future<Profile> getProfile() async => Profile.fromJson(await _api.getProfile());
+  Future<Profile> getProfile() async =>
+      Profile.fromJson(await _api.getProfile());
 
   /// Saves the onboarding answers; the server calculates the targets.
   Future<Profile> saveOnboarding(OnboardingAnswers answers) async =>
       Profile.fromJson(await _api.updateProfile(answers.toJson()));
 
   /// Stores the consent to process health data (current version).
-  Future<void> giveHealthConsent() => _api.giveConsent('health_data', healthConsentVersion);
+  Future<void> giveHealthConsent() =>
+      _api.giveConsent('health_data', healthConsentVersion);
 
   /// Changes settings such as `weight_unit`, `energy_unit` or `language`.
   Future<Profile> updateSettings(Map<String, dynamic> changes) async =>

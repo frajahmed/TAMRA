@@ -10,7 +10,11 @@ import '../json.dart';
 /// Saturday in many Arabic countries).
 class DateStrip extends StatelessWidget {
   /// Creates the strip around [selected]; [today] can be fixed in tests.
-  const DateStrip({super.key, required this.selected, required this.onSelected, this.today});
+  const DateStrip(
+      {super.key,
+      required this.selected,
+      required this.onSelected,
+      this.today});
 
   /// The selected day.
   final DateTime selected;
@@ -42,15 +46,15 @@ class DateStrip extends StatelessWidget {
           key: const Key('week-previous'),
           tooltip: strings.previousWeek,
           icon: const Icon(Icons.chevron_left),
-          onPressed: () =>
-              onSelected(DateTime(selected.year, selected.month, selected.day - 7)),
+          onPressed: () => onSelected(
+              DateTime(selected.year, selected.month, selected.day - 7)),
         ),
         for (var index = 0; index < 7; index++)
           Expanded(
             child: _DayCell(
               day: DateTime(start.year, start.month, start.day + index),
-              weekdayLabel: localizations
-                  .narrowWeekdays[(localizations.firstDayOfWeekIndex + index) % 7],
+              weekdayLabel: localizations.narrowWeekdays[
+                  (localizations.firstDayOfWeekIndex + index) % 7],
               selected: selected,
               today: now,
               colors: colors,
@@ -61,8 +65,8 @@ class DateStrip extends StatelessWidget {
           key: const Key('week-next'),
           tooltip: strings.nextWeek,
           icon: const Icon(Icons.chevron_right),
-          onPressed: () =>
-              onSelected(DateTime(selected.year, selected.month, selected.day + 7)),
+          onPressed: () => onSelected(
+              DateTime(selected.year, selected.month, selected.day + 7)),
         ),
       ],
     );
@@ -99,32 +103,34 @@ class _DayCell extends StatelessWidget {
       label: MaterialLocalizations.of(context).formatFullDate(day),
       excludeSemantics: true,
       child: InkWell(
-      key: Key('day-${dateKey(day)}'),
-      borderRadius: BorderRadius.circular(14),
-      onTap: () => onTap(day),
-      child: Container(
-        margin: const EdgeInsetsDirectional.symmetric(horizontal: 2),
-        padding: const EdgeInsetsDirectional.symmetric(vertical: 8),
-        decoration: BoxDecoration(
-          color: isSelected ? colors.brand : Colors.transparent,
-          borderRadius: BorderRadius.circular(14),
-          border: isToday && !isSelected ? Border.all(color: colors.brand) : null,
+        key: Key('day-${dateKey(day)}'),
+        borderRadius: BorderRadius.circular(14),
+        onTap: () => onTap(day),
+        child: Container(
+          margin: const EdgeInsetsDirectional.symmetric(horizontal: 2),
+          padding: const EdgeInsetsDirectional.symmetric(vertical: 8),
+          decoration: BoxDecoration(
+            color: isSelected ? colors.brand : Colors.transparent,
+            borderRadius: BorderRadius.circular(14),
+            border:
+                isToday && !isSelected ? Border.all(color: colors.brand) : null,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                weekdayLabel,
+                style: TextStyle(
+                    color: isSelected ? colors.onBrand : colors.textSecondary),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                '${day.day}',
+                style: TextStyle(color: textColor, fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              weekdayLabel,
-              style: TextStyle(color: isSelected ? colors.onBrand : colors.textSecondary),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              '${day.day}',
-              style: TextStyle(color: textColor, fontWeight: FontWeight.w600),
-            ),
-          ],
-        ),
-      ),
       ),
     );
   }

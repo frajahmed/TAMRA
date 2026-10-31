@@ -47,7 +47,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 
   /// Validates a number field; returns the value or sets [_inputError].
-  num? _readNumber(TextEditingController controller, num min, num max, AppStrings strings) {
+  num? _readNumber(
+      TextEditingController controller, num min, num max, AppStrings strings) {
     final value = num.tryParse(controller.text.trim().replaceAll(',', '.'));
     if (value == null || value < min || value > max) {
       setState(() => _inputError = strings.invalidRange(min, max));
@@ -116,7 +117,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       _localTarget = answers.localCalorieTarget(_year);
     });
     try {
-      final profile = await ref.read(profileRepositoryProvider).saveOnboarding(answers);
+      final profile =
+          await ref.read(profileRepositoryProvider).saveOnboarding(answers);
       if (mounted) setState(() => _result = profile);
     } catch (_) {
       if (mounted) setState(() => _saveError = strings.genericError);
@@ -140,26 +142,33 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   profile: _result,
                   localTarget: _localTarget,
                   saving: _saving,
-                  onStart: () => ref.read(authControllerProvider.notifier).markProfileComplete(),
+                  onStart: () => ref
+                      .read(authControllerProvider.notifier)
+                      .markProfileComplete(),
                 )
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text(strings.stepOf(_index + 1, total), key: const Key('onboarding-step')),
+                    Text(strings.stepOf(_index + 1, total),
+                        key: const Key('onboarding-step')),
                     const SizedBox(height: 8),
                     LinearProgressIndicator(value: (_index + 1) / total),
                     const SizedBox(height: 24),
-                    Expanded(child: SingleChildScrollView(child: _question(strings))),
+                    Expanded(
+                        child:
+                            SingleChildScrollView(child: _question(strings))),
                     if (_inputError != null)
                       Text(
                         _inputError!,
                         key: const Key('onboarding-error'),
-                        style: TextStyle(color: Theme.of(context).colorScheme.error),
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.error),
                       ),
                     if (_saveError != null)
                       Text(
                         _saveError!,
-                        style: TextStyle(color: Theme.of(context).colorScheme.error),
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.error),
                       ),
                     const SizedBox(height: 16),
                     Row(
@@ -176,7 +185,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         FilledButton(
                           key: const Key('onboarding-next'),
                           onPressed: () => _next(strings),
-                          child: Text(_index == total - 1 ? strings.save : strings.next),
+                          child: Text(_index == total - 1
+                              ? strings.save
+                              : strings.next),
                         ),
                       ],
                     ),
@@ -230,9 +241,15 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           decimals: false,
         );
       case _Step.height:
-        return _NumberInput(question: strings.heightQuestion, controller: _height, style: title);
+        return _NumberInput(
+            question: strings.heightQuestion,
+            controller: _height,
+            style: title);
       case _Step.weight:
-        return _NumberInput(question: strings.weightQuestion, controller: _weight, style: title);
+        return _NumberInput(
+            question: strings.weightQuestion,
+            controller: _weight,
+            style: title);
     }
   }
 }
@@ -306,7 +323,8 @@ class _NumberInput extends StatelessWidget {
           autofocus: true,
           keyboardType: TextInputType.numberWithOptions(decimal: decimals),
           inputFormatters: [
-            FilteringTextInputFormatter.allow(RegExp(decimals ? r'[0-9.,]' : r'[0-9]')),
+            FilteringTextInputFormatter.allow(
+                RegExp(decimals ? r'[0-9.,]' : r'[0-9]')),
           ],
         ),
       ],

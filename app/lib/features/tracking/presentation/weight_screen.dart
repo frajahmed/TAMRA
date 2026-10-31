@@ -36,11 +36,13 @@ class WeightScreen extends ConsumerWidget {
     await _run(
       context,
       ref,
-      () => ref.read(trackingRepositoryProvider).saveWeight(result.$1, result.$2),
+      () =>
+          ref.read(trackingRepositoryProvider).saveWeight(result.$1, result.$2),
     );
   }
 
-  Future<void> _run(BuildContext context, WidgetRef ref, Future<void> Function() action) async {
+  Future<void> _run(BuildContext context, WidgetRef ref,
+      Future<void> Function() action) async {
     final messenger = ScaffoldMessenger.of(context);
     final error = AppStrings.of(context).genericError;
     try {
@@ -58,7 +60,8 @@ class WeightScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final strings = AppStrings.of(context);
-    final unit = ref.watch(profileProvider).valueOrNull?.weightUnit ?? WeightUnit.kg;
+    final unit =
+        ref.watch(profileProvider).valueOrNull?.weightUnit ?? WeightUnit.kg;
     final weights = ref.watch(weightsProvider);
     final localizations = MaterialLocalizations.of(context);
 
@@ -98,7 +101,9 @@ class WeightScreen extends ConsumerWidget {
                       padding: const EdgeInsetsDirectional.all(16),
                       child: LineChart(
                         key: const Key('weight-chart'),
-                        values: [for (final log in logs) unit.fromKg(log.weightKg)],
+                        values: [
+                          for (final log in logs) unit.fromKg(log.weightKg)
+                        ],
                         semanticLabel: strings.weightChartLabel,
                       ),
                     ),
@@ -117,7 +122,9 @@ class WeightScreen extends ConsumerWidget {
                         onPressed: () => _run(
                           context,
                           ref,
-                          () => ref.read(trackingRepositoryProvider).deleteWeight(log.id),
+                          () => ref
+                              .read(trackingRepositoryProvider)
+                              .deleteWeight(log.id),
                         ),
                       ),
                     ),
@@ -144,7 +151,8 @@ class _WeightDialogState extends State<_WeightDialog> {
   late final _input = TextEditingController(
     text: widget.existing == null
         ? ''
-        : formatAmount(double.parse(widget.unit.fromKg(widget.existing!.weightKg).toStringAsFixed(1))),
+        : formatAmount(double.parse(
+            widget.unit.fromKg(widget.existing!.weightKg).toStringAsFixed(1))),
   );
   String? _error;
 
@@ -170,8 +178,10 @@ class _WeightDialogState extends State<_WeightDialog> {
     final kg = typed == null ? null : widget.unit.toKg(typed);
     if (kg == null || kg < minWeightKg || kg > maxWeightKg) {
       final low = formatAmount(widget.unit.fromKg(minWeightKg).roundToDouble());
-      final high = formatAmount(widget.unit.fromKg(maxWeightKg).roundToDouble());
-      setState(() => _error = strings.invalidRange(num.parse(low), num.parse(high)));
+      final high =
+          formatAmount(widget.unit.fromKg(maxWeightKg).roundToDouble());
+      setState(
+          () => _error = strings.invalidRange(num.parse(low), num.parse(high)));
       return;
     }
     Navigator.of(context).pop((_date, double.parse(kg.toStringAsFixed(1))));
@@ -190,7 +200,8 @@ class _WeightDialogState extends State<_WeightDialog> {
             contentPadding: EdgeInsetsDirectional.zero,
             leading: const Icon(Icons.event),
             title: Text(strings.dateLabel),
-            subtitle: Text(MaterialLocalizations.of(context).formatMediumDate(_date)),
+            subtitle:
+                Text(MaterialLocalizations.of(context).formatMediumDate(_date)),
             // The day of an existing entry stays fixed: one weight per day.
             onTap: widget.existing == null ? _pickDate : null,
           ),
@@ -199,7 +210,9 @@ class _WeightDialogState extends State<_WeightDialog> {
             controller: _input,
             autofocus: true,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]'))],
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]'))
+            ],
             decoration: InputDecoration(
               labelText: strings.weightLabel(widget.unit),
               errorText: _error,

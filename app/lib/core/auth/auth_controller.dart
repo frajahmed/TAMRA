@@ -138,7 +138,8 @@ class AuthController extends Notifier<AuthState> {
       final profile = await _api.getProfile();
       final consents = await _api.listConsents();
       final hasHealthConsent = consents.any(
-        (consent) => consent['type'] == 'health_data' && consent['withdrawn_at'] == null,
+        (consent) =>
+            consent['type'] == 'health_data' && consent['withdrawn_at'] == null,
       );
       state = AuthState(
         status: AuthStatus.loggedIn,

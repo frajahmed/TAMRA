@@ -25,15 +25,18 @@ class FakeServer implements HttpClientAdapter {
     if (options.path == '/api/v1/auth/refresh/') {
       return refreshWorks
           ? _json(200, {'access': 'new-access', 'refresh': 'new-refresh'})
-          : _json(401, {'code': 'token_not_valid', 'message': 'expired', 'fields': {}});
+          : _json(401,
+              {'code': 'token_not_valid', 'message': 'expired', 'fields': {}});
     }
     if (auth == 'Bearer new-access') {
       return _json(200, {'ok': true});
     }
-    return _json(401, {'code': 'token_not_valid', 'message': 'expired', 'fields': {}});
+    return _json(
+        401, {'code': 'token_not_valid', 'message': 'expired', 'fields': {}});
   }
 
-  ResponseBody _json(int status, Map<String, dynamic> body) => ResponseBody.fromString(
+  ResponseBody _json(int status, Map<String, dynamic> body) =>
+      ResponseBody.fromString(
         jsonEncode(body),
         status,
         headers: {
@@ -51,8 +54,10 @@ void main() {
   late int expiredCalls;
 
   Dio dio() {
-    final plain = Dio(BaseOptions(baseUrl: 'http://test'))..httpClientAdapter = server;
-    final main = Dio(BaseOptions(baseUrl: 'http://test'))..httpClientAdapter = server;
+    final plain = Dio(BaseOptions(baseUrl: 'http://test'))
+      ..httpClientAdapter = server;
+    final main = Dio(BaseOptions(baseUrl: 'http://test'))
+      ..httpClientAdapter = server;
     main.interceptors.add(
       AuthInterceptor(
         storage: storage,
@@ -68,9 +73,11 @@ void main() {
     expiredCalls = 0;
   });
 
-  test('adds the bearer token, refreshes once on 401 and repeats the request', () async {
+  test('adds the bearer token, refreshes once on 401 and repeats the request',
+      () async {
     server = FakeServer();
-    final response = await dio().get<Map<String, dynamic>>('/api/v1/me/profile/');
+    final response =
+        await dio().get<Map<String, dynamic>>('/api/v1/me/profile/');
 
     expect(response.data, {'ok': true});
     expect(storage.access, 'new-access');
@@ -97,7 +104,8 @@ void main() {
   test('public endpoints are sent without a token', () async {
     server = FakeServer();
     await expectLater(
-      dio().post<dynamic>('/api/v1/auth/login/', data: {'email': 'a', 'password': 'b'}),
+      dio().post<dynamic>('/api/v1/auth/login/',
+          data: {'email': 'a', 'password': 'b'}),
       throwsA(isA<DioException>()),
     );
     expect(server.log, ['/api/v1/auth/login/ null']);

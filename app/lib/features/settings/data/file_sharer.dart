@@ -16,10 +16,13 @@ class SystemFileSharer implements FileSharer {
 
   @override
   Future<void> shareJson(String fileName, String content) async {
-    final file = XFile.fromData(utf8.encode(content), mimeType: 'application/json', name: fileName);
-    await SharePlus.instance.share(ShareParams(files: [file], fileNameOverrides: [fileName]));
+    final file = XFile.fromData(utf8.encode(content),
+        mimeType: 'application/json', name: fileName);
+    await SharePlus.instance
+        .share(ShareParams(files: [file], fileNameOverrides: [fileName]));
   }
 }
 
 /// The share menu; widget tests replace it with a fake.
-final fileSharerProvider = Provider<FileSharer>((ref) => const SystemFileSharer());
+final fileSharerProvider =
+    Provider<FileSharer>((ref) => const SystemFileSharer());

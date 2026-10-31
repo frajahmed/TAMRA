@@ -14,20 +14,24 @@ void main() {
   test('every language has exactly the same keys as English, none empty', () {
     final englishKeys = translations['en']!.keys.toSet();
     translations.forEach((language, table) {
-      expect(table.keys.toSet(), englishKeys, reason: 'Keys differ in "$language"');
+      expect(table.keys.toSet(), englishKeys,
+          reason: 'Keys differ in "$language"');
       table.forEach((key, value) {
-        expect(value.trim(), isNotEmpty, reason: 'Empty text "$key" in "$language"');
+        expect(value.trim(), isNotEmpty,
+            reason: 'Empty text "$key" in "$language"');
       });
     });
   });
 
   test('resolveLocale picks a supported device language', () {
     expect(
-      AppStrings.resolveLocale(const Locale('ar', 'SA'), AppStrings.supportedLocales),
+      AppStrings.resolveLocale(
+          const Locale('ar', 'SA'), AppStrings.supportedLocales),
       const Locale('ar'),
     );
     expect(
-      AppStrings.resolveLocale(const Locale('de', 'AT'), AppStrings.supportedLocales),
+      AppStrings.resolveLocale(
+          const Locale('de', 'AT'), AppStrings.supportedLocales),
       const Locale('de'),
     );
   });

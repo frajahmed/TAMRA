@@ -20,6 +20,8 @@ IconData activityKindIcon(ActivityKind kind) => switch (kind) {
 /// Icon of the source: hand for manual entries, heart for health apps, link for others.
 IconData activitySourceIcon(ActivitySource source) => switch (source) {
       ActivitySource.manual => Icons.edit_note,
-      ActivitySource.appleHealth || ActivitySource.healthConnect => Icons.favorite,
+      ActivitySource.appleHealth ||
+      ActivitySource.healthConnect =>
+        Icons.favorite,
       ActivitySource.other => Icons.link,
     };

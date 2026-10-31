@@ -37,7 +37,8 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
   final Set<String> _hidden = {};
 
   /// Deletes waiting for [undoDuration]: the timer and the action that deletes on the server.
-  final Map<String, ({Timer timer, Future<void> Function() commit})> _pending = {};
+  final Map<String, ({Timer timer, Future<void> Function() commit})> _pending =
+      {};
 
   Future<void> _reload(DateTime day) async {
     ref.invalidate(diaryDayProvider(day));
@@ -71,7 +72,9 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
           );
       messenger.showSnackBar(
         SnackBar(
-          content: Text(copied == 0 ? strings.nothingToCopy : strings.entriesCopied(copied)),
+          content: Text(copied == 0
+              ? strings.nothingToCopy
+              : strings.entriesCopied(copied)),
         ),
       );
       if (copied > 0 && mounted) await _reload(day);
@@ -94,7 +97,8 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
         key: const Key('undo-snackbar'),
         content: Text(strings.entryDeleted),
         duration: undoDuration,
-        action: SnackBarAction(label: strings.undo, onPressed: () => _undo(entry.id)),
+        action: SnackBarAction(
+            label: strings.undo, onPressed: () => _undo(entry.id)),
       ),
     );
 
@@ -142,7 +146,9 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          isToday ? strings.today : MaterialLocalizations.of(context).formatMediumDate(day),
+          isToday
+              ? strings.today
+              : MaterialLocalizations.of(context).formatMediumDate(day),
           key: const Key('home-title'),
         ),
         actions: [
@@ -188,7 +194,8 @@ class _DiaryScreenState extends ConsumerState<DiaryScreen> {
                   onDelete: _delete,
                 ),
               ),
-              loading: () => const Center(child: CircularProgressIndicator(key: Key('diary-loading'))),
+              loading: () => const Center(
+                  child: CircularProgressIndicator(key: Key('diary-loading'))),
               error: (error, stack) => Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -251,7 +258,8 @@ class _DiaryContent extends StatelessWidget {
                 Icon(Icons.cloud_off, size: 18, color: colors.textSecondary),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: Text(strings.offlineHint, style: TextStyle(color: colors.textSecondary)),
+                  child: Text(strings.offlineHint,
+                      style: TextStyle(color: colors.textSecondary)),
                 ),
               ],
             ),
@@ -262,11 +270,14 @@ class _DiaryContent extends StatelessWidget {
             child: Column(
               children: [
                 CalorieArc(
-                  progress: budget == null || budget <= 0 ? 0 : totals.kcal / budget,
+                  progress:
+                      budget == null || budget <= 0 ? 0 : totals.kcal / budget,
                   value: strings.energy(remaining?.abs() ?? totals.kcal, unit),
                   label: remaining == null
                       ? ''
-                      : (remaining >= 0 ? strings.caloriesLeft : strings.caloriesOver),
+                      : (remaining >= 0
+                          ? strings.caloriesLeft
+                          : strings.caloriesOver),
                 ),
                 if (target != null && remaining != null)
                   Text(
@@ -290,11 +301,13 @@ class _DiaryContent extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: _macro(strings, strings.carbs, totals.carbs, targets.carbsG, colors.carbs),
+                      child: _macro(strings, strings.carbs, totals.carbs,
+                          targets.carbsG, colors.carbs),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: _macro(strings, strings.fat, totals.fat, targets.fatG, colors.fat),
+                      child: _macro(strings, strings.fat, totals.fat,
+                          targets.fatG, colors.fat),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -318,7 +331,8 @@ class _DiaryContent extends StatelessWidget {
             child: ListTile(
               key: const Key('diary-sport'),
               leading: Icon(Icons.directions_run, color: colors.brand),
-              title: Text(strings.activityBurned(strings.energy(day.burnedKcal, unit))),
+              title: Text(
+                  strings.activityBurned(strings.energy(day.burnedKcal, unit))),
               trailing: Text(strings.stepsValue(day.steps)),
             ),
           ),
@@ -360,7 +374,8 @@ class _DiaryContent extends StatelessWidget {
     );
   }
 
-  Widget _macro(AppStrings strings, String label, double grams, int? target, Color color) {
+  Widget _macro(AppStrings strings, String label, double grams, int? target,
+      Color color) {
     return MacroBar(
       label: label,
       grams: grams,

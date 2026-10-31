@@ -60,7 +60,8 @@ class DeviceHealthSource implements HealthSource {
   }
 
   @override
-  Future<HealthImport> read({required DateTime from, required DateTime to}) async {
+  Future<HealthImport> read(
+      {required DateTime from, required DateTime to}) async {
     await _configure();
     final points = await _health.getHealthDataFromTypes(
       types: const [HealthDataType.WORKOUT],
@@ -87,9 +88,12 @@ class DeviceHealthSource implements HealthSource {
     }
 
     final steps = <DateTime, int>{};
-    for (var day = dateOnly(from); !day.isAfter(to); day = DateTime(day.year, day.month, day.day + 1)) {
+    for (var day = dateOnly(from);
+        !day.isAfter(to);
+        day = DateTime(day.year, day.month, day.day + 1)) {
       final next = DateTime(day.year, day.month, day.day + 1);
-      final count = await _health.getTotalStepsInInterval(day, next.isAfter(to) ? to : next);
+      final count = await _health.getTotalStepsInInterval(
+          day, next.isAfter(to) ? to : next);
       if (count != null && count > 0) steps[day] = count;
     }
     return HealthImport(workouts: workouts, stepsByDay: steps);
@@ -97,4 +101,5 @@ class DeviceHealthSource implements HealthSource {
 }
 
 /// The health hub of the phone; widget tests replace it with a fake.
-final healthSourceProvider = Provider<HealthSource>((ref) => DeviceHealthSource());
+final healthSourceProvider =
+    Provider<HealthSource>((ref) => DeviceHealthSource());

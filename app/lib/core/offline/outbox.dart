@@ -15,7 +15,8 @@ class OutboxOperation {
   Map<String, dynamic> toJson() => {'kind': kind, 'payload': payload};
 
   /// Reads the stored form.
-  factory OutboxOperation.fromJson(Map<String, dynamic> json) => OutboxOperation(
+  factory OutboxOperation.fromJson(Map<String, dynamic> json) =>
+      OutboxOperation(
         kind: json['kind']?.toString() ?? '',
         payload: json['payload'] is Map<String, dynamic>
             ? json['payload'] as Map<String, dynamic>
@@ -42,7 +43,8 @@ class Outbox {
   }
 
   /// Adds [operation] at the end.
-  Future<void> add(OutboxOperation operation) async => _save([...await all(), operation]);
+  Future<void> add(OutboxOperation operation) async =>
+      _save([...await all(), operation]);
 
   /// Removes the oldest operation (after it was sent or found invalid).
   Future<void> removeFirst() async {
@@ -53,6 +55,7 @@ class Outbox {
   /// Number of waiting operations.
   Future<int> get length async => (await all()).length;
 
-  Future<void> _save(List<OutboxOperation> items) =>
-      _store.write(_key, {'items': [for (final item in items) item.toJson()]});
+  Future<void> _save(List<OutboxOperation> items) => _store.write(_key, {
+        'items': [for (final item in items) item.toJson()]
+      });
 }

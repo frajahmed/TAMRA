@@ -35,7 +35,8 @@ class ActivityRepository {
     required List<Map<String, dynamic>> activities,
     required List<Map<String, dynamic>> steps,
   }) async {
-    final result = await _api.importActivities({'activities': activities, 'steps': steps});
+    final result =
+        await _api.importActivities({'activities': activities, 'steps': steps});
     return jsonInt(result['created']) ?? 0;
   }
 }
@@ -46,6 +47,7 @@ final activityRepositoryProvider = Provider<ActivityRepository>((ref) {
 });
 
 /// Workouts and steps of one day.
-final activityDayProvider = FutureProvider.autoDispose.family<ActivityDay, DateTime>((ref, day) {
+final activityDayProvider =
+    FutureProvider.autoDispose.family<ActivityDay, DateTime>((ref, day) {
   return ref.watch(activityRepositoryProvider).day(day);
 });

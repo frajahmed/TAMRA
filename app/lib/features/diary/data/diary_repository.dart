@@ -48,7 +48,8 @@ class DiaryRepository {
   Future<void> delete(String id) => _api.deleteDiaryEntry(id);
 
   /// Copies the entries of [from] (only [meal] when given) to [to]; returns how many.
-  Future<int> copy({required DateTime from, required DateTime to, Meal? meal}) =>
+  Future<int> copy(
+          {required DateTime from, required DateTime to, Meal? meal}) =>
       _api.copyDiary({
         'from_date': dateKey(from),
         'to_date': dateKey(to),
@@ -77,9 +78,11 @@ class SelectedDay extends Notifier<DateTime> {
 }
 
 /// The day shown in the diary.
-final selectedDayProvider = NotifierProvider<SelectedDay, DateTime>(SelectedDay.new);
+final selectedDayProvider =
+    NotifierProvider<SelectedDay, DateTime>(SelectedDay.new);
 
 /// Entries and targets of one day; invalidate it after a change to reload.
-final diaryDayProvider = FutureProvider.autoDispose.family<DiaryDay, DateTime>((ref, day) {
+final diaryDayProvider =
+    FutureProvider.autoDispose.family<DiaryDay, DateTime>((ref, day) {
   return ref.watch(diaryRepositoryProvider).day(day);
 });

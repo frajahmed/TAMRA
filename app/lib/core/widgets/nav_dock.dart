@@ -5,7 +5,8 @@ import '../../app/theme.dart';
 /// One tab of the [NavDock].
 class NavDockItem {
   /// Creates a tab with icon, label and a widget key for tests.
-  const NavDockItem({required this.icon, required this.label, required this.keyName});
+  const NavDockItem(
+      {required this.icon, required this.label, required this.keyName});
 
   /// Icon of the tab.
   final IconData icon;

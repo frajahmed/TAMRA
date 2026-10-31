@@ -17,7 +17,8 @@ import 'diary_repository.dart';
 /// Conflicts: the server keeps the newest change (last write wins on `updated_at`).
 class OfflineDiaryRepository implements DiaryRepository {
   /// Wraps [remote] (the API) with a cache in [store] and an [outbox].
-  OfflineDiaryRepository({required this.remote, required this.store, required this.outbox});
+  OfflineDiaryRepository(
+      {required this.remote, required this.store, required this.outbox});
 
   /// The online diary (the API).
   final DiaryRepository remote;
@@ -56,7 +57,8 @@ class OfflineDiaryRepository implements DiaryRepository {
       if (!error.isNetworkError) rethrow;
       final local = entry.toLocalEntry();
       await _changeCachedDay(entry.date, (entries) => [...entries, local]);
-      await outbox.add(OutboxOperation(kind: 'diary.create', payload: entry.toJson()));
+      await outbox
+          .add(OutboxOperation(kind: 'diary.create', payload: entry.toJson()));
       return local;
     }
   }
@@ -94,18 +96,23 @@ class OfflineDiaryRepository implements DiaryRepository {
       await remote.delete(id);
     } on ApiError catch (error) {
       if (!error.isNetworkError) rethrow;
-      await outbox.add(OutboxOperation(kind: 'diary.delete', payload: {'id': id}));
+      await outbox
+          .add(OutboxOperation(kind: 'diary.delete', payload: {'id': id}));
     }
     if (cached != null) {
       await _changeCachedDay(
         cached.date,
-        (entries) => [for (final entry in entries) if (entry.id != id) entry],
+        (entries) => [
+          for (final entry in entries)
+            if (entry.id != id) entry
+        ],
       );
     }
   }
 
   @override
-  Future<int> copy({required DateTime from, required DateTime to, Meal? meal}) =>
+  Future<int> copy(
+          {required DateTime from, required DateTime to, Meal? meal}) =>
       // Copying needs the server (it calculates fresh nutrients); it works online only.
       remote.copy(from: from, to: to, meal: meal);
 
@@ -115,7 +122,8 @@ class OfflineDiaryRepository implements DiaryRepository {
       try {
         await _send(operation);
       } on ApiError catch (error) {
-        if (error.isNetworkError) return; // still offline: keep the rest for later
+        if (error.isNetworkError)
+          return; // still offline: keep the rest for later
         // 400 "id already used" / 404 "not found": already done or no longer possible.
       }
       await outbox.removeFirst();
@@ -155,7 +163,8 @@ class OfflineDiaryRepository implements DiaryRepository {
     final day = cached == null
         ? DiaryDay(date: dateOnly(date), entries: const [])
         : DiaryDay.fromJson(cached);
-    await store.write(_key(date), day.withEntries(change(day.entries)).toJson());
+    await store.write(
+        _key(date), day.withEntries(change(day.entries)).toJson());
   }
 
   Future<void> _replaceCachedEntry(
@@ -165,14 +174,17 @@ class OfflineDiaryRepository implements DiaryRepository {
   ) =>
       _changeCachedDay(
         date,
-        (entries) => [for (final entry in entries) entry.id == id ? replace(entry) : entry],
+        (entries) => [
+          for (final entry in entries) entry.id == id ? replace(entry) : entry
+        ],
       );
 
   /// Looks for [id] in the cached days of the last weeks (entries are edited near today).
   Future<DiaryEntry?> _findCachedEntry(String id) async {
     final today = dateOnly(DateTime.now());
     for (var offset = 0; offset <= 60; offset++) {
-      final cached = await store.read(_key(DateTime(today.year, today.month, today.day - offset)));
+      final cached = await store
+          .read(_key(DateTime(today.year, today.month, today.day - offset)));
       if (cached == null) continue;
       for (final entry in DiaryDay.fromJson(cached).entries) {
         if (entry.id == id) return entry;

@@ -72,4 +72,5 @@ class MemoryTokenStorage implements TokenStorage {
 }
 
 /// Where tokens are stored: the phone's secure storage (Keychain / Keystore).
-final tokenStorageProvider = Provider<TokenStorage>((ref) => SecureTokenStorage());
+final tokenStorageProvider =
+    Provider<TokenStorage>((ref) => SecureTokenStorage());

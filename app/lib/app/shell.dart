@@ -70,14 +70,23 @@ class AppShell extends ConsumerWidget {
           initialLocation: index == navigationShell.currentIndex,
         ),
         items: [
-          NavDockItem(icon: Icons.menu_book, label: strings.navDiary, keyName: 'nav-diary'),
-          NavDockItem(icon: Icons.bar_chart, label: strings.navStats, keyName: 'nav-stats'),
+          NavDockItem(
+              icon: Icons.menu_book,
+              label: strings.navDiary,
+              keyName: 'nav-diary'),
+          NavDockItem(
+              icon: Icons.bar_chart,
+              label: strings.navStats,
+              keyName: 'nav-stats'),
           NavDockItem(
             icon: Icons.directions_run,
             label: strings.navActivity,
             keyName: 'nav-activity',
           ),
-          NavDockItem(icon: Icons.person, label: strings.navProfile, keyName: 'nav-profile'),
+          NavDockItem(
+              icon: Icons.person,
+              label: strings.navProfile,
+              keyName: 'nav-profile'),
         ],
       ),
     );

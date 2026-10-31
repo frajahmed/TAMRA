@@ -29,7 +29,9 @@ class Food {
       id: json['id'].toString(),
       name: json['name']?.toString() ?? '',
       brand: json['brand']?.toString() ?? '',
-      barcode: barcode == null || barcode.toString().isEmpty ? null : barcode.toString(),
+      barcode: barcode == null || barcode.toString().isEmpty
+          ? null
+          : barcode.toString(),
       isCustom: json['is_custom'] == true,
       per100g: NutritionPer100g(
         kcal: jsonDouble(json['kcal']) ?? 0,

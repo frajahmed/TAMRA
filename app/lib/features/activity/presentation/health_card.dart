@@ -36,7 +36,8 @@ class _HealthCardState extends ConsumerState<HealthCard> {
       ..invalidate(healthStatusProvider)
       ..invalidate(activityDayProvider)
       ..invalidate(diaryDayProvider);
-    if (message != null) messenger.showSnackBar(SnackBar(content: Text(message)));
+    if (message != null)
+      messenger.showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -62,13 +63,15 @@ class _HealthCardState extends ConsumerState<HealthCard> {
                 const Icon(Icons.favorite_outline),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: Text(strings.healthTitle, style: Theme.of(context).textTheme.titleMedium),
+                  child: Text(strings.healthTitle,
+                      style: Theme.of(context).textTheme.titleMedium),
                 ),
               ],
             ),
             const SizedBox(height: 8),
             if (!status.supported)
-              Text(strings.healthUnsupported, key: const Key('health-unsupported'))
+              Text(strings.healthUnsupported,
+                  key: const Key('health-unsupported'))
             else if (!status.connected) ...[
               Text(strings.healthConnectHint(app)),
               const SizedBox(height: 12),
@@ -99,7 +102,8 @@ class _HealthCardState extends ConsumerState<HealthCard> {
                     key: const Key('health-sync'),
                     onPressed: _busy
                         ? null
-                        : () => _run(() async => strings.healthSynced(await sync.sync())),
+                        : () => _run(() async =>
+                            strings.healthSynced(await sync.sync())),
                     child: Text(strings.healthSyncNow),
                   ),
                   TextButton(

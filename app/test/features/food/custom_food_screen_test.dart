@@ -5,7 +5,8 @@ import 'package:tamra_app/features/food/domain/food.dart';
 
 import 'food_fakes.dart';
 
-Future<void> _openForm(WidgetTester tester, FakeFoodRepository repository, List<Food?> picked) async {
+Future<void> _openForm(WidgetTester tester, FakeFoodRepository repository,
+    List<Food?> picked) async {
   useTallScreen(tester);
   await tester.pumpWidget(foodTestApp(repository, picked));
   await tester.tap(find.byKey(const Key('open')));
@@ -30,7 +31,8 @@ void main() {
     expect(repository.created, isNull);
   });
 
-  testWidgets('kcal above 900 and an invalid barcode are rejected', (tester) async {
+  testWidgets('kcal above 900 and an invalid barcode are rejected',
+      (tester) async {
     final repository = FakeFoodRepository();
     await _openForm(tester, repository, []);
 
@@ -39,12 +41,14 @@ void main() {
     await tester.enterText(find.byKey(const Key('custom-barcode')), '123');
     await _save(tester);
 
-    expect(find.text('Please enter a value between 0 and 900.'), findsOneWidget);
+    expect(
+        find.text('Please enter a value between 0 and 900.'), findsOneWidget);
     expect(find.text('A barcode has 8 to 14 digits.'), findsOneWidget);
     expect(repository.created, isNull);
   });
 
-  testWidgets('protein, carbs and fat together must stay at or below 100 g', (tester) async {
+  testWidgets('protein, carbs and fat together must stay at or below 100 g',
+      (tester) async {
     final repository = FakeFoodRepository();
     await _openForm(tester, repository, []);
 
@@ -58,16 +62,19 @@ void main() {
     expect(repository.created, isNull);
   });
 
-  testWidgets('valid form saves with decimal commas and returns the food', (tester) async {
+  testWidgets('valid form saves with decimal commas and returns the food',
+      (tester) async {
     final repository = FakeFoodRepository();
     final picked = <Food?>[];
     await _openForm(tester, repository, picked);
 
-    await tester.enterText(find.byKey(const Key('custom-name')), ' Vollkornbrot ');
+    await tester.enterText(
+        find.byKey(const Key('custom-name')), ' Vollkornbrot ');
     await tester.enterText(find.byKey(const Key('custom-kcal')), '230,5');
     await tester.enterText(find.byKey(const Key('custom-protein')), '8,4');
     await tester.enterText(find.byKey(const Key('custom-carbs')), '40');
-    await tester.enterText(find.byKey(const Key('custom-barcode')), '4000417025005');
+    await tester.enterText(
+        find.byKey(const Key('custom-barcode')), '4000417025005');
     await _save(tester);
 
     final created = repository.created!;

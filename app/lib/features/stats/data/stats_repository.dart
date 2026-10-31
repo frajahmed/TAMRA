@@ -12,8 +12,10 @@ class StatsRepository {
   final ApiClient _api;
 
   /// Totals per day / week / month and averages from [from] to [to] (both included).
-  Future<StatsSummary> summary(DateTime from, DateTime to, {String group = 'day'}) async =>
-      StatsSummary.fromJson(await _api.statsSummary(dateKey(from), dateKey(to), group: group));
+  Future<StatsSummary> summary(DateTime from, DateTime to,
+          {String group = 'day'}) async =>
+      StatsSummary.fromJson(
+          await _api.statsSummary(dateKey(from), dateKey(to), group: group));
 }
 
 /// The [StatsRepository] used by the statistics screen (replaced by a fake in tests).
@@ -31,11 +33,14 @@ class SelectedStatsRange extends Notifier<StatsRange> {
 }
 
 /// The range chosen on the statistics screen (7 days by default).
-final statsRangeProvider = NotifierProvider<SelectedStatsRange, StatsRange>(SelectedStatsRange.new);
+final statsRangeProvider =
+    NotifierProvider<SelectedStatsRange, StatsRange>(SelectedStatsRange.new);
 
 /// Statistics of the chosen range up to today.
 final statsProvider = FutureProvider.autoDispose<StatsSummary>((ref) {
   final range = ref.watch(statsRangeProvider);
   final today = dateOnly(DateTime.now());
-  return ref.watch(statsRepositoryProvider).summary(range.start(today), today, group: range.group);
+  return ref
+      .watch(statsRepositoryProvider)
+      .summary(range.start(today), today, group: range.group);
 });

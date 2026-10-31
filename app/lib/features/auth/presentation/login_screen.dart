@@ -23,8 +23,9 @@ class LoginScreen extends ConsumerWidget {
             keyPrefix: 'login',
             submitLabel: strings.login,
             switchLabel: strings.noAccount,
-            onSubmit: (email, password) =>
-                ref.read(authControllerProvider.notifier).login(email, password),
+            onSubmit: (email, password) => ref
+                .read(authControllerProvider.notifier)
+                .login(email, password),
             onSwitch: () => context.go(AppRoutes.register),
           ),
         ),

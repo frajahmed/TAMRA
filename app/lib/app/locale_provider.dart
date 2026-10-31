@@ -26,8 +26,9 @@ class SecureLanguageStorage implements LanguageStorage {
   Future<String?> read() => _storage.read(key: _key);
 
   @override
-  Future<void> write(String? code) =>
-      code == null ? _storage.delete(key: _key) : _storage.write(key: _key, value: code);
+  Future<void> write(String? code) => code == null
+      ? _storage.delete(key: _key)
+      : _storage.write(key: _key, value: code);
 }
 
 /// Language kept in memory (tests).
@@ -46,7 +47,8 @@ class MemoryLanguageStorage implements LanguageStorage {
 }
 
 /// Where the language is saved (replaced by [MemoryLanguageStorage] in tests).
-final languageStorageProvider = Provider<LanguageStorage>((ref) => SecureLanguageStorage());
+final languageStorageProvider =
+    Provider<LanguageStorage>((ref) => SecureLanguageStorage());
 
 /// The language chosen by the user. `null` means: follow the device language.
 class LocaleNotifier extends Notifier<Locale?> {

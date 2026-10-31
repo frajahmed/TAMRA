@@ -6,14 +6,16 @@ import 'package:tamra_app/features/debug/presentation/debug_screen.dart';
 import '../helpers/fakes.dart';
 
 void main() {
-  testWidgets('diary start screen shows German texts, left-to-right', (tester) async {
+  testWidgets('diary start screen shows German texts, left-to-right',
+      (tester) async {
     useTallView(tester);
     await tester.pumpWidget(testApp(locale: const Locale('de')));
     await tester.pumpAndSettle();
 
     expect(find.text('Heute'), findsOneWidget);
     expect(find.text('Frühstück'), findsOneWidget);
-    final direction = Directionality.of(tester.element(find.byKey(const Key('home-title'))));
+    final direction =
+        Directionality.of(tester.element(find.byKey(const Key('home-title'))));
     expect(direction, TextDirection.ltr);
   });
 
@@ -24,7 +26,8 @@ void main() {
 
     expect(find.text('اليوم'), findsOneWidget);
     expect(find.text('الفطور'), findsOneWidget);
-    final direction = Directionality.of(tester.element(find.byKey(const Key('home-title'))));
+    final direction =
+        Directionality.of(tester.element(find.byKey(const Key('home-title'))));
     expect(direction, TextDirection.rtl);
   });
 
@@ -38,7 +41,10 @@ void main() {
   testWidgets('new users must give consent first', (tester) async {
     await tester.pumpWidget(
       testApp(
-        auth: const AuthState(status: AuthStatus.loggedIn, needsConsent: true, needsProfile: true),
+        auth: const AuthState(
+            status: AuthStatus.loggedIn,
+            needsConsent: true,
+            needsProfile: true),
       ),
     );
     await tester.pumpAndSettle();
@@ -71,7 +77,8 @@ void main() {
     expect(find.text('Server reachable'), findsOneWidget);
   });
 
-  testWidgets('debug screen shows an error when the server is down', (tester) async {
+  testWidgets('debug screen shows an error when the server is down',
+      (tester) async {
     await tester.pumpWidget(
       testApp(overrides: [healthProvider.overrideWith((ref) async => false)]),
     );

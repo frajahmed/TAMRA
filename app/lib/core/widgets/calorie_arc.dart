@@ -33,39 +33,43 @@ class CalorieArc extends StatelessWidget {
       label: '$value $label',
       excludeSemantics: true,
       child: SizedBox(
-      width: 220,
-      height: 170,
-      child: CustomPaint(
-        painter: _ArcPainter(
-          progress: progress.clamp(0, 1).toDouble(),
-          track: colors.border,
-          fill: colors.progress,
-        ),
-        child: Padding(
-          padding: const EdgeInsetsDirectional.only(top: 56),
-          child: FittedBox(
-            fit: BoxFit.scaleDown,
-            alignment: Alignment.topCenter,
-            child: Column(
-              children: [
-                Text(
-                  value,
-                  key: const Key('calorie-value'),
-                  style: textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
-                ),
-                Text(label, style: textTheme.bodyMedium?.copyWith(color: colors.textSecondary)),
-              ],
+        width: 220,
+        height: 170,
+        child: CustomPaint(
+          painter: _ArcPainter(
+            progress: progress.clamp(0, 1).toDouble(),
+            track: colors.border,
+            fill: colors.progress,
+          ),
+          child: Padding(
+            padding: const EdgeInsetsDirectional.only(top: 56),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.topCenter,
+              child: Column(
+                children: [
+                  Text(
+                    value,
+                    key: const Key('calorie-value'),
+                    style: textTheme.headlineSmall
+                        ?.copyWith(fontWeight: FontWeight.w700),
+                  ),
+                  Text(label,
+                      style: textTheme.bodyMedium
+                          ?.copyWith(color: colors.textSecondary)),
+                ],
+              ),
             ),
           ),
         ),
-      ),
       ),
     );
   }
 }
 
 class _ArcPainter extends CustomPainter {
-  _ArcPainter({required this.progress, required this.track, required this.fill});
+  _ArcPainter(
+      {required this.progress, required this.track, required this.fill});
 
   final double progress;
   final Color track;
@@ -78,7 +82,8 @@ class _ArcPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     const stroke = 16.0;
     final radius = math.min(size.width / 2, size.height * 0.6) - stroke;
-    final rect = Rect.fromCircle(center: Offset(size.width / 2, size.height * 0.6), radius: radius);
+    final rect = Rect.fromCircle(
+        center: Offset(size.width / 2, size.height * 0.6), radius: radius);
     final paint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = stroke
@@ -86,7 +91,8 @@ class _ArcPainter extends CustomPainter {
 
     canvas.drawArc(rect, _start, _sweep, false, paint..color = track);
     if (progress > 0) {
-      canvas.drawArc(rect, _start, _sweep * progress, false, paint..color = fill);
+      canvas.drawArc(
+          rect, _start, _sweep * progress, false, paint..color = fill);
     }
   }
 

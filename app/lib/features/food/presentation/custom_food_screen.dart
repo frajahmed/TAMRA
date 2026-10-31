@@ -23,7 +23,8 @@ class _CustomFoodScreenState extends ConsumerState<CustomFoodScreen> {
   final _formKey = GlobalKey<FormState>();
   late final _name = TextEditingController(text: widget.prefill.name);
   final _brand = TextEditingController();
-  late final _barcode = TextEditingController(text: widget.prefill.barcode ?? '');
+  late final _barcode =
+      TextEditingController(text: widget.prefill.barcode ?? '');
   final _kcal = TextEditingController();
   final _protein = TextEditingController();
   final _carbs = TextEditingController();
@@ -102,7 +103,8 @@ class _CustomFoodScreenState extends ConsumerState<CustomFoodScreen> {
     bool required = false,
   }) {
     return (text) {
-      if ((text ?? '').trim().isEmpty) return required ? strings.fieldRequired : null;
+      if ((text ?? '').trim().isEmpty)
+        return required ? strings.fieldRequired : null;
       final value = parseAmount(text);
       if (value == null) return strings.invalidNumber;
       if (value < min || value > max) return strings.invalidRange(min, max);
@@ -122,7 +124,9 @@ class _CustomFoodScreenState extends ConsumerState<CustomFoodScreen> {
         key: Key(key),
         controller: controller,
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
-        inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]'))],
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]'))
+        ],
         decoration: InputDecoration(labelText: label),
         validator: validator,
       ),
@@ -171,12 +175,15 @@ class _CustomFoodScreenState extends ConsumerState<CustomFoodScreen> {
                 validator: (text) {
                   final value = (text ?? '').trim();
                   if (value.isEmpty) return null;
-                  return RegExp(r'^\d{8,14}$').hasMatch(value) ? null : strings.barcodeInvalid;
+                  return RegExp(r'^\d{8,14}$').hasMatch(value)
+                      ? null
+                      : strings.barcodeInvalid;
                 },
               ),
             ),
             const SizedBox(height: 8),
-            Text(strings.per100gHeading, style: Theme.of(context).textTheme.titleMedium),
+            Text(strings.per100gHeading,
+                style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 12),
             _numberField(
               'custom-kcal',
@@ -186,15 +193,16 @@ class _CustomFoodScreenState extends ConsumerState<CustomFoodScreen> {
             ),
             _numberField('custom-protein', _protein, grams(strings.protein),
                 _number(strings, min: 0, max: 100)),
-            _numberField(
-                'custom-carbs', _carbs, grams(strings.carbs), _number(strings, min: 0, max: 100)),
-            _numberField(
-                'custom-sugar', _sugar, grams(strings.sugar), _number(strings, min: 0, max: 100)),
-            _numberField('custom-fat', _fat, grams(strings.fat), _number(strings, min: 0, max: 100)),
-            _numberField(
-                'custom-fiber', _fiber, grams(strings.fiber), _number(strings, min: 0, max: 100)),
-            _numberField(
-                'custom-salt', _salt, grams(strings.salt), _number(strings, min: 0, max: 100)),
+            _numberField('custom-carbs', _carbs, grams(strings.carbs),
+                _number(strings, min: 0, max: 100)),
+            _numberField('custom-sugar', _sugar, grams(strings.sugar),
+                _number(strings, min: 0, max: 100)),
+            _numberField('custom-fat', _fat, grams(strings.fat),
+                _number(strings, min: 0, max: 100)),
+            _numberField('custom-fiber', _fiber, grams(strings.fiber),
+                _number(strings, min: 0, max: 100)),
+            _numberField('custom-salt', _salt, grams(strings.salt),
+                _number(strings, min: 0, max: 100)),
             _numberField('custom-serving', _serving, strings.servingSize,
                 _number(strings, min: 0.1, max: 5000)),
             if (_error != null) ...[

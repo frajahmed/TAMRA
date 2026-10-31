@@ -144,7 +144,8 @@ class _BarcodeScreenState extends ConsumerState<BarcodeScreen> {
                       ? Text(
                           strings.scanHint,
                           textAlign: TextAlign.center,
-                          style: const TextStyle(color: Colors.white, fontSize: 16),
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 16),
                         )
                       : Column(
                           mainAxisSize: MainAxisSize.min,
@@ -153,7 +154,8 @@ class _BarcodeScreenState extends ConsumerState<BarcodeScreen> {
                               _error!,
                               key: const Key('scan-error'),
                               textAlign: TextAlign.center,
-                              style: const TextStyle(color: Colors.white, fontSize: 16),
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 16),
                             ),
                             const SizedBox(height: 12),
                             FilledButton(
@@ -165,7 +167,9 @@ class _BarcodeScreenState extends ConsumerState<BarcodeScreen> {
                         ),
                 ),
                 if (_loading)
-                  const Center(child: CircularProgressIndicator(key: Key('scan-loading'))),
+                  const Center(
+                      child:
+                          CircularProgressIndicator(key: Key('scan-loading'))),
               ],
             ),
     );

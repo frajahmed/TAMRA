@@ -33,7 +33,8 @@ class AuthInterceptor extends QueuedInterceptor {
   static bool isPublic(String path) => _publicPaths.any(path.endsWith);
 
   @override
-  Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+  Future<void> onRequest(
+      RequestOptions options, RequestInterceptorHandler handler) async {
     if (!isPublic(options.path)) {
       final access = await storage.readAccess();
       if (access != null) {
@@ -44,10 +45,13 @@ class AuthInterceptor extends QueuedInterceptor {
   }
 
   @override
-  Future<void> onError(DioException err, ErrorInterceptorHandler handler) async {
+  Future<void> onError(
+      DioException err, ErrorInterceptorHandler handler) async {
     final options = err.requestOptions;
     final isUnauthorized = err.response?.statusCode == 401;
-    if (!isUnauthorized || isPublic(options.path) || options.extra[_retriedKey] == true) {
+    if (!isUnauthorized ||
+        isPublic(options.path) ||
+        options.extra[_retriedKey] == true) {
       handler.next(err);
       return;
     }

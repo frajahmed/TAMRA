@@ -14,7 +14,8 @@ class SplashScreen extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(strings.appName, style: Theme.of(context).textTheme.headlineMedium),
+            Text(strings.appName,
+                style: Theme.of(context).textTheme.headlineMedium),
             const SizedBox(height: 24),
             CircularProgressIndicator(semanticsLabel: strings.loading),
           ],

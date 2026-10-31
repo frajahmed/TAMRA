@@ -37,8 +37,11 @@ class StatsScreen extends ConsumerWidget {
               key: const Key('stats-range'),
               showSelectedIcon: false,
               segments: [
-                ButtonSegment(value: StatsRange.days7, label: Text(strings.statsRange7)),
-                ButtonSegment(value: StatsRange.weeks4, label: Text(strings.statsRange4w)),
+                ButtonSegment(
+                    value: StatsRange.days7, label: Text(strings.statsRange7)),
+                ButtonSegment(
+                    value: StatsRange.weeks4,
+                    label: Text(strings.statsRange4w)),
                 ButtonSegment(
                   value: StatsRange.months12,
                   // Marked for the later PRO plan; still free while there is no payment.
@@ -130,7 +133,9 @@ class _StatsContent extends StatelessWidget {
                 BarChart(
                   key: const Key('stats-kcal-chart'),
                   values: [for (final day in summary.days) day.nutrients.kcal],
-                  secondaryValues: [for (final day in summary.days) day.burnedKcal],
+                  secondaryValues: [
+                    for (final day in summary.days) day.burnedKcal
+                  ],
                   labels: [for (final day in summary.days) label(day.date)],
                   target: target?.toDouble(),
                   semanticLabel: strings.kcalChartLabel,
@@ -161,8 +166,12 @@ class _StatsContent extends StatelessWidget {
                   style: textTheme.headlineSmall,
                 ),
                 const SizedBox(height: 8),
-                _MacroLine(label: strings.carbs, grams: averages.carbs, color: colors.carbs),
-                _MacroLine(label: strings.fat, grams: averages.fat, color: colors.fat),
+                _MacroLine(
+                    label: strings.carbs,
+                    grams: averages.carbs,
+                    color: colors.carbs),
+                _MacroLine(
+                    label: strings.fat, grams: averages.fat, color: colors.fat),
                 _MacroLine(
                   label: strings.protein,
                   grams: averages.protein,
@@ -176,7 +185,8 @@ class _StatsContent extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  strings.statsLoggedDays(summary.loggedDays, _dayCount(summary)),
+                  strings.statsLoggedDays(
+                      summary.loggedDays, _dayCount(summary)),
                   key: const Key('stats-logged-days'),
                   style: TextStyle(color: colors.textSecondary),
                 ),
@@ -209,11 +219,16 @@ int _dayCount(StatsSummary summary) {
   if (summary.days.isEmpty) return 0;
   final first = summary.days.first.date;
   final today = DateTime.now();
-  return DateTime(today.year, today.month, today.day).difference(first).inDays + 1;
+  return DateTime(today.year, today.month, today.day).difference(first).inDays +
+      1;
 }
 
 class _MacroLine extends StatelessWidget {
-  const _MacroLine({required this.label, required this.grams, required this.color, this.value});
+  const _MacroLine(
+      {required this.label,
+      required this.grams,
+      required this.color,
+      this.value});
 
   final String label;
   final double? grams;

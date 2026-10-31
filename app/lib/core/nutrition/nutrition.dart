@@ -141,7 +141,8 @@ int dailyCalorieTarget({
 /// MET (metabolic equivalent) says how many times more energy an activity uses than
 /// sitting still; e.g. running ≈ 9.8, walking ≈ 3.5. The result is a suggestion the
 /// user can change.
-double activityKcal({required double met, required double weightKg, required int minutes}) {
+double activityKcal(
+    {required double met, required double weightKg, required int minutes}) {
   if (met < 0 || weightKg < 0 || minutes < 0) {
     throw ArgumentError('MET, weight and minutes must not be negative');
   }
@@ -157,7 +158,8 @@ enum EnergyUnit {
   kj;
 
   /// The unit from the API value `kcal` or `kj`; unknown values fall back to kcal.
-  static EnergyUnit fromApi(Object? value) => value == 'kj' ? EnergyUnit.kj : EnergyUnit.kcal;
+  static EnergyUnit fromApi(Object? value) =>
+      value == 'kj' ? EnergyUnit.kj : EnergyUnit.kcal;
 }
 
 /// How body weight is shown (stored is always kg).
@@ -169,13 +171,15 @@ enum WeightUnit {
   lb;
 
   /// The unit from the API value `kg` or `lb`; unknown values fall back to kg.
-  static WeightUnit fromApi(Object? value) => value == 'lb' ? WeightUnit.lb : WeightUnit.kg;
+  static WeightUnit fromApi(Object? value) =>
+      value == 'lb' ? WeightUnit.lb : WeightUnit.kg;
 
   /// [kg] converted to this unit for display.
   double fromKg(double kg) => this == WeightUnit.lb ? Units.kgToLb(kg) : kg;
 
   /// A value typed in this unit converted to kg for storing.
-  double toKg(double value) => this == WeightUnit.lb ? Units.lbToKg(value) : value;
+  double toKg(double value) =>
+      this == WeightUnit.lb ? Units.lbToKg(value) : value;
 }
 
 /// Unit conversions for display only.
@@ -185,10 +189,13 @@ abstract final class Units {
 
   /// Kilograms to pounds.
   static double kgToLb(double kg) => kg / _kgPerLb;
+
   /// Pounds to kilograms (stored value).
   static double lbToKg(double lb) => lb * _kgPerLb;
+
   /// Kilocalories to kilojoules (EU labels show both).
   static double kcalToKj(double kcal) => kcal * _kjPerKcal;
+
   /// Kilojoules to kilocalories (stored value).
   static double kjToKcal(double kj) => kj / _kjPerKcal;
 }

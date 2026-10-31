@@ -5,9 +5,10 @@ import 'package:tamra_app/core/auth/auth_controller.dart';
 void main() {
   const unknown = AuthState.unknown();
   const loggedOut = AuthState.loggedOut();
-  const needsConsent =
-      AuthState(status: AuthStatus.loggedIn, needsConsent: true, needsProfile: true);
-  const needsProfile = AuthState(status: AuthStatus.loggedIn, needsProfile: true);
+  const needsConsent = AuthState(
+      status: AuthStatus.loggedIn, needsConsent: true, needsProfile: true);
+  const needsProfile =
+      AuthState(status: AuthStatus.loggedIn, needsProfile: true);
   const ready = AuthState(status: AuthStatus.loggedIn);
 
   test('unknown state waits on the splash screen', () {

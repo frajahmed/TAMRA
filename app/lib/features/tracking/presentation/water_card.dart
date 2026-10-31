@@ -14,7 +14,8 @@ class WaterCard extends ConsumerWidget {
   /// The day shown.
   final DateTime day;
 
-  Future<void> _change(BuildContext context, WidgetRef ref, Future<void> Function() action) async {
+  Future<void> _change(BuildContext context, WidgetRef ref,
+      Future<void> Function() action) async {
     final messenger = ScaffoldMessenger.of(context);
     final error = AppStrings.of(context).genericError;
     try {
@@ -44,7 +45,8 @@ class WaterCard extends ConsumerWidget {
             Row(
               children: [
                 Expanded(
-                  child: Text(strings.water, style: Theme.of(context).textTheme.titleMedium),
+                  child: Text(strings.water,
+                      style: Theme.of(context).textTheme.titleMedium),
                 ),
                 Text(
                   strings.waterProgress(data?.totalMl ?? 0, waterGoalMl),
@@ -60,10 +62,15 @@ class WaterCard extends ConsumerWidget {
                   child: Wrap(
                     spacing: 4,
                     children: [
-                      for (var index = 0; index < waterGoalMl ~/ glassMl; index++)
+                      for (var index = 0;
+                          index < waterGoalMl ~/ glassMl;
+                          index++)
                         Icon(
-                          index < glasses ? Icons.local_drink : Icons.local_drink_outlined,
-                          color: index < glasses ? colors.progress : colors.border,
+                          index < glasses
+                              ? Icons.local_drink
+                              : Icons.local_drink_outlined,
+                          color:
+                              index < glasses ? colors.progress : colors.border,
                         ),
                     ],
                   ),
@@ -85,7 +92,8 @@ class WaterCard extends ConsumerWidget {
                   tooltip: strings.waterAdd,
                   style: IconButton.styleFrom(backgroundColor: colors.progress),
                   icon: const Icon(Icons.add, color: Colors.white),
-                  onPressed: () => _change(context, ref, () => repository.addWater(day)),
+                  onPressed: () =>
+                      _change(context, ref, () => repository.addWater(day)),
                 ),
               ],
             ),

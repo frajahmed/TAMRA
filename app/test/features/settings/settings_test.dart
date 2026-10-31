@@ -50,10 +50,12 @@ void main() {
       {'weight_unit': 'lb'},
       {'energy_unit': 'kj'},
     ]);
-    expect(find.text('7289 kJ'), findsOneWidget); // target shown in the new unit
+    expect(
+        find.text('7289 kJ'), findsOneWidget); // target shown in the new unit
   });
 
-  testWidgets('choosing a language switches the app and remembers it', (tester) async {
+  testWidgets('choosing a language switches the app and remembers it',
+      (tester) async {
     final storage = MemoryLanguageStorage();
     final profile = FakeProfileRepository(result: _profile);
     await _openProfile(tester, profile: profile, languageStorage: storage);
@@ -75,11 +77,13 @@ void main() {
     await tester.tap(find.byKey(const Key('export-data')));
     await tester.pumpAndSettle();
 
-    expect(sharer.sharedNames, ['tamra-export-${dateKey(DateTime.now())}.json']);
+    expect(
+        sharer.sharedNames, ['tamra-export-${dateKey(DateTime.now())}.json']);
     expect(sharer.sharedContents.single, contains('a@example.com'));
   });
 
-  testWidgets('withdrawing the consent brings back the consent screen', (tester) async {
+  testWidgets('withdrawing the consent brings back the consent screen',
+      (tester) async {
     final profile = FakeProfileRepository(result: _profile);
     await _openProfile(tester, profile: profile);
 
@@ -92,7 +96,8 @@ void main() {
     expect(find.byKey(const Key('consent-checkbox')), findsOneWidget);
   });
 
-  testWidgets('delete account needs the right password, then logs out', (tester) async {
+  testWidgets('delete account needs the right password, then logs out',
+      (tester) async {
     final profile = FakeProfileRepository(result: _profile);
     final controller = FakeAuthController(loggedInComplete);
     await _openProfile(tester, profile: profile, controller: controller);
@@ -105,7 +110,8 @@ void main() {
     expect(find.text('The password is not correct.'), findsOneWidget);
     expect(controller.calls, isEmpty);
 
-    await tester.enterText(find.byKey(const Key('delete-password')), 'secret-pass-1');
+    await tester.enterText(
+        find.byKey(const Key('delete-password')), 'secret-pass-1');
     await tester.tap(find.byKey(const Key('delete-confirm')));
     await tester.pumpAndSettle();
 

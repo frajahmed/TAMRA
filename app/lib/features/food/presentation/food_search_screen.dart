@@ -141,9 +141,12 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen> {
   Widget _body(AppStrings strings) {
     switch (_status) {
       case _SearchStatus.idle:
-        return _Message(key: const Key('food-search-idle'), text: strings.foodSearchMinChars);
+        return _Message(
+            key: const Key('food-search-idle'),
+            text: strings.foodSearchMinChars);
       case _SearchStatus.loading:
-        return const Center(child: CircularProgressIndicator(key: Key('food-search-loading')));
+        return const Center(
+            child: CircularProgressIndicator(key: Key('food-search-loading')));
       case _SearchStatus.error:
         return _Message(
           key: const Key('food-search-error'),

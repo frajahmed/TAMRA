@@ -25,11 +25,16 @@ HealthImport _data() => HealthImport(
 
 HealthSync _sync(FakeHealthSource source, FakeActivityRepository repository,
         MemoryHealthSettingsStorage storage) =>
-    HealthSync(source: source, repository: repository, storage: storage, clock: () => _now);
+    HealthSync(
+        source: source,
+        repository: repository,
+        storage: storage,
+        clock: () => _now);
 
 void main() {
   group('HealthSync', () {
-    test('connect asks for access, then reads the last 30 days and imports', () async {
+    test('connect asks for access, then reads the last 30 days and imports',
+        () async {
       final source = FakeHealthSource(data: _data());
       final repository = FakeActivityRepository();
       final storage = MemoryHealthSettingsStorage();
@@ -41,7 +46,8 @@ void main() {
       expect(storage.connected, isTrue);
       expect(storage.last, _now);
       final sent = repository.imported.single;
-      final workout = (sent['activities'] as List<dynamic>).single as Map<String, dynamic>;
+      final workout =
+          (sent['activities'] as List<dynamic>).single as Map<String, dynamic>;
       expect(workout['external_id'], 'hc-1');
       expect(workout['source'], 'health_connect');
       expect(workout['date'], '2026-10-27');
@@ -55,7 +61,8 @@ void main() {
     test('refused access keeps the hub disconnected', () async {
       final source = FakeHealthSource(grant: false);
       final storage = MemoryHealthSettingsStorage();
-      expect(await _sync(source, FakeActivityRepository(), storage).connect(), isFalse);
+      expect(await _sync(source, FakeActivityRepository(), storage).connect(),
+          isFalse);
       expect(storage.connected, isFalse);
       expect(source.reads, isEmpty);
     });
@@ -86,10 +93,17 @@ void main() {
         ),
       );
       final repository = FakeActivityRepository();
-      final created = await _sync(source, repository, MemoryHealthSettingsStorage()).sync();
+      final created =
+          await _sync(source, repository, MemoryHealthSettingsStorage()).sync();
 
-      expect(repository.imported.map((page) => (page['activities'] as List<dynamic>).length), [500, 500, 200]);
-      expect(repository.imported.map((page) => (page['steps'] as List<dynamic>).length), [1, 0, 0]);
+      expect(
+          repository.imported
+              .map((page) => (page['activities'] as List<dynamic>).length),
+          [500, 500, 200]);
+      expect(
+          repository.imported
+              .map((page) => (page['steps'] as List<dynamic>).length),
+          [1, 0, 0]);
       expect(created, 1201);
     });
 
@@ -97,7 +111,8 @@ void main() {
       final storage = MemoryHealthSettingsStorage()
         ..connected = true
         ..last = _now;
-      await _sync(FakeHealthSource(), FakeActivityRepository(), storage).disconnect();
+      await _sync(FakeHealthSource(), FakeActivityRepository(), storage)
+          .disconnect();
       expect(storage.connected, isFalse);
       expect(storage.last, isNull);
     });
@@ -122,14 +137,17 @@ void main() {
     expect(activityKindFromHealth('HIKING'), ActivityKind.hiking);
     expect(activityKindFromHealth('WALKING'), ActivityKind.walking);
     expect(activityKindFromHealth('BIKING_STATIONARY'), ActivityKind.cycling);
-    expect(activityKindFromHealth('TRADITIONAL_STRENGTH_TRAINING'), ActivityKind.strength);
-    expect(activityKindFromHealth('HIGH_INTENSITY_INTERVAL_TRAINING'), ActivityKind.hiit);
+    expect(activityKindFromHealth('TRADITIONAL_STRENGTH_TRAINING'),
+        ActivityKind.strength);
+    expect(activityKindFromHealth('HIGH_INTENSITY_INTERVAL_TRAINING'),
+        ActivityKind.hiit);
     expect(activityKindFromHealth('soccer'), ActivityKind.teamSport);
     expect(activityKindFromHealth('ARCHERY'), ActivityKind.other);
   });
 
   group('health card', () {
-    Future<void> openActivity(WidgetTester tester, {
+    Future<void> openActivity(
+      WidgetTester tester, {
       required FakeHealthSource health,
       required MemoryHealthSettingsStorage storage,
       FakeActivityRepository? activity,
@@ -145,7 +163,8 @@ void main() {
       await tester.pumpAndSettle();
     }
 
-    testWidgets('connect imports and then offers sync and disconnect', (tester) async {
+    testWidgets('connect imports and then offers sync and disconnect',
+        (tester) async {
       final activity = FakeActivityRepository();
       final storage = MemoryHealthSettingsStorage();
       await openActivity(
@@ -188,7 +207,8 @@ void main() {
       expect(find.byKey(const Key('health-unsupported')), findsOneWidget);
     });
 
-    testWidgets('a connected hub syncs once when the app opens', (tester) async {
+    testWidgets('a connected hub syncs once when the app opens',
+        (tester) async {
       final activity = FakeActivityRepository();
       final storage = MemoryHealthSettingsStorage()..connected = true;
       await openActivity(

@@ -28,7 +28,8 @@ const Map<String, Map<String, String>> translations = {
         'To show your calories and progress, TAMRA stores health data such as weight, '
             'body measurements and what you eat. Your data is stored in the EU, is never sold, '
             'and you can withdraw your consent or delete your account at any time in the settings.',
-    'consentCheckbox': 'I agree that TAMRA processes my health data for these purposes.',
+    'consentCheckbox':
+        'I agree that TAMRA processes my health data for these purposes.',
     'continueButton': 'Continue',
     'onboardingTitle': 'Your plan',
     'stepOf': 'Step {current} of {total}',
@@ -85,9 +86,11 @@ const Map<String, Map<String, String>> translations = {
     'scanTitle': 'Scan barcode',
     'scanHint': 'Hold the barcode inside the frame.',
     'scanNotFoundTitle': 'Food not found',
-    'scanNotFoundText': 'We do not know a food with the barcode {code} yet. You can add it yourself.',
+    'scanNotFoundText':
+        'We do not know a food with the barcode {code} yet. You can add it yourself.',
     'scanAgain': 'Scan again',
-    'cameraDeniedText': 'TAMRA needs the camera to scan barcodes. Please allow camera access in the settings.',
+    'cameraDeniedText':
+        'TAMRA needs the camera to scan barcodes. Please allow camera access in the settings.',
     'openSettings': 'Open settings',
     'today': 'Today',
     'mealBreakfast': 'Breakfast',
@@ -126,7 +129,8 @@ const Map<String, Map<String, String>> translations = {
     'weightLabelLb': 'Weight in lb',
     'weightValueKg': '{value} kg',
     'weightValueLb': '{value} lb',
-    'weightEmpty': 'No weight yet. Weigh yourself in the morning for comparable values.',
+    'weightEmpty':
+        'No weight yet. Weigh yourself in the morning for comparable values.',
     'dateLabel': 'Date',
     'delete': 'Delete',
     'cancel': 'Cancel',
@@ -149,10 +153,12 @@ const Map<String, Map<String, String>> translations = {
     'exportData': 'Export my data',
     'exportDataHint': 'All your data as a JSON file',
     'withdrawConsent': 'Withdraw health data consent',
-    'withdrawConsentText': 'Without this consent TAMRA cannot save meals, weight or activity. Your saved data stays until you delete your account.',
+    'withdrawConsentText':
+        'Without this consent TAMRA cannot save meals, weight or activity. Your saved data stays until you delete your account.',
     'withdrawConfirm': 'Withdraw',
     'deleteAccount': 'Delete account',
-    'deleteAccountText': 'This deletes your account and all your data for good. Enter your password to confirm.',
+    'deleteAccountText':
+        'This deletes your account and all your data for good. Enter your password to confirm.',
     'deleteConfirm': 'Delete for good',
     'copyYesterday': 'Copy yesterday',
     'copyMealFromYesterday': 'Copy from yesterday',
@@ -167,7 +173,8 @@ const Map<String, Map<String, String>> translations = {
     'durationLabel': 'Duration in minutes',
     'distanceLabel': 'Distance in km (optional)',
     'kcalBurnedLabel': 'Burned kcal',
-    'kcalSuggestion': 'Suggested from type, duration and your weight. You can change it.',
+    'kcalSuggestion':
+        'Suggested from type, duration and your weight. You can change it.',
     'importedHint': 'Imported – change it in the original app',
     'kindWalking': 'Walking',
     'kindRunning': 'Running',
@@ -181,22 +188,26 @@ const Map<String, Map<String, String>> translations = {
     'kindDancing': 'Dancing',
     'kindOther': 'Other',
     'activityHint': 'Daily life without sport – sport is added separately.',
-    'calorieFormulaSport': 'Target {target} + sport {sport} − eaten {eaten} = {remaining}',
+    'calorieFormulaSport':
+        'Target {target} + sport {sport} − eaten {eaten} = {remaining}',
     'countSport': 'Add sport calories to my budget',
-    'countSportHint': 'Steps are not added; your daily life is already in the target.',
+    'countSportHint':
+        'Steps are not added; your daily life is already in the target.',
     'statsRange7': '7 days',
     'statsRange4w': '4 weeks',
     'statsRange12m': '12 months',
     'statsEaten': 'Eaten and sport',
     'statsSportAverage': 'Sport per logged day',
     'healthTitle': 'Health apps',
-    'healthConnectHint': 'Import workouts and steps from your watch and other apps (Garmin, Fitbit, Polar, Samsung Health, Strava …) through {app}.',
+    'healthConnectHint':
+        'Import workouts and steps from your watch and other apps (Garmin, Fitbit, Polar, Samsung Health, Strava …) through {app}.',
     'healthConnect': 'Connect',
     'healthDisconnect': 'Disconnect',
     'healthSyncNow': 'Sync now',
     'healthLastSync': 'Last sync: {time}',
     'healthSynced': '{count} new entries imported',
-    'healthDenied': 'No access. Allow TAMRA in {app} to read workouts and steps.',
+    'healthDenied':
+        'No access. Allow TAMRA in {app} to read workouts and steps.',
     'healthUnsupported': 'Not available on this device.',
     'offlineHint': 'Offline – changes are saved on the phone and sent later.',
   },
@@ -282,9 +293,11 @@ const Map<String, Map<String, String>> translations = {
     'scanTitle': 'Barcode scannen',
     'scanHint': 'Halte den Barcode in den Rahmen.',
     'scanNotFoundTitle': 'Lebensmittel nicht gefunden',
-    'scanNotFoundText': 'Zum Barcode {code} kennen wir noch kein Lebensmittel. Du kannst es selbst anlegen.',
+    'scanNotFoundText':
+        'Zum Barcode {code} kennen wir noch kein Lebensmittel. Du kannst es selbst anlegen.',
     'scanAgain': 'Erneut scannen',
-    'cameraDeniedText': 'TAMRA braucht die Kamera, um Barcodes zu scannen. Bitte erlaube den Kamerazugriff in den Einstellungen.',
+    'cameraDeniedText':
+        'TAMRA braucht die Kamera, um Barcodes zu scannen. Bitte erlaube den Kamerazugriff in den Einstellungen.',
     'openSettings': 'Einstellungen öffnen',
     'today': 'Heute',
     'mealBreakfast': 'Frühstück',
@@ -323,14 +336,16 @@ const Map<String, Map<String, String>> translations = {
     'weightLabelLb': 'Gewicht in lb',
     'weightValueKg': '{value} kg',
     'weightValueLb': '{value} lb',
-    'weightEmpty': 'Noch kein Gewicht. Am besten morgens wiegen, dann sind die Werte vergleichbar.',
+    'weightEmpty':
+        'Noch kein Gewicht. Am besten morgens wiegen, dann sind die Werte vergleichbar.',
     'dateLabel': 'Datum',
     'delete': 'Löschen',
     'cancel': 'Abbrechen',
     'statsAverage': 'Durchschnitt pro Tag mit Einträgen',
     'statsLoggedDays': '{count} von {total} Tagen eingetragen',
     'statsWeightChange': 'Gewichtsveränderung',
-    'statsNoWeightChange': 'Trage an zwei Tagen dein Gewicht ein, um eine Veränderung zu sehen.',
+    'statsNoWeightChange':
+        'Trage an zwei Tagen dein Gewicht ein, um eine Veränderung zu sehen.',
     'statsTarget': 'Ziel',
     'openWeight': 'Gewichtsverlauf',
     'kcalChartLabel': 'Gegessene und verbrannte Kalorien pro Zeitraum',
@@ -346,10 +361,12 @@ const Map<String, Map<String, String>> translations = {
     'exportData': 'Meine Daten exportieren',
     'exportDataHint': 'Alle deine Daten als JSON-Datei',
     'withdrawConsent': 'Einwilligung Gesundheitsdaten widerrufen',
-    'withdrawConsentText': 'Ohne diese Einwilligung kann TAMRA keine Mahlzeiten, kein Gewicht und keine Aktivität speichern. Deine gespeicherten Daten bleiben, bis du dein Konto löschst.',
+    'withdrawConsentText':
+        'Ohne diese Einwilligung kann TAMRA keine Mahlzeiten, kein Gewicht und keine Aktivität speichern. Deine gespeicherten Daten bleiben, bis du dein Konto löschst.',
     'withdrawConfirm': 'Widerrufen',
     'deleteAccount': 'Konto löschen',
-    'deleteAccountText': 'Dein Konto und alle deine Daten werden endgültig gelöscht. Gib zur Bestätigung dein Passwort ein.',
+    'deleteAccountText':
+        'Dein Konto und alle deine Daten werden endgültig gelöscht. Gib zur Bestätigung dein Passwort ein.',
     'deleteConfirm': 'Endgültig löschen',
     'copyYesterday': 'Gestern kopieren',
     'copyMealFromYesterday': 'Von gestern kopieren',
@@ -364,7 +381,8 @@ const Map<String, Map<String, String>> translations = {
     'durationLabel': 'Dauer in Minuten',
     'distanceLabel': 'Strecke in km (optional)',
     'kcalBurnedLabel': 'Verbrannte kcal',
-    'kcalSuggestion': 'Vorschlag aus Sportart, Dauer und deinem Gewicht. Du kannst ihn ändern.',
+    'kcalSuggestion':
+        'Vorschlag aus Sportart, Dauer und deinem Gewicht. Du kannst ihn ändern.',
     'importedHint': 'Importiert – ändern in der Original-App',
     'kindWalking': 'Gehen',
     'kindRunning': 'Laufen',
@@ -378,24 +396,29 @@ const Map<String, Map<String, String>> translations = {
     'kindDancing': 'Tanzen',
     'kindOther': 'Sonstiges',
     'activityHint': 'Alltag ohne Sport – Sport wird extra eingetragen.',
-    'calorieFormulaSport': 'Ziel {target} + Sport {sport} − gegessen {eaten} = {remaining}',
+    'calorieFormulaSport':
+        'Ziel {target} + Sport {sport} − gegessen {eaten} = {remaining}',
     'countSport': 'Sport-Kalorien zum Budget addieren',
-    'countSportHint': 'Schritte werden nicht addiert; dein Alltag steckt schon im Ziel.',
+    'countSportHint':
+        'Schritte werden nicht addiert; dein Alltag steckt schon im Ziel.',
     'statsRange7': '7 Tage',
     'statsRange4w': '4 Wochen',
     'statsRange12m': '12 Monate',
     'statsEaten': 'Gegessen und Sport',
     'statsSportAverage': 'Sport pro Tag mit Einträgen',
     'healthTitle': 'Gesundheits-Apps',
-    'healthConnectHint': 'Trainings und Schritte von deiner Uhr und anderen Apps (Garmin, Fitbit, Polar, Samsung Health, Strava …) über {app} übernehmen.',
+    'healthConnectHint':
+        'Trainings und Schritte von deiner Uhr und anderen Apps (Garmin, Fitbit, Polar, Samsung Health, Strava …) über {app} übernehmen.',
     'healthConnect': 'Verbinden',
     'healthDisconnect': 'Trennen',
     'healthSyncNow': 'Jetzt abgleichen',
     'healthLastSync': 'Letzter Abgleich: {time}',
     'healthSynced': '{count} neue Einträge übernommen',
-    'healthDenied': 'Kein Zugriff. Erlaube TAMRA in {app}, Trainings und Schritte zu lesen.',
+    'healthDenied':
+        'Kein Zugriff. Erlaube TAMRA in {app}, Trainings und Schritte zu lesen.',
     'healthUnsupported': 'Auf diesem Gerät nicht verfügbar.',
-    'offlineHint': 'Offline – Änderungen werden auf dem Handy gespeichert und später gesendet.',
+    'offlineHint':
+        'Offline – Änderungen werden auf dem Handy gespeichert und später gesendet.',
   },
   'fr': {
     'appName': 'TAMRA',
@@ -475,13 +498,16 @@ const Map<String, Map<String, String>> translations = {
     'salt': 'Sel',
     'servingSize': 'Portion en g (facultatif)',
     'invalidNumber': 'Veuillez saisir un nombre.',
-    'macrosTooHigh': 'Protéines, glucides et lipides ne peuvent pas dépasser 100 g au total.',
+    'macrosTooHigh':
+        'Protéines, glucides et lipides ne peuvent pas dépasser 100 g au total.',
     'scanTitle': 'Scanner un code-barres',
     'scanHint': 'Placez le code-barres dans le cadre.',
     'scanNotFoundTitle': 'Aliment introuvable',
-    'scanNotFoundText': 'Nous ne connaissons pas encore d’aliment avec le code-barres {code}. Vous pouvez l’ajouter vous-même.',
+    'scanNotFoundText':
+        'Nous ne connaissons pas encore d’aliment avec le code-barres {code}. Vous pouvez l’ajouter vous-même.',
     'scanAgain': 'Scanner à nouveau',
-    'cameraDeniedText': 'TAMRA a besoin de la caméra pour scanner les codes-barres. Autorisez l’accès à la caméra dans les réglages.',
+    'cameraDeniedText':
+        'TAMRA a besoin de la caméra pour scanner les codes-barres. Autorisez l’accès à la caméra dans les réglages.',
     'openSettings': 'Ouvrir les réglages',
     'today': 'Aujourd’hui',
     'mealBreakfast': 'Petit-déjeuner',
@@ -520,14 +546,16 @@ const Map<String, Map<String, String>> translations = {
     'weightLabelLb': 'Poids en lb',
     'weightValueKg': '{value} kg',
     'weightValueLb': '{value} lb',
-    'weightEmpty': 'Pas encore de poids. Pesez-vous le matin pour des valeurs comparables.',
+    'weightEmpty':
+        'Pas encore de poids. Pesez-vous le matin pour des valeurs comparables.',
     'dateLabel': 'Date',
     'delete': 'Supprimer',
     'cancel': 'Annuler',
     'statsAverage': 'Moyenne par jour saisi',
     'statsLoggedDays': '{count} jours saisis sur {total}',
     'statsWeightChange': 'Évolution du poids',
-    'statsNoWeightChange': 'Saisissez votre poids sur deux jours pour voir une évolution.',
+    'statsNoWeightChange':
+        'Saisissez votre poids sur deux jours pour voir une évolution.',
     'statsTarget': 'Objectif',
     'openWeight': 'Historique du poids',
     'kcalChartLabel': 'Calories mangées et brûlées par période',
@@ -543,10 +571,12 @@ const Map<String, Map<String, String>> translations = {
     'exportData': 'Exporter mes données',
     'exportDataHint': 'Toutes tes données dans un fichier JSON',
     'withdrawConsent': 'Retirer le consentement aux données de santé',
-    'withdrawConsentText': 'Sans ce consentement, TAMRA ne peut pas enregistrer de repas, de poids ni d’activité. Tes données enregistrées restent jusqu’à la suppression de ton compte.',
+    'withdrawConsentText':
+        'Sans ce consentement, TAMRA ne peut pas enregistrer de repas, de poids ni d’activité. Tes données enregistrées restent jusqu’à la suppression de ton compte.',
     'withdrawConfirm': 'Retirer',
     'deleteAccount': 'Supprimer le compte',
-    'deleteAccountText': 'Ton compte et toutes tes données seront supprimés définitivement. Saisis ton mot de passe pour confirmer.',
+    'deleteAccountText':
+        'Ton compte et toutes tes données seront supprimés définitivement. Saisis ton mot de passe pour confirmer.',
     'deleteConfirm': 'Supprimer définitivement',
     'copyYesterday': 'Copier hier',
     'copyMealFromYesterday': 'Copier depuis hier',
@@ -561,7 +591,8 @@ const Map<String, Map<String, String>> translations = {
     'durationLabel': 'Durée en minutes',
     'distanceLabel': 'Distance en km (facultatif)',
     'kcalBurnedLabel': 'kcal brûlées',
-    'kcalSuggestion': 'Suggestion selon le sport, la durée et ton poids. Tu peux la modifier.',
+    'kcalSuggestion':
+        'Suggestion selon le sport, la durée et ton poids. Tu peux la modifier.',
     'importedHint': 'Importé – modifie-le dans l’app d’origine',
     'kindWalking': 'Marche',
     'kindRunning': 'Course',
@@ -575,24 +606,29 @@ const Map<String, Map<String, String>> translations = {
     'kindDancing': 'Danse',
     'kindOther': 'Autre',
     'activityHint': 'Vie quotidienne sans sport – le sport s’ajoute à part.',
-    'calorieFormulaSport': 'Objectif {target} + sport {sport} − mangé {eaten} = {remaining}',
+    'calorieFormulaSport':
+        'Objectif {target} + sport {sport} − mangé {eaten} = {remaining}',
     'countSport': 'Ajouter les calories du sport au budget',
-    'countSportHint': 'Les pas ne sont pas ajoutés ; ta vie quotidienne est déjà dans l’objectif.',
+    'countSportHint':
+        'Les pas ne sont pas ajoutés ; ta vie quotidienne est déjà dans l’objectif.',
     'statsRange7': '7 jours',
     'statsRange4w': '4 semaines',
     'statsRange12m': '12 mois',
     'statsEaten': 'Mangé et sport',
     'statsSportAverage': 'Sport par jour saisi',
     'healthTitle': 'Apps santé',
-    'healthConnectHint': 'Importe les entraînements et les pas de ta montre et d’autres apps (Garmin, Fitbit, Polar, Samsung Health, Strava…) via {app}.',
+    'healthConnectHint':
+        'Importe les entraînements et les pas de ta montre et d’autres apps (Garmin, Fitbit, Polar, Samsung Health, Strava…) via {app}.',
     'healthConnect': 'Connecter',
     'healthDisconnect': 'Déconnecter',
     'healthSyncNow': 'Synchroniser',
     'healthLastSync': 'Dernière synchro : {time}',
     'healthSynced': '{count} nouvelles entrées importées',
-    'healthDenied': 'Pas d’accès. Autorise TAMRA dans {app} à lire les entraînements et les pas.',
+    'healthDenied':
+        'Pas d’accès. Autorise TAMRA dans {app} à lire les entraînements et les pas.',
     'healthUnsupported': 'Non disponible sur cet appareil.',
-    'offlineHint': 'Hors ligne – les modifications sont enregistrées sur le téléphone et envoyées plus tard.',
+    'offlineHint':
+        'Hors ligne – les modifications sont enregistrées sur le téléphone et envoyées plus tard.',
   },
   'it': {
     'appName': 'TAMRA',
@@ -618,7 +654,8 @@ const Map<String, Map<String, String>> translations = {
             'corporee e ciò che mangi. I tuoi dati sono conservati nell’UE, non vengono mai '
             'venduti e puoi revocare il consenso o eliminare l’account in qualsiasi momento '
             'nelle impostazioni.',
-    'consentCheckbox': 'Acconsento che TAMRA tratti i miei dati sanitari per questi scopi.',
+    'consentCheckbox':
+        'Acconsento che TAMRA tratti i miei dati sanitari per questi scopi.',
     'continueButton': 'Continua',
     'onboardingTitle': 'Il tuo piano',
     'stepOf': 'Passo {current} di {total}',
@@ -671,13 +708,16 @@ const Map<String, Map<String, String>> translations = {
     'salt': 'Sale',
     'servingSize': 'Porzione in g (facoltativa)',
     'invalidNumber': 'Inserisci un numero.',
-    'macrosTooHigh': 'Proteine, carboidrati e grassi insieme non possono superare 100 g.',
+    'macrosTooHigh':
+        'Proteine, carboidrati e grassi insieme non possono superare 100 g.',
     'scanTitle': 'Scansiona codice a barre',
     'scanHint': 'Inquadra il codice a barre nella cornice.',
     'scanNotFoundTitle': 'Alimento non trovato',
-    'scanNotFoundText': 'Non conosciamo ancora un alimento con il codice a barre {code}. Puoi aggiungerlo tu.',
+    'scanNotFoundText':
+        'Non conosciamo ancora un alimento con il codice a barre {code}. Puoi aggiungerlo tu.',
     'scanAgain': 'Scansiona di nuovo',
-    'cameraDeniedText': 'TAMRA ha bisogno della fotocamera per scansionare i codici a barre. Consenti l’accesso alla fotocamera nelle impostazioni.',
+    'cameraDeniedText':
+        'TAMRA ha bisogno della fotocamera per scansionare i codici a barre. Consenti l’accesso alla fotocamera nelle impostazioni.',
     'openSettings': 'Apri impostazioni',
     'today': 'Oggi',
     'mealBreakfast': 'Colazione',
@@ -716,14 +756,16 @@ const Map<String, Map<String, String>> translations = {
     'weightLabelLb': 'Peso in lb',
     'weightValueKg': '{value} kg',
     'weightValueLb': '{value} lb',
-    'weightEmpty': 'Nessun peso ancora. Pesati la mattina per valori confrontabili.',
+    'weightEmpty':
+        'Nessun peso ancora. Pesati la mattina per valori confrontabili.',
     'dateLabel': 'Data',
     'delete': 'Elimina',
     'cancel': 'Annulla',
     'statsAverage': 'Media per giorno registrato',
     'statsLoggedDays': '{count} giorni registrati su {total}',
     'statsWeightChange': 'Variazione di peso',
-    'statsNoWeightChange': 'Registra il peso in due giorni per vedere una variazione.',
+    'statsNoWeightChange':
+        'Registra il peso in due giorni per vedere una variazione.',
     'statsTarget': 'Obiettivo',
     'openWeight': 'Andamento del peso',
     'kcalChartLabel': 'Calorie mangiate e bruciate per periodo',
@@ -739,10 +781,12 @@ const Map<String, Map<String, String>> translations = {
     'exportData': 'Esporta i miei dati',
     'exportDataHint': 'Tutti i tuoi dati in un file JSON',
     'withdrawConsent': 'Revoca il consenso ai dati sanitari',
-    'withdrawConsentText': 'Senza questo consenso TAMRA non può salvare pasti, peso o attività. I dati salvati restano finché non elimini l’account.',
+    'withdrawConsentText':
+        'Senza questo consenso TAMRA non può salvare pasti, peso o attività. I dati salvati restano finché non elimini l’account.',
     'withdrawConfirm': 'Revoca',
     'deleteAccount': 'Elimina account',
-    'deleteAccountText': 'Il tuo account e tutti i tuoi dati verranno eliminati definitivamente. Inserisci la password per confermare.',
+    'deleteAccountText':
+        'Il tuo account e tutti i tuoi dati verranno eliminati definitivamente. Inserisci la password per confermare.',
     'deleteConfirm': 'Elimina definitivamente',
     'copyYesterday': 'Copia ieri',
     'copyMealFromYesterday': 'Copia da ieri',
@@ -757,7 +801,8 @@ const Map<String, Map<String, String>> translations = {
     'durationLabel': 'Durata in minuti',
     'distanceLabel': 'Distanza in km (facoltativa)',
     'kcalBurnedLabel': 'kcal bruciate',
-    'kcalSuggestion': 'Suggerimento in base a sport, durata e peso. Puoi modificarlo.',
+    'kcalSuggestion':
+        'Suggerimento in base a sport, durata e peso. Puoi modificarlo.',
     'importedHint': 'Importato – modificalo nell’app originale',
     'kindWalking': 'Camminata',
     'kindRunning': 'Corsa',
@@ -770,25 +815,31 @@ const Map<String, Map<String, String>> translations = {
     'kindHiking': 'Escursionismo',
     'kindDancing': 'Danza',
     'kindOther': 'Altro',
-    'activityHint': 'Vita quotidiana senza sport – lo sport si aggiunge a parte.',
-    'calorieFormulaSport': 'Obiettivo {target} + sport {sport} − mangiato {eaten} = {remaining}',
+    'activityHint':
+        'Vita quotidiana senza sport – lo sport si aggiunge a parte.',
+    'calorieFormulaSport':
+        'Obiettivo {target} + sport {sport} − mangiato {eaten} = {remaining}',
     'countSport': 'Aggiungi le calorie dello sport al budget',
-    'countSportHint': 'I passi non vengono aggiunti; la vita quotidiana è già nell’obiettivo.',
+    'countSportHint':
+        'I passi non vengono aggiunti; la vita quotidiana è già nell’obiettivo.',
     'statsRange7': '7 giorni',
     'statsRange4w': '4 settimane',
     'statsRange12m': '12 mesi',
     'statsEaten': 'Mangiato e sport',
     'statsSportAverage': 'Sport per giorno registrato',
     'healthTitle': 'App salute',
-    'healthConnectHint': 'Importa allenamenti e passi dall’orologio e da altre app (Garmin, Fitbit, Polar, Samsung Health, Strava…) tramite {app}.',
+    'healthConnectHint':
+        'Importa allenamenti e passi dall’orologio e da altre app (Garmin, Fitbit, Polar, Samsung Health, Strava…) tramite {app}.',
     'healthConnect': 'Collega',
     'healthDisconnect': 'Scollega',
     'healthSyncNow': 'Sincronizza ora',
     'healthLastSync': 'Ultima sincronizzazione: {time}',
     'healthSynced': '{count} nuove voci importate',
-    'healthDenied': 'Nessun accesso. Consenti a TAMRA in {app} di leggere allenamenti e passi.',
+    'healthDenied':
+        'Nessun accesso. Consenti a TAMRA in {app} di leggere allenamenti e passi.',
     'healthUnsupported': 'Non disponibile su questo dispositivo.',
-    'offlineHint': 'Offline – le modifiche vengono salvate sul telefono e inviate più tardi.',
+    'offlineHint':
+        'Offline – le modifiche vengono salvate sul telefono e inviate più tardi.',
   },
   'ar': {
     'appName': 'تمرة',
@@ -865,13 +916,16 @@ const Map<String, Map<String, String>> translations = {
     'salt': 'الملح',
     'servingSize': 'حجم الحصة بالغرام (اختياري)',
     'invalidNumber': 'يرجى إدخال رقم.',
-    'macrosTooHigh': 'لا يمكن أن يتجاوز مجموع البروتين والكربوهيدرات والدهون 100 غ.',
+    'macrosTooHigh':
+        'لا يمكن أن يتجاوز مجموع البروتين والكربوهيدرات والدهون 100 غ.',
     'scanTitle': 'مسح الباركود',
     'scanHint': 'ضع الباركود داخل الإطار.',
     'scanNotFoundTitle': 'لم يتم العثور على الطعام',
-    'scanNotFoundText': 'لا نعرف بعد طعامًا بالباركود {code}. يمكنك إضافته بنفسك.',
+    'scanNotFoundText':
+        'لا نعرف بعد طعامًا بالباركود {code}. يمكنك إضافته بنفسك.',
     'scanAgain': 'المسح مرة أخرى',
-    'cameraDeniedText': 'يحتاج تمرة إلى الكاميرا لمسح الباركود. يرجى السماح بالوصول إلى الكاميرا في الإعدادات.',
+    'cameraDeniedText':
+        'يحتاج تمرة إلى الكاميرا لمسح الباركود. يرجى السماح بالوصول إلى الكاميرا في الإعدادات.',
     'openSettings': 'فتح الإعدادات',
     'today': 'اليوم',
     'mealBreakfast': 'الفطور',
@@ -910,7 +964,8 @@ const Map<String, Map<String, String>> translations = {
     'weightLabelLb': 'الوزن بالرطل',
     'weightValueKg': '{value} كغ',
     'weightValueLb': '{value} رطل',
-    'weightEmpty': 'لا يوجد وزن بعد. تَوزَّن صباحًا لتحصل على قيم قابلة للمقارنة.',
+    'weightEmpty':
+        'لا يوجد وزن بعد. تَوزَّن صباحًا لتحصل على قيم قابلة للمقارنة.',
     'dateLabel': 'التاريخ',
     'delete': 'حذف',
     'cancel': 'إلغاء',
@@ -933,10 +988,12 @@ const Map<String, Map<String, String>> translations = {
     'exportData': 'تصدير بياناتي',
     'exportDataHint': 'كل بياناتك في ملف JSON',
     'withdrawConsent': 'سحب الموافقة على البيانات الصحية',
-    'withdrawConsentText': 'بدون هذه الموافقة لا يستطيع تمرة حفظ الوجبات أو الوزن أو النشاط. تبقى بياناتك المحفوظة حتى تحذف حسابك.',
+    'withdrawConsentText':
+        'بدون هذه الموافقة لا يستطيع تمرة حفظ الوجبات أو الوزن أو النشاط. تبقى بياناتك المحفوظة حتى تحذف حسابك.',
     'withdrawConfirm': 'سحب',
     'deleteAccount': 'حذف الحساب',
-    'deleteAccountText': 'سيتم حذف حسابك وجميع بياناتك نهائيًا. أدخل كلمة المرور للتأكيد.',
+    'deleteAccountText':
+        'سيتم حذف حسابك وجميع بياناتك نهائيًا. أدخل كلمة المرور للتأكيد.',
     'deleteConfirm': 'حذف نهائي',
     'copyYesterday': 'نسخ الأمس',
     'copyMealFromYesterday': 'نسخ من الأمس',
@@ -965,7 +1022,8 @@ const Map<String, Map<String, String>> translations = {
     'kindDancing': 'الرقص',
     'kindOther': 'أخرى',
     'activityHint': 'الحياة اليومية بدون رياضة – تُضاف الرياضة بشكل منفصل.',
-    'calorieFormulaSport': 'الهدف {target} + الرياضة {sport} − المأكول {eaten} = {remaining}',
+    'calorieFormulaSport':
+        'الهدف {target} + الرياضة {sport} − المأكول {eaten} = {remaining}',
     'countSport': 'إضافة سعرات الرياضة إلى الميزانية',
     'countSportHint': 'لا تُضاف الخطوات؛ حياتك اليومية محسوبة في الهدف.',
     'statsRange7': '7 أيام',
@@ -974,13 +1032,15 @@ const Map<String, Map<String, String>> translations = {
     'statsEaten': 'المأكول والرياضة',
     'statsSportAverage': 'الرياضة لكل يوم مسجّل',
     'healthTitle': 'تطبيقات الصحة',
-    'healthConnectHint': 'استورد التمارين والخطوات من ساعتك والتطبيقات الأخرى (Garmin وFitbit وPolar وSamsung Health وStrava …) عبر {app}.',
+    'healthConnectHint':
+        'استورد التمارين والخطوات من ساعتك والتطبيقات الأخرى (Garmin وFitbit وPolar وSamsung Health وStrava …) عبر {app}.',
     'healthConnect': 'ربط',
     'healthDisconnect': 'إلغاء الربط',
     'healthSyncNow': 'مزامنة الآن',
     'healthLastSync': 'آخر مزامنة: {time}',
     'healthSynced': 'تم استيراد {count} إدخالات جديدة',
-    'healthDenied': 'لا يوجد وصول. اسمح لتمرة في {app} بقراءة التمارين والخطوات.',
+    'healthDenied':
+        'لا يوجد وصول. اسمح لتمرة في {app} بقراءة التمارين والخطوات.',
     'healthUnsupported': 'غير متاح على هذا الجهاز.',
     'offlineHint': 'غير متصل – تُحفظ التغييرات على الهاتف وتُرسل لاحقًا.',
   },

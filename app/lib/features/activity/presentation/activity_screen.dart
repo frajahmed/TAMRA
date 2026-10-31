@@ -19,7 +19,8 @@ class ActivityScreen extends ConsumerWidget {
   /// Creates the activity screen.
   const ActivityScreen({super.key});
 
-  Future<void> _delete(BuildContext context, WidgetRef ref, Activity activity) async {
+  Future<void> _delete(
+      BuildContext context, WidgetRef ref, Activity activity) async {
     final messenger = ScaffoldMessenger.of(context);
     final error = AppStrings.of(context).genericError;
     try {
@@ -39,7 +40,8 @@ class ActivityScreen extends ConsumerWidget {
     final colors = AppColors.of(context);
     final day = ref.watch(selectedDayProvider);
     final sport = ref.watch(activityDayProvider(day));
-    final energyUnit = ref.watch(profileProvider).valueOrNull?.energyUnit ?? EnergyUnit.kcal;
+    final energyUnit =
+        ref.watch(profileProvider).valueOrNull?.energyUnit ?? EnergyUnit.kcal;
 
     return Scaffold(
       appBar: AppBar(title: Text(strings.navActivity)),
@@ -84,7 +86,8 @@ class ActivityScreen extends ConsumerWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                strings.activityBurned(strings.energy(data.burnedKcal, energyUnit)),
+                                strings.activityBurned(strings.energy(
+                                    data.burnedKcal, energyUnit)),
                                 key: const Key('activity-burned'),
                                 style: Theme.of(context).textTheme.titleLarge,
                               ),
@@ -97,7 +100,8 @@ class ActivityScreen extends ConsumerWidget {
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(Icons.directions_walk, color: colors.textSecondary),
+                              Icon(Icons.directions_walk,
+                                  color: colors.textSecondary),
                               const SizedBox(width: 4),
                               Flexible(
                                 child: Text(
@@ -127,7 +131,8 @@ class ActivityScreen extends ConsumerWidget {
                     Card(
                       child: ListTile(
                         key: Key('activity-${activity.id}'),
-                        leading: Icon(activityKindIcon(activity.kind), color: colors.brand),
+                        leading: Icon(activityKindIcon(activity.kind),
+                            color: colors.brand),
                         title: Text(
                           activity.title.isEmpty
                               ? strings.activityKind(activity.kind)

@@ -29,7 +29,8 @@ class EntryEditorArgs {
   }) : entry = null;
 
   /// Change amount or meal of [entry].
-  EntryEditorArgs.edit(DiaryEntry this.entry, {this.energyUnit = EnergyUnit.kcal})
+  EntryEditorArgs.edit(DiaryEntry this.entry,
+      {this.energyUnit = EnergyUnit.kcal})
       : food = null,
         meal = entry.meal,
         date = entry.date;
@@ -79,7 +80,8 @@ class EntryEditorScreen extends ConsumerStatefulWidget {
 }
 
 class _EntryEditorScreenState extends ConsumerState<EntryEditorScreen> {
-  late final _amount = TextEditingController(text: formatAmount(widget.args.initialAmountG));
+  late final _amount =
+      TextEditingController(text: formatAmount(widget.args.initialAmountG));
   late Meal _meal = widget.args.meal;
   bool _busy = false;
   String? _error;
@@ -153,7 +155,9 @@ class _EntryEditorScreenState extends ConsumerState<EntryEditorScreen> {
     final preview = args.per100g.forGrams(_validAmount ?? 0);
 
     return Scaffold(
-      appBar: AppBar(title: Text(args.isEdit ? strings.editEntryTitle : strings.addEntryTitle)),
+      appBar: AppBar(
+          title: Text(
+              args.isEdit ? strings.editEntryTitle : strings.addEntryTitle)),
       body: ListView(
         padding: const EdgeInsetsDirectional.all(16),
         children: [
@@ -163,7 +167,9 @@ class _EntryEditorScreenState extends ConsumerState<EntryEditorScreen> {
             key: const Key('entry-amount'),
             controller: _amount,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]'))],
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]'))
+            ],
             decoration: InputDecoration(labelText: strings.amountLabel),
             onChanged: (_) => setState(() => _error = null),
           ),
@@ -174,7 +180,8 @@ class _EntryEditorScreenState extends ConsumerState<EntryEditorScreen> {
               child: ActionChip(
                 key: const Key('entry-serving'),
                 label: Text(strings.oneServing(serving.round())),
-                onPressed: () => setState(() => _amount.text = formatAmount(serving)),
+                onPressed: () =>
+                    setState(() => _amount.text = formatAmount(serving)),
               ),
             ),
           ],
@@ -202,8 +209,14 @@ class _EntryEditorScreenState extends ConsumerState<EntryEditorScreen> {
                     style: Theme.of(context).textTheme.headlineSmall,
                   ),
                   const SizedBox(height: 8),
-                  _PreviewRow(label: strings.carbs, grams: preview.carbs, color: colors.carbs),
-                  _PreviewRow(label: strings.fat, grams: preview.fat, color: colors.fat),
+                  _PreviewRow(
+                      label: strings.carbs,
+                      grams: preview.carbs,
+                      color: colors.carbs),
+                  _PreviewRow(
+                      label: strings.fat,
+                      grams: preview.fat,
+                      color: colors.fat),
                   _PreviewRow(
                     label: strings.protein,
                     grams: preview.protein,
@@ -234,7 +247,8 @@ class _EntryEditorScreenState extends ConsumerState<EntryEditorScreen> {
 }
 
 class _PreviewRow extends StatelessWidget {
-  const _PreviewRow({required this.label, required this.grams, required this.color});
+  const _PreviewRow(
+      {required this.label, required this.grams, required this.color});
 
   final String label;
   final double grams;
@@ -250,7 +264,8 @@ class _PreviewRow extends StatelessWidget {
           Icon(Icons.circle, size: 10, color: color),
           const SizedBox(width: 8),
           Expanded(child: Text(label)),
-          Text(strings.gramsValue(formatAmount(double.parse(grams.toStringAsFixed(1))))),
+          Text(strings.gramsValue(
+              formatAmount(double.parse(grams.toStringAsFixed(1))))),
         ],
       ),
     );

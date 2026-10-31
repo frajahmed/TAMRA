@@ -42,7 +42,8 @@ class FakeFoodRepository implements FoodRepository {
     barcodes.add(barcode);
     final food = barcodeFood;
     if (food == null) {
-      throw const ApiError(code: 'not_found', message: 'Not found.', statusCode: 404);
+      throw const ApiError(
+          code: 'not_found', message: 'Not found.', statusCode: 404);
     }
     return food;
   }
@@ -124,7 +125,8 @@ Widget foodTestApp(
   return ProviderScope(
     overrides: [
       foodRepositoryProvider.overrideWithValue(repository),
-      barcodeSourceProvider.overrideWithValue(barcodeSource ?? FakeBarcodeSource()),
+      barcodeSourceProvider
+          .overrideWithValue(barcodeSource ?? FakeBarcodeSource()),
     ],
     child: MaterialApp.router(
       routerConfig: router,

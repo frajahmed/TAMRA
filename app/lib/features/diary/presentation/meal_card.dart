@@ -45,7 +45,8 @@ class MealCard extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: Text(strings.meal(meal), style: Theme.of(context).textTheme.titleMedium),
+                  child: Text(strings.meal(meal),
+                      style: Theme.of(context).textTheme.titleMedium),
                 ),
                 Text(energyText, style: TextStyle(color: colors.textSecondary)),
                 IconButton(

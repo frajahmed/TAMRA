@@ -127,7 +127,8 @@ class Activity {
   /// Reads one workout of the API.
   factory Activity.fromJson(Map<String, dynamic> json) => Activity(
         id: json['id'].toString(),
-        date: DateTime.tryParse(json['date']?.toString() ?? '') ?? DateTime(1970),
+        date:
+            DateTime.tryParse(json['date']?.toString() ?? '') ?? DateTime(1970),
         kind: ActivityKind.fromApi(json['kind']),
         title: json['title']?.toString() ?? '',
         durationMin: jsonInt(json['duration_min']) ?? 0,
@@ -176,7 +177,8 @@ class NewActivity {
 /// Sport of one day.
 class ActivityDay {
   /// Creates the sport of [date].
-  const ActivityDay({required this.date, required this.activities, this.steps = 0});
+  const ActivityDay(
+      {required this.date, required this.activities, this.steps = 0});
 
   /// The day.
   final DateTime date;
@@ -188,10 +190,12 @@ class ActivityDay {
   final int steps;
 
   /// Sum of burned kcal.
-  double get burnedKcal => activities.fold(0, (sum, activity) => sum + activity.kcal);
+  double get burnedKcal =>
+      activities.fold(0, (sum, activity) => sum + activity.kcal);
 
   /// Sum of sport minutes.
-  int get minutes => activities.fold(0, (sum, activity) => sum + activity.durationMin);
+  int get minutes =>
+      activities.fold(0, (sum, activity) => sum + activity.durationMin);
 }
 
 /// One workout read from Apple Health or Health Connect.
@@ -276,5 +280,16 @@ const _healthKinds = <(List<String>, ActivityKind)>[
   (['STRENGTH', 'WEIGHT', 'FUNCTIONAL'], ActivityKind.strength),
   (['YOGA', 'PILATES', 'STRETCH'], ActivityKind.yoga),
   (['DANC'], ActivityKind.dancing),
-  (['SOCCER', 'FOOTBALL', 'BASKETBALL', 'VOLLEYBALL', 'HANDBALL', 'HOCKEY', 'RUGBY'], ActivityKind.teamSport),
+  (
+    [
+      'SOCCER',
+      'FOOTBALL',
+      'BASKETBALL',
+      'VOLLEYBALL',
+      'HANDBALL',
+      'HOCKEY',
+      'RUGBY'
+    ],
+    ActivityKind.teamSport
+  ),
 ];

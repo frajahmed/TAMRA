@@ -20,14 +20,18 @@ StatsSummary _week({double? change}) {
           nutrients: NutrientAmounts(kcal: offset.isEven ? 1800 : 0),
         ),
     ],
-    averages: const NutrientAmounts(kcal: 1800, protein: 90, carbs: 200, fat: 60),
+    averages:
+        const NutrientAmounts(kcal: 1800, protein: 90, carbs: 200, fat: 60),
     loggedDays: 4,
     kcalTarget: 2000,
     weightChangeKg: change,
   );
 }
 
-Future<void> _pumpApp(WidgetTester tester, {FakeStatsRepository? stats, FakeDiaryRepository? diary, FakeFoodRepository? foods}) async {
+Future<void> _pumpApp(WidgetTester tester,
+    {FakeStatsRepository? stats,
+    FakeDiaryRepository? diary,
+    FakeFoodRepository? foods}) async {
   tester.view.physicalSize = const Size(1200, 4000);
   tester.view.devicePixelRatio = 2;
   addTearDown(tester.view.reset);
@@ -35,7 +39,9 @@ Future<void> _pumpApp(WidgetTester tester, {FakeStatsRepository? stats, FakeDiar
     testApp(
       stats: stats,
       diary: diary,
-      overrides: [if (foods != null) foodRepositoryProvider.overrideWithValue(foods)],
+      overrides: [
+        if (foods != null) foodRepositoryProvider.overrideWithValue(foods)
+      ],
     ),
   );
   await tester.pumpAndSettle();
@@ -45,7 +51,8 @@ String _text(WidgetTester tester, String key) =>
     tester.widget<Text>(find.byKey(Key(key))).data ?? '';
 
 void main() {
-  testWidgets('statistics show the week, averages and the weight change', (tester) async {
+  testWidgets('statistics show the week, averages and the weight change',
+      (tester) async {
     final stats = FakeStatsRepository(_week(change: -0.6));
     await _pumpApp(tester, stats: stats);
 
@@ -60,19 +67,22 @@ void main() {
     expect(_text(tester, 'stats-weight-change'), '-0.6 kg');
   });
 
-  testWidgets('without two weights the screen explains what is needed', (tester) async {
+  testWidgets('without two weights the screen explains what is needed',
+      (tester) async {
     await _pumpApp(tester, stats: FakeStatsRepository(_week()));
     await tester.tap(find.byKey(const Key('nav-stats')));
     await tester.pumpAndSettle();
 
-    expect(_text(tester, 'stats-weight-change'), 'Log your weight on two days to see a change.');
+    expect(_text(tester, 'stats-weight-change'),
+        'Log your weight on two days to see a change.');
 
     await tester.tap(find.byKey(const Key('open-weight')));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('weight-empty')), findsOneWidget);
   });
 
-  testWidgets('the request covers the last 7 days including today', (tester) async {
+  testWidgets('the request covers the last 7 days including today',
+      (tester) async {
     final stats = FakeStatsRepository();
     await _pumpApp(tester, stats: stats);
     await tester.tap(find.byKey(const Key('nav-stats')));
@@ -86,7 +96,8 @@ void main() {
     expect(to.difference(from).inDays, 6);
   });
 
-  testWidgets('range switch stays visible when statistics fail', (tester) async {
+  testWidgets('range switch stays visible when statistics fail',
+      (tester) async {
     final stats = FakeStatsRepository()..error = Exception('failed');
     await _pumpApp(tester, stats: stats);
     await tester.tap(find.byKey(const Key('nav-stats')));
@@ -102,13 +113,32 @@ void main() {
       'to': '2026-10-21',
       'kcal_target': 1850,
       'days': [
-        {'date': '2026-10-20', 'kcal': '1720.50', 'protein': '95.00', 'carbs': '180.25',
-         'fat': '60.00', 'water_ml': 1500, 'weight_kg': '75.5'},
-        {'date': '2026-10-21', 'kcal': '0.00', 'protein': '0.00', 'carbs': '0.00',
-         'fat': '0.00', 'water_ml': 0, 'weight_kg': null},
+        {
+          'date': '2026-10-20',
+          'kcal': '1720.50',
+          'protein': '95.00',
+          'carbs': '180.25',
+          'fat': '60.00',
+          'water_ml': 1500,
+          'weight_kg': '75.5'
+        },
+        {
+          'date': '2026-10-21',
+          'kcal': '0.00',
+          'protein': '0.00',
+          'carbs': '0.00',
+          'fat': '0.00',
+          'water_ml': 0,
+          'weight_kg': null
+        },
       ],
-      'averages': {'kcal': '1720.50', 'protein': '95.00', 'carbs': '180.25', 'fat': '60.00',
-                   'logged_days': 1},
+      'averages': {
+        'kcal': '1720.50',
+        'protein': '95.00',
+        'carbs': '180.25',
+        'fat': '60.00',
+        'logged_days': 1
+      },
       'weight_change_kg': null,
     });
     expect(summary.days, hasLength(2));
@@ -121,7 +151,8 @@ void main() {
   });
 
   group('navigation dock', () {
-    testWidgets('tabs switch between diary, statistics, activity and profile', (tester) async {
+    testWidgets('tabs switch between diary, statistics, activity and profile',
+        (tester) async {
       await _pumpApp(tester);
 
       await tester.tap(find.byKey(const Key('nav-activity')));
@@ -137,9 +168,11 @@ void main() {
       expect(find.byKey(const Key('home-title')), findsOneWidget);
     });
 
-    testWidgets('the centre button adds food to the meal of the time of day', (tester) async {
+    testWidgets('the centre button adds food to the meal of the time of day',
+        (tester) async {
       final diary = FakeDiaryRepository();
-      await _pumpApp(tester, diary: diary, foods: FakeFoodRepository()..results = [apple]);
+      await _pumpApp(tester,
+          diary: diary, foods: FakeFoodRepository()..results = [apple]);
       await tester.tap(find.byKey(const Key('nav-stats')));
       await tester.pumpAndSettle();
 
@@ -147,7 +180,8 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('sheet-search')));
       await tester.pumpAndSettle();
-      await tester.enterText(find.byKey(const Key('food-search-field')), 'apfel');
+      await tester.enterText(
+          find.byKey(const Key('food-search-field')), 'apfel');
       await tester.pump(searchDebounce);
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('food-result-f1')));
@@ -168,7 +202,8 @@ void main() {
   });
 
   group('ranges', () {
-    testWidgets('4 weeks and 12 months ask for weekly and monthly groups', (tester) async {
+    testWidgets('4 weeks and 12 months ask for weekly and monthly groups',
+        (tester) async {
       final stats = FakeStatsRepository();
       await _pumpApp(tester, stats: stats);
       await tester.tap(find.byKey(const Key('nav-stats')));
@@ -179,10 +214,13 @@ void main() {
       await tester.tap(find.text('12 months'));
       await tester.pumpAndSettle();
 
-      expect(stats.calls.map((call) => call.split(':').last), ['day', 'week', 'month']);
+      expect(stats.calls.map((call) => call.split(':').last),
+          ['day', 'week', 'month']);
     });
 
-    test('range starts: 7 days, Monday 3 weeks back, first of the month 11 months back', () {
+    test(
+        'range starts: 7 days, Monday 3 weeks back, first of the month 11 months back',
+        () {
       final wednesday = DateTime(2026, 10, 28);
       expect(StatsRange.days7.start(wednesday), DateTime(2026, 10, 22));
       expect(StatsRange.weeks4.start(wednesday), DateTime(2026, 10, 5));

@@ -12,7 +12,10 @@ void main() {
     testWidgets('button is disabled until the box is checked', (tester) async {
       final repository = FakeProfileRepository();
       final controller = FakeAuthController(
-        const AuthState(status: AuthStatus.loggedIn, needsConsent: true, needsProfile: true),
+        const AuthState(
+            status: AuthStatus.loggedIn,
+            needsConsent: true,
+            needsProfile: true),
       );
       await tester.pumpWidget(
         testApp(
@@ -55,7 +58,8 @@ void main() {
       await tester.pumpWidget(
         testApp(
           locale: locale,
-          auth: const AuthState(status: AuthStatus.loggedIn, needsProfile: true),
+          auth:
+              const AuthState(status: AuthStatus.loggedIn, needsProfile: true),
           profile: repository,
         ),
       );
@@ -73,7 +77,8 @@ void main() {
       await tapNext(tester);
     }
 
-    testWidgets('happy path saves the answers and shows the target', (tester) async {
+    testWidgets('happy path saves the answers and shows the target',
+        (tester) async {
       final repository = await openOnboarding(tester);
       final year = DateTime.now().year;
 
@@ -120,7 +125,8 @@ void main() {
       await enter(tester, '50');
 
       expect(find.byKey(const Key('onboarding-error')), findsOneWidget);
-      expect(find.text('Please enter a value between 100 and 250.'), findsOneWidget);
+      expect(find.text('Please enter a value between 100 and 250.'),
+          findsOneWidget);
       expect(find.text('Step 4 of 6'), findsOneWidget);
     });
 
@@ -128,12 +134,14 @@ void main() {
       await openOnboarding(tester, locale: const Locale('ar'));
       final step = find.byKey(const Key('onboarding-step'));
       expect(Directionality.of(tester.element(step)), TextDirection.rtl);
-      expect(find.text(AppStrings(const Locale('ar')).goalQuestion), findsOneWidget);
+      expect(find.text(AppStrings(const Locale('ar')).goalQuestion),
+          findsOneWidget);
     });
   });
 
   test('OnboardingAnswers maps very active to the API value', () {
-    expect(OnboardingAnswers.activityToApi(ActivityLevel.veryActive), 'very_active');
+    expect(OnboardingAnswers.activityToApi(ActivityLevel.veryActive),
+        'very_active');
   });
 
   test('Profile.fromJson reads DRF decimals', () {

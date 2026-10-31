@@ -44,7 +44,10 @@ class ApiError implements Exception {
   /// The first message of every field error, for showing under a form.
   List<String> get fieldMessages => [
         for (final value in fields.values)
-          if (value is List && value.isNotEmpty) value.first.toString() else value.toString(),
+          if (value is List && value.isNotEmpty)
+            value.first.toString()
+          else
+            value.toString(),
       ];
 
   @override
@@ -84,7 +87,8 @@ class ApiClient {
 
   /// GET /api/v1/health/ → true when the server answers {"status": "ok"}.
   Future<bool> health() => _call(() async {
-        final response = await _dio.get<Map<String, dynamic>>('/api/v1/health/');
+        final response =
+            await _dio.get<Map<String, dynamic>>('/api/v1/health/');
         return response.data?['status'] == 'ok';
       });
 
@@ -110,14 +114,16 @@ class ApiClient {
 
   /// POST /auth/logout/ → the refresh token is blacklisted on the server.
   Future<void> logout(String refreshToken) => _call(() async {
-        await _dio.post<dynamic>('/api/v1/auth/logout/', data: {'refresh': refreshToken});
+        await _dio.post<dynamic>('/api/v1/auth/logout/',
+            data: {'refresh': refreshToken});
       });
 
   // --- Profile and consents ---------------------------------------------------
 
   /// GET /me/profile/ → body data, targets and settings.
   Future<Map<String, dynamic>> getProfile() => _call(() async {
-        final response = await _dio.get<Map<String, dynamic>>('/api/v1/me/profile/');
+        final response =
+            await _dio.get<Map<String, dynamic>>('/api/v1/me/profile/');
         return _map(response);
       });
 
@@ -150,7 +156,8 @@ class ApiClient {
 
   /// POST `/me/consents/<type>/withdraw/` → the consent is marked as withdrawn.
   Future<void> withdrawConsent(String type) => _call(() async {
-        await _dio.post<dynamic>('/api/v1/me/consents/${Uri.encodeComponent(type)}/withdraw/');
+        await _dio.post<dynamic>(
+            '/api/v1/me/consents/${Uri.encodeComponent(type)}/withdraw/');
       });
 
   /// GET `/me/export/` → all personal data as JSON text (GDPR Art. 15 and 20).
@@ -209,8 +216,10 @@ class ApiClient {
       });
 
   /// POST /foods/ → creates an own food and returns it.
-  Future<Map<String, dynamic>> createFood(Map<String, dynamic> data) => _call(() async {
-        final response = await _dio.post<Map<String, dynamic>>('/api/v1/foods/', data: data);
+  Future<Map<String, dynamic>> createFood(Map<String, dynamic> data) =>
+      _call(() async {
+        final response =
+            await _dio.post<Map<String, dynamic>>('/api/v1/foods/', data: data);
         return _map(response);
       });
 
@@ -238,13 +247,16 @@ class ApiClient {
       });
 
   /// POST `/diary/` → the saved entry with the nutrient snapshot.
-  Future<Map<String, dynamic>> createDiaryEntry(Map<String, dynamic> data) => _call(() async {
-        final response = await _dio.post<Map<String, dynamic>>('/api/v1/diary/', data: data);
+  Future<Map<String, dynamic>> createDiaryEntry(Map<String, dynamic> data) =>
+      _call(() async {
+        final response =
+            await _dio.post<Map<String, dynamic>>('/api/v1/diary/', data: data);
         return _map(response);
       });
 
   /// PATCH `/diary/<id>/` → the changed entry (amount or meal).
-  Future<Map<String, dynamic>> updateDiaryEntry(String id, Map<String, dynamic> changes) =>
+  Future<Map<String, dynamic>> updateDiaryEntry(
+          String id, Map<String, dynamic> changes) =>
       _call(() async {
         final response = await _dio.patch<Map<String, dynamic>>(
           '/api/v1/diary/${Uri.encodeComponent(id)}/',
@@ -260,7 +272,8 @@ class ApiClient {
 
   /// POST `/diary/copy/` → copies a day (or one meal) to another day; returns the count.
   Future<int> copyDiary(Map<String, dynamic> body) => _call(() async {
-        final response = await _dio.post<Map<String, dynamic>>('/api/v1/diary/copy/', data: body);
+        final response = await _dio
+            .post<Map<String, dynamic>>('/api/v1/diary/copy/', data: body);
         final copied = _map(response)['copied'];
         return copied is int ? copied : 0;
       });
@@ -272,13 +285,17 @@ class ApiClient {
       _call(() async {
         final response = await _dio.get<List<dynamic>>(
           '/api/v1/weight/',
-          queryParameters: {if (from != null) 'from': from, if (to != null) 'to': to},
+          queryParameters: {
+            if (from != null) 'from': from,
+            if (to != null) 'to': to
+          },
         );
         return _list(response.data);
       });
 
   /// POST `/weight/` → saves the weight of a day (a second POST for the same day updates it).
-  Future<Map<String, dynamic>> saveWeight(String date, double weightKg) => _call(() async {
+  Future<Map<String, dynamic>> saveWeight(String date, double weightKg) =>
+      _call(() async {
         final response = await _dio.post<Map<String, dynamic>>(
           '/api/v1/weight/',
           data: {'date': date, 'weight_kg': weightKg.toStringAsFixed(1)},
@@ -288,7 +305,8 @@ class ApiClient {
 
   /// DELETE `/weight/<id>/`.
   Future<void> deleteWeight(String id) => _call(() async {
-        await _dio.delete<dynamic>('/api/v1/weight/${Uri.encodeComponent(id)}/');
+        await _dio
+            .delete<dynamic>('/api/v1/weight/${Uri.encodeComponent(id)}/');
       });
 
   /// GET `/water/?date=` → water entries of one day, newest first.
@@ -301,7 +319,8 @@ class ApiClient {
       });
 
   /// POST `/water/` → one glass or bottle.
-  Future<Map<String, dynamic>> addWater(String date, int amountMl) => _call(() async {
+  Future<Map<String, dynamic>> addWater(String date, int amountMl) =>
+      _call(() async {
         final response = await _dio.post<Map<String, dynamic>>(
           '/api/v1/water/',
           data: {'date': date, 'amount_ml': amountMl},
@@ -317,7 +336,8 @@ class ApiClient {
   // --- Activity ---------------------------------------------------------------
 
   /// GET `/activities/?date=` → workouts of one day.
-  Future<List<Map<String, dynamic>>> listActivities(String date) => _call(() async {
+  Future<List<Map<String, dynamic>>> listActivities(String date) =>
+      _call(() async {
         final response = await _dio.get<List<dynamic>>(
           '/api/v1/activities/',
           queryParameters: {'date': date},
@@ -335,18 +355,22 @@ class ApiClient {
       });
 
   /// POST `/activities/` → a workout entered by hand.
-  Future<Map<String, dynamic>> createActivity(Map<String, dynamic> data) => _call(() async {
-        final response = await _dio.post<Map<String, dynamic>>('/api/v1/activities/', data: data);
+  Future<Map<String, dynamic>> createActivity(Map<String, dynamic> data) =>
+      _call(() async {
+        final response = await _dio
+            .post<Map<String, dynamic>>('/api/v1/activities/', data: data);
         return _map(response);
       });
 
   /// DELETE `/activities/<id>/`.
   Future<void> deleteActivity(String id) => _call(() async {
-        await _dio.delete<dynamic>('/api/v1/activities/${Uri.encodeComponent(id)}/');
+        await _dio
+            .delete<dynamic>('/api/v1/activities/${Uri.encodeComponent(id)}/');
       });
 
   /// POST `/activities/import/` → workouts and steps from a health app (safe to repeat).
-  Future<Map<String, dynamic>> importActivities(Map<String, dynamic> body) => _call(() async {
+  Future<Map<String, dynamic>> importActivities(Map<String, dynamic> body) =>
+      _call(() async {
         final response = await _dio.post<Map<String, dynamic>>(
           '/api/v1/activities/import/',
           data: body,
@@ -357,7 +381,8 @@ class ApiClient {
   // --- Statistics -------------------------------------------------------------
 
   /// GET `/stats/summary/?from=&to=&group=` → totals per day / week / month and averages.
-  Future<Map<String, dynamic>> statsSummary(String from, String to, {String group = 'day'}) =>
+  Future<Map<String, dynamic>> statsSummary(String from, String to,
+          {String group = 'day'}) =>
       _call(() async {
         final response = await _dio.get<Map<String, dynamic>>(
           '/api/v1/stats/summary/',
@@ -387,7 +412,8 @@ final dioProvider = Provider<Dio>((ref) {
     AuthInterceptor(
       storage: ref.watch(tokenStorageProvider),
       plainDio: Dio(_baseOptions()),
-      onSessionExpired: () => ref.read(authControllerProvider.notifier).sessionExpired(),
+      onSessionExpired: () =>
+          ref.read(authControllerProvider.notifier).sessionExpired(),
     ),
   );
   return dio;

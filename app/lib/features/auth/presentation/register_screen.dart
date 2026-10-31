@@ -24,8 +24,9 @@ class RegisterScreen extends ConsumerWidget {
             submitLabel: strings.register,
             switchLabel: strings.haveAccount,
             checkPasswordLength: true,
-            onSubmit: (email, password) =>
-                ref.read(authControllerProvider.notifier).register(email, password),
+            onSubmit: (email, password) => ref
+                .read(authControllerProvider.notifier)
+                .register(email, password),
             onSwitch: () => context.go(AppRoutes.login),
           ),
         ),

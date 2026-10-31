@@ -11,8 +11,10 @@ void main() {
     await tester.pumpWidget(testApp(controller: controller));
     await tester.pumpAndSettle();
 
-    await tester.enterText(find.byKey(const Key('login-email')), 'user@example.com');
-    await tester.enterText(find.byKey(const Key('login-password')), 'secret-123');
+    await tester.enterText(
+        find.byKey(const Key('login-email')), 'user@example.com');
+    await tester.enterText(
+        find.byKey(const Key('login-password')), 'secret-123');
     await tester.tap(find.byKey(const Key('login-submit')));
     await tester.pumpAndSettle();
 
@@ -20,13 +22,15 @@ void main() {
     expect(find.byKey(const Key('home-title')), findsOneWidget);
   });
 
-  testWidgets('invalid email is rejected before calling the API', (tester) async {
+  testWidgets('invalid email is rejected before calling the API',
+      (tester) async {
     final controller = FakeAuthController(const AuthState.loggedOut());
     await tester.pumpWidget(testApp(controller: controller));
     await tester.pumpAndSettle();
 
     await tester.enterText(find.byKey(const Key('login-email')), 'no-email');
-    await tester.enterText(find.byKey(const Key('login-password')), 'secret-123');
+    await tester.enterText(
+        find.byKey(const Key('login-password')), 'secret-123');
     await tester.tap(find.byKey(const Key('login-submit')));
     await tester.pumpAndSettle();
 
@@ -46,16 +50,19 @@ void main() {
     await tester.pumpWidget(testApp(controller: controller));
     await tester.pumpAndSettle();
 
-    await tester.enterText(find.byKey(const Key('login-email')), 'user@example.com');
+    await tester.enterText(
+        find.byKey(const Key('login-email')), 'user@example.com');
     await tester.enterText(find.byKey(const Key('login-password')), 'wrong');
     await tester.tap(find.byKey(const Key('login-submit')));
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('login-error')), findsOneWidget);
-    expect(find.text('No active account found with the given credentials'), findsOneWidget);
+    expect(find.text('No active account found with the given credentials'),
+        findsOneWidget);
   });
 
-  testWidgets('register needs 10 characters and then leads to consent', (tester) async {
+  testWidgets('register needs 10 characters and then leads to consent',
+      (tester) async {
     final controller = FakeAuthController(const AuthState.loggedOut());
     await tester.pumpWidget(testApp(controller: controller));
     await tester.pumpAndSettle();
@@ -63,14 +70,17 @@ void main() {
     await tester.tap(find.byKey(const Key('login-switch')));
     await tester.pumpAndSettle();
 
-    await tester.enterText(find.byKey(const Key('register-email')), 'neu@example.com');
+    await tester.enterText(
+        find.byKey(const Key('register-email')), 'neu@example.com');
     await tester.enterText(find.byKey(const Key('register-password')), 'short');
     await tester.tap(find.byKey(const Key('register-submit')));
     await tester.pumpAndSettle();
-    expect(find.text('The password needs at least 10 characters.'), findsOneWidget);
+    expect(find.text('The password needs at least 10 characters.'),
+        findsOneWidget);
     expect(controller.calls, isEmpty);
 
-    await tester.enterText(find.byKey(const Key('register-password')), 'long-enough-1');
+    await tester.enterText(
+        find.byKey(const Key('register-password')), 'long-enough-1');
     await tester.tap(find.byKey(const Key('register-submit')));
     await tester.pumpAndSettle();
 

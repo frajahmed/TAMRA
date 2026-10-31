@@ -3,7 +3,8 @@ import 'package:tamra_app/core/nutrition/nutrition.dart';
 
 void main() {
   group('NutritionPer100g.forGrams', () {
-    const food = NutritionPer100g(kcal: 200, protein: 10, carbs: 30, fat: 5, sugar: 12);
+    const food =
+        NutritionPer100g(kcal: 200, protein: 10, carbs: 30, fat: 5, sugar: 12);
 
     test('scales all values by grams / 100', () {
       final amounts = food.forGrams(150);

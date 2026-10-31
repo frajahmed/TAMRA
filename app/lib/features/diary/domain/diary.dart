@@ -17,8 +17,8 @@ enum Meal {
   snack;
 
   /// The meal from the API value (`breakfast`, `lunch`, `dinner`, `snack`); unknown → snack.
-  static Meal fromApi(Object? value) =>
-      Meal.values.firstWhere((meal) => meal.name == value, orElse: () => Meal.snack);
+  static Meal fromApi(Object? value) => Meal.values
+      .firstWhere((meal) => meal.name == value, orElse: () => Meal.snack);
 }
 
 /// One food eaten in one meal on one day, as returned by /api/v1/diary/.
@@ -117,7 +117,8 @@ class DiaryEntry {
   /// Reads one entry of GET /api/v1/diary/.
   factory DiaryEntry.fromJson(Map<String, dynamic> json) {
     final food = json['food_detail'];
-    final foodMap = food is Map<String, dynamic> ? food : const <String, dynamic>{};
+    final foodMap =
+        food is Map<String, dynamic> ? food : const <String, dynamic>{};
     return DiaryEntry(
       id: json['id'].toString(),
       date: DateTime.tryParse(json['date']?.toString() ?? '') ?? DateTime(1970),
@@ -221,11 +222,14 @@ class DiaryDay {
   }
 
   /// Entries of one meal, in the order the server sent them.
-  List<DiaryEntry> entriesOf(Meal meal) =>
-      [for (final entry in entries) if (entry.meal == meal) entry];
+  List<DiaryEntry> entriesOf(Meal meal) => [
+        for (final entry in entries)
+          if (entry.meal == meal) entry
+      ];
 
   /// Sum of all entries of the day.
-  NutrientAmounts get totals => NutrientAmounts.sum(entries.map((entry) => entry.nutrients));
+  NutrientAmounts get totals =>
+      NutrientAmounts.sum(entries.map((entry) => entry.nutrients));
 
   /// Sum of one meal.
   NutrientAmounts totalsOf(Meal meal) =>
@@ -278,7 +282,10 @@ class DiaryDay {
       ? this
       : DiaryDay(
           date: date,
-          entries: [for (final entry in entries) if (!ids.contains(entry.id)) entry],
+          entries: [
+            for (final entry in entries)
+              if (!ids.contains(entry.id)) entry
+          ],
           targets: targets,
           energyUnit: energyUnit,
           burnedKcal: burnedKcal,
@@ -341,7 +348,8 @@ class NewDiaryEntry {
         foodId: foodId,
         foodName: foodName,
         amountG: amountG,
-        nutrients: (per100g ?? const NutritionPer100g(kcal: 0, protein: 0, carbs: 0, fat: 0))
+        nutrients: (per100g ??
+                const NutritionPer100g(kcal: 0, protein: 0, carbs: 0, fat: 0))
             .forGrams(amountG),
       );
 }
