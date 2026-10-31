@@ -3,6 +3,24 @@ from rest_framework import serializers
 from activity.serializers import ActivitySerializer
 
 
+class StreakBadgeSerializer(serializers.Serializer):
+    """One consecutive-day badge and the first date it was earned."""
+
+    days = serializers.IntegerField()
+    earned = serializers.BooleanField()
+    earned_on = serializers.DateField(allow_null=True)
+
+
+class StreakSerializer(serializers.Serializer):
+    """Current and longest diary streaks for the user's local date."""
+
+    date = serializers.DateField()
+    current_days = serializers.IntegerField()
+    longest_days = serializers.IntegerField()
+    logged_today = serializers.BooleanField()
+    badges = StreakBadgeSerializer(many=True)
+
+
 class StatsDaySerializer(serializers.Serializer):
     """Totals of one day (or averages of a week / month); decimals as text."""
 

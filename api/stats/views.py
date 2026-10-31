@@ -10,10 +10,12 @@ from rest_framework.views import APIView
 
 from activity.models import Activity
 from activity.serializers import ActivitySerializer
+from diary.models import DiaryEntry
 from diary.views import DATE_PARAM, required_date
 
-from .serializers import StatsDayBalanceSerializer, StatsSummarySerializer
+from .serializers import StatsDayBalanceSerializer, StatsSummarySerializer, StreakSerializer
 from .services import MAX_DAYS, day_balance, summarize
+from .streaks import compute_streak
 
 
 def date_range(request: Request, group: str) -> tuple[date, date]:
@@ -65,3 +67,19 @@ class StatsDayView(APIView):
         activities = Activity.objects.filter(user=request.user, date=day)
         data["activities"] = ActivitySerializer(activities, many=True).data
         return Response(StatsDayBalanceSerializer(data).data)
+
+
+class StatsStreakView(APIView):
+    """Diary-entry streak and fixed milestones up to the user's local date."""
+
+    @extend_schema(parameters=[DATE_PARAM], responses=StreakSerializer)
+    def get(self, request: Request) -> Response:
+        """Return streaks for ?date= using one query for distinct logged diary days."""
+        day = required_date(request)
+        logged_days = list(
+            DiaryEntry.objects.filter(user=request.user, date__lte=day)
+            .values_list("date", flat=True)
+            .distinct()
+            .order_by("date")
+        )
+        return Response(StreakSerializer(compute_streak(logged_days, day)).data)
