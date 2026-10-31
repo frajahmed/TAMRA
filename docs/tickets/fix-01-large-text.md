@@ -65,3 +65,30 @@ Do not change colours, texts or behaviour. No new strings needed.
 - `flutter analyze` green, doc-comment check green.
 - No change to `app/test/accessibility/accessibility_test.dart`.
 - Commit message for the fix: `fix(app): layouts fit with 200 % text (FIX-01)`.
+
+---
+
+## Review 1 (Claude, 31.10.2026) – 2 small changes, same branch
+
+The four layout fixes are correct and match the ticket. Two follow-ups, both caused by the
+ticket's own suggestions:
+
+1. **Statistics: range switch disappears while loading and on error.** `statsProvider` watches
+   `statsRangeProvider`, so tapping "4 weeks" reloads it and `stats.when` shows the spinner –
+   the `SegmentedButton` is inside the data list and vanishes for that moment. On an error the
+   user cannot switch back at all.
+   Fix in `app/lib/features/stats/presentation/stats_screen.dart`: body becomes
+   `Column(children: [Padding(EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0), <range button>),
+   Expanded(child: stats.when(...))])`. Remove the button from `_StatsContent` again
+   (and the `onRangeSelected` parameter). Key `stats-range` stays.
+   Test (new, in `app/test/features/stats/stats_test.dart`): with a `FakeStatsRepository` that throws,
+   `find.byKey(Key('stats-retry'))` and `find.byKey(Key('stats-range'))` are both found.
+   If the fake cannot throw yet, add an optional `Object? error` to `FakeStatsRepository` in
+   `app/test/helpers/fakes.dart`.
+2. **Duplicate file:** `QWEN-UEBERGABE.md` in the repo root is identical to
+   `docs/QWEN-UEBERGABE.md`. Delete the root copy (`git rm QWEN-UEBERGABE.md`).
+
+Files to change: `stats_screen.dart`, `app/test/features/stats/stats_test.dart`, `app/test/helpers/fakes.dart`
+(only if needed), `QWEN-UEBERGABE.md` (delete), this ticket file (commit it as it is).
+Commit: `fix(app): range switch stays visible while statistics load (FIX-01)`.
+The 200 % accessibility tests must stay green.

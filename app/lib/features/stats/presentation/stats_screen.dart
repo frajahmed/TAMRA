@@ -29,32 +29,57 @@ class StatsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: Text(strings.navStats)),
-      body: stats.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(strings.genericError, key: const Key('stats-error')),
-              const SizedBox(height: 12),
-              OutlinedButton(
-                key: const Key('stats-retry'),
-                onPressed: () => ref.invalidate(statsProvider),
-                child: Text(strings.retry),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
+            child: SegmentedButton<StatsRange>(
+              key: const Key('stats-range'),
+              showSelectedIcon: false,
+              segments: [
+                ButtonSegment(value: StatsRange.days7, label: Text(strings.statsRange7)),
+                ButtonSegment(value: StatsRange.weeks4, label: Text(strings.statsRange4w)),
+                ButtonSegment(
+                  value: StatsRange.months12,
+                  // Marked for the later PRO plan; still free while there is no payment.
+                  icon: const Icon(Icons.lock_outline, size: 16),
+                  label: Text(strings.statsRange12m),
+                ),
+              ],
+              selected: {range},
+              onSelectionChanged: (selection) =>
+                  ref.read(statsRangeProvider.notifier).select(selection.first),
+            ),
+          ),
+          Expanded(
+            child: stats.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (error, stack) => Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(strings.genericError, key: const Key('stats-error')),
+                    const SizedBox(height: 12),
+                    OutlinedButton(
+                      key: const Key('stats-retry'),
+                      onPressed: () => ref.invalidate(statsProvider),
+                      child: Text(strings.retry),
+                    ),
+                  ],
+                ),
               ),
-            ],
+              data: (summary) => RefreshIndicator(
+                onRefresh: () => ref.refresh(statsProvider.future),
+                child: _StatsContent(
+                  summary: summary,
+                  range: range,
+                  energyUnit: energyUnit,
+                  weightUnit: weightUnit,
+                ),
+              ),
+            ),
           ),
-        ),
-        data: (summary) => RefreshIndicator(
-          onRefresh: () => ref.refresh(statsProvider.future),
-          child: _StatsContent(
-            summary: summary,
-            range: range,
-            onRangeSelected: (selected) => ref.read(statsRangeProvider.notifier).select(selected),
-            energyUnit: energyUnit,
-            weightUnit: weightUnit,
-          ),
-        ),
+        ],
       ),
     );
   }
@@ -64,14 +89,12 @@ class _StatsContent extends StatelessWidget {
   const _StatsContent({
     required this.summary,
     required this.range,
-    required this.onRangeSelected,
     required this.energyUnit,
     required this.weightUnit,
   });
 
   final StatsSummary summary;
   final StatsRange range;
-  final ValueChanged<StatsRange> onRangeSelected;
   final EnergyUnit energyUnit;
   final WeightUnit weightUnit;
 
@@ -96,25 +119,6 @@ class _StatsContent extends StatelessWidget {
       key: const Key('stats-list'),
       padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 32),
       children: [
-        Padding(
-          padding: const EdgeInsetsDirectional.only(bottom: 8),
-          child: SegmentedButton<StatsRange>(
-            key: const Key('stats-range'),
-            showSelectedIcon: false,
-            segments: [
-              ButtonSegment(value: StatsRange.days7, label: Text(strings.statsRange7)),
-              ButtonSegment(value: StatsRange.weeks4, label: Text(strings.statsRange4w)),
-              ButtonSegment(
-                value: StatsRange.months12,
-                // Marked for the later PRO plan; still free while there is no payment.
-                icon: const Icon(Icons.lock_outline, size: 16),
-                label: Text(strings.statsRange12m),
-              ),
-            ],
-            selected: {range},
-            onSelectionChanged: (selection) => onRangeSelected(selection.first),
-          ),
-        ),
         Card(
           child: Padding(
             padding: const EdgeInsetsDirectional.all(16),
