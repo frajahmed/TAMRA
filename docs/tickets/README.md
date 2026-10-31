@@ -1,7 +1,7 @@
 # Tickets
 
 Work strictly in this order. One ticket = one branch = one pull request.
-Tickets marked **[Claude]** are done by Claude, not by Qwen.
+Codex implements the tickets (see `AGENTS.md`). Tickets marked **[Claude]** are done by Claude.
 
 | Sprint | Ticket | Title | Area | Status |
 | --- | --- | --- | --- | --- |
@@ -30,6 +30,9 @@ Tickets marked **[Claude]** are done by Claude, not by Qwen.
 | 5 | T-52 | App: activities and manual sport entry | app | done (Claude) |
 | 5 | T-53 | App: connect Apple Health and Health Connect **[Claude]** | app | done (Claude; iOS needs the HealthKit capability in Xcode) |
 | 5 | T-54 | App: balance dashboard and history | app | done (Claude) |
+| – | FIX-01 | Layouts fit with 200 % text | app | in review (Codex, PR #1) |
+| 6 | T-63a | Streak and badges | api | open (Codex) |
+| 6 | T-63b | App: streak chip and badges | app | open (Codex) |
 
 Design system and screen plan: `docs/DESIGN.md`. Ideas for later: `docs/tickets/backlog.md`
 (AI photo scan T-60, fasting T-61, recipes T-62, streaks T-63, cloud connections T-64).

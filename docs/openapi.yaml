@@ -821,6 +821,30 @@ paths:
               schema:
                 $ref: '#/components/schemas/StatsDayBalance'
           description: ''
+  /api/v1/stats/streak/:
+    get:
+      operationId: stats_streak_retrieve
+      description: Return streaks for ?date= using one query for distinct logged diary
+        days.
+      parameters:
+      - in: query
+        name: date
+        schema:
+          type: string
+          format: date
+        description: The user's local day (YYYY-MM-DD)
+        required: true
+      tags:
+      - stats
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Streak'
+          description: ''
   /api/v1/stats/summary/:
     get:
       operationId: stats_summary_retrieve
@@ -2339,6 +2363,45 @@ components:
       - kcal_target
       - to
       - weight_change_kg
+    Streak:
+      type: object
+      description: Current and longest diary streaks for the user's local date.
+      properties:
+        date:
+          type: string
+          format: date
+        current_days:
+          type: integer
+        longest_days:
+          type: integer
+        logged_today:
+          type: boolean
+        badges:
+          type: array
+          items:
+            $ref: '#/components/schemas/StreakBadge'
+      required:
+      - badges
+      - current_days
+      - date
+      - logged_today
+      - longest_days
+    StreakBadge:
+      type: object
+      description: One consecutive-day badge and the first date it was earned.
+      properties:
+        days:
+          type: integer
+        earned:
+          type: boolean
+        earned_on:
+          type: string
+          format: date
+          nullable: true
+      required:
+      - days
+      - earned
+      - earned_on
     TokenBlacklistRequest:
       type: object
       properties:
