@@ -13,6 +13,7 @@ import '../../../core/widgets/date_strip.dart';
 import '../../../core/widgets/macro_bar.dart';
 import '../../../l10n/app_strings.dart';
 import '../../food/domain/food.dart';
+import '../../stats/presentation/streak_chip.dart';
 import '../../tracking/presentation/water_card.dart';
 import '../data/diary_repository.dart';
 import '../domain/diary.dart';
@@ -279,6 +280,8 @@ class _DiaryContent extends StatelessWidget {
                           ? strings.caloriesLeft
                           : strings.caloriesOver),
                 ),
+                if (DateUtils.isSameDay(day.date, DateTime.now()))
+                  const StreakChip(),
                 if (target != null && remaining != null)
                   Text(
                     sport > 0

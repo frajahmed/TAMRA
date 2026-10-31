@@ -11,6 +11,7 @@ import '../../../l10n/app_strings.dart';
 import '../../onboarding/data/profile_repository.dart';
 import '../data/stats_repository.dart';
 import '../domain/stats.dart';
+import 'badges_card.dart';
 
 /// Statistics tab: eaten and burned calories against the target for 7 days, 4 weeks or
 /// 12 months, average macros and sport, and the weight change. 12 months will be PRO.
@@ -209,6 +210,8 @@ class _StatsContent extends StatelessWidget {
             onTap: () => context.push(AppRoutes.weight),
           ),
         ),
+        const SizedBox(height: 12),
+        const BadgesCard(),
       ],
     );
   }

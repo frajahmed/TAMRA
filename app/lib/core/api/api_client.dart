@@ -391,6 +391,15 @@ class ApiClient {
         return _map(response);
       });
 
+  /// GET `/stats/streak/?date=` → current and longest diary streak plus badges.
+  Future<Map<String, dynamic>> statsStreak(String date) => _call(() async {
+        final response = await _dio.get<Map<String, dynamic>>(
+          '/api/v1/stats/streak/',
+          queryParameters: {'date': date},
+        );
+        return _map(response);
+      });
+
   List<Map<String, dynamic>> _list(List<dynamic>? data) => [
         for (final item in data ?? const <dynamic>[])
           if (item is Map<String, dynamic>) item,
