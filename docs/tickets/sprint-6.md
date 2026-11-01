@@ -153,3 +153,24 @@ The existing 200 % test in `app/test/accessibility/accessibility_test.dart` must
 (it visits diary and statistics).
 
 **Commit:** `feat(app): streak chip and badges (T-63b)`.
+
+### Review 1 for T-63b (Claude, 01.11.2026) – PR #3, 1 change, same branch
+
+CI is green. Everything in the ticket is implemented as written (API call, model, provider,
+chip states, badges, keys, all 45 texts, tests 1–8). One concrete deviation:
+
+1. **Chip position in the diary.** `StreakChip` sits between `CalorieArc` and the
+   `calorie-formula` text, so it separates the arc from its formula (decision D3: the formula is
+   always visible directly under the arc). Move the
+   `if (DateUtils.isSameDay(day.date, DateTime.now())) const StreakChip(),` block in
+   `app/lib/features/diary/presentation/diary_screen.dart` to directly **after** the
+   `calorie-formula` `Text` (before `const SizedBox(height: 16)`). Nothing else changes.
+
+Accepted scope deviation: commit `347241a` adds braces to single-line `if` statements in
+`health_card.dart`, `offline_diary_repository.dart`, `custom_food_screen.dart` and
+`profile_screen.dart`. They are outside the ticket, but needed: the autoformat commit on `main`
+split those lines and `flutter analyze` then reported `curly_braces_in_flow_control_structures`.
+Claude fixes the cause in the Autofix workflow separately.
+
+Files to change: `diary_screen.dart`, this ticket file (commit only).
+Commit: `fix(app): streak chip below the calorie formula (T-63b)`.

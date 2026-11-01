@@ -280,8 +280,6 @@ class _DiaryContent extends StatelessWidget {
                           ? strings.caloriesLeft
                           : strings.caloriesOver),
                 ),
-                if (DateUtils.isSameDay(day.date, DateTime.now()))
-                  const StreakChip(),
                 if (target != null && remaining != null)
                   Text(
                     sport > 0
@@ -300,6 +298,8 @@ class _DiaryContent extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: TextStyle(color: colors.textSecondary),
                   ),
+                if (DateUtils.isSameDay(day.date, DateTime.now()))
+                  const StreakChip(),
                 const SizedBox(height: 16),
                 Row(
                   children: [
