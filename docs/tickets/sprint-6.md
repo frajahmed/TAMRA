@@ -1,7 +1,7 @@
 # Sprint 6 – Motivation and new features
 
 Read `AGENTS.md` (and through it `QWEN.md` §2–§7) before every ticket.
-Order: T-63a → T-63b → T-65 → T-61 → T-62 → T-60. One ticket = one branch = one pull request.
+Order: T-63a → T-63b → CHORE-01 → T-65a → T-65b → T-61 → T-62 → T-60. One ticket = one branch = one pull request.
 
 ---
 
@@ -174,3 +174,94 @@ Claude fixes the cause in the Autofix workflow separately.
 
 Files to change: `diary_screen.dart`, this ticket file (commit only).
 Commit: `fix(app): streak chip below the calorie formula (T-63b)`.
+
+---
+
+## CHORE-01: Autofix must not break `main` (ci)
+
+**Branch:** `chore/CHORE-01-autofix-analyze` (start from the newest `main`, after PR #3 is merged).
+
+Claude already changed `.github/workflows/autofix.yml` in the folder: after `dart format` it runs
+`flutter analyze`, and if that fails it throws the app formatting away instead of pushing a
+`main` that does not pass analyze. Reason: the autoformat commit `4143116` split one-line `if`
+statements and `flutter analyze` failed on them (fixed by hand in T-63b).
+
+Do: commit `.github/workflows/autofix.yml`, `docs/tickets/sprint-6.md` and `docs/tickets/README.md` exactly as they are. No other
+change. Commit: `ci: autofix keeps flutter analyze green (CHORE-01)`.
+
+---
+
+## T-65a: Feature flags (api)
+
+**Branch:** `feat/T-65a-flags-api`
+
+**Goal:** switch new features (fasting, photo scan, recipes) on and off without an app release,
+first for single test accounts, later for everyone. Flags are not secret; they never contain
+health data.
+
+**Files to read:** `api/core/urls.py`, `api/core/views.py`, `api/core/models.py`,
+`api/config/settings/base.py` (`env_list`), `api/profiles/admin.py` (admin pattern),
+`api/stats/tests/test_streak.py` (test pattern).
+
+**Files to create/change:**
+- `api/config/settings/base.py` – `FEATURE_FLAGS` and `FEATURE_FLAGS_ON`
+- `api/core/flags.py` (new) – `def flags_for(user) -> dict[str, bool]`
+- `api/core/models.py` – model `FlagOverride`; migration `api/core/migrations/000X_flagoverride.py`
+- `api/core/admin.py` (new or extend) – register `FlagOverride`
+- `api/core/views.py`, `api/core/urls.py` – `FlagsView`, URL `flags/`, name `flags`
+- `api/core/tests/test_flags.py` (new), `docs/openapi.yaml` (regenerate as in T-63a)
+
+**Rules:**
+- Known flags and their default (all off) in settings:
+  `FEATURE_FLAGS = {"fasting": False, "photo_scan": False, "recipes": False}`.
+- Global switch-on per server via environment: `FEATURE_FLAGS_ON = env_list("FEATURE_FLAGS_ON")`,
+  e.g. `FEATURE_FLAGS_ON=fasting,recipes`. Unknown names there are ignored.
+- Per-user override for testing: `FlagOverride(TimeStampedModel)` with `user` (FK, cascade),
+  `name` (CharField, choices = the keys of `FEATURE_FLAGS`), `enabled` (bool);
+  `UniqueConstraint(fields=["user", "name"])`. Set in Django admin only (no API to change it).
+- Result order: default → global environment → user override (the override wins).
+- `flags_for` returns every known flag, never unknown names.
+- `GET /api/v1/flags/` (logged in) → `{"flags": {"fasting": false, "photo_scan": false, "recipes": false}}`.
+  Serializer `FlagsSerializer` with `flags = serializers.DictField(child=serializers.BooleanField())`.
+- Account deletion: the cascade removes overrides; check that `accounts/data.py` export does not
+  need them (flags are configuration, not personal data – do not add them to the export).
+
+**Tests:** all off by default; `FEATURE_FLAGS_ON` turns one on (`override_settings`); an unknown
+name in `FEATURE_FLAGS_ON` is ignored; a user override `enabled=True` turns one on only for that
+user; an override `enabled=False` beats the global switch; answer has exactly the known keys;
+401 when not logged in.
+
+**Checks:** as in T-63a, plus `makemigrations --check` must pass after your migration.
+**Commit:** `feat(api): feature flags with per-user override (T-65a)`.
+
+---
+
+## T-65b: Feature flags (app)
+
+**Branch:** `feat/T-65b-flags-app` (after T-65a is merged).
+
+**Files to read:** `AGENTS.md`, `app/lib/core/api/api_client.dart`,
+`app/lib/core/offline/local_store.dart`, `app/lib/core/auth/auth_controller.dart`,
+`app/lib/features/debug/presentation/debug_screen.dart`, `app/test/helpers/fakes.dart`.
+
+**Files to create/change:**
+- `app/lib/core/api/api_client.dart` – `Future<Map<String, dynamic>> flags()`
+- `app/lib/core/flags/flags.dart` (new) – `FeatureFlags` (immutable, `bool isOn(String name)`,
+  `fromJson`), `FlagsRepository`, `flagsProvider`, constants `Flag.fasting`, `Flag.photoScan`
+  (`'photo_scan'`), `Flag.recipes`
+- `app/lib/features/debug/presentation/debug_screen.dart` – list of all flags with on/off
+- `app/test/helpers/fakes.dart` – `FakeFlagsRepository`
+- `app/test/core/flags_test.dart` (new)
+
+**Rules:**
+- `flagsProvider = FutureProvider<FeatureFlags>`: loads `/api/v1/flags/` after login. The last
+  answer is saved in the `LocalStore` under key `feature_flags`; offline the saved answer is used;
+  without any saved answer every flag is off (`FeatureFlags.allOff`).
+- Unknown flag names from the server are kept but never break anything; a missing name is off.
+- Logout and account deletion delete the saved flags (same place where the diary cache is
+  cleared, see `auth_controller.dart`).
+- No user-facing texts in this ticket (debug screen only shows the raw flag names).
+
+**Tests:** `fromJson`; missing name is off; network error with a saved answer uses it; network
+error without one gives all off; logout clears the saved flags; debug screen lists the flags.
+**Commit:** `feat(app): feature flags with offline cache (T-65b)`.
