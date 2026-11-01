@@ -103,8 +103,9 @@ class _CustomFoodScreenState extends ConsumerState<CustomFoodScreen> {
     bool required = false,
   }) {
     return (text) {
-      if ((text ?? '').trim().isEmpty)
+      if ((text ?? '').trim().isEmpty) {
         return required ? strings.fieldRequired : null;
+      }
       final value = parseAmount(text);
       if (value == null) return strings.invalidNumber;
       if (value < min || value > max) return strings.invalidRange(min, max);

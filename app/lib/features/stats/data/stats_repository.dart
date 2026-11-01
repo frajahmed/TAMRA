@@ -2,7 +2,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/api/api_client.dart';
 import '../../../core/json.dart';
+import '../../diary/data/diary_repository.dart';
 import '../domain/stats.dart';
+import '../domain/streak.dart';
 
 /// Statistics of the logged-in user from the TAMRA API.
 class StatsRepository {
@@ -12,10 +14,18 @@ class StatsRepository {
   final ApiClient _api;
 
   /// Totals per day / week / month and averages from [from] to [to] (both included).
-  Future<StatsSummary> summary(DateTime from, DateTime to,
-          {String group = 'day'}) async =>
+  Future<StatsSummary> summary(
+    DateTime from,
+    DateTime to, {
+    String group = 'day',
+  }) async =>
       StatsSummary.fromJson(
-          await _api.statsSummary(dateKey(from), dateKey(to), group: group));
+        await _api.statsSummary(dateKey(from), dateKey(to), group: group),
+      );
+
+  /// Current and longest diary streak for the user's local [today].
+  Future<Streak> streak(DateTime today) async =>
+      Streak.fromJson(await _api.statsStreak(dateKey(today)));
 }
 
 /// The [StatsRepository] used by the statistics screen (replaced by a fake in tests).
@@ -43,4 +53,11 @@ final statsProvider = FutureProvider.autoDispose<StatsSummary>((ref) {
   return ref
       .watch(statsRepositoryProvider)
       .summary(range.start(today), today, group: range.group);
+});
+
+/// Today's streak, reloaded after the selected diary day has reloaded.
+final streakProvider = FutureProvider.autoDispose<Streak>((ref) async {
+  final selectedDay = ref.watch(selectedDayProvider);
+  await ref.watch(diaryDayProvider(selectedDay).future);
+  return ref.watch(statsRepositoryProvider).streak(dateOnly(DateTime.now()));
 });

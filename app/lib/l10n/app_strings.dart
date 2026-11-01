@@ -113,6 +113,8 @@ class AppStrings {
   String get next => text('next');
   String get back => text('back');
   String get save => text('save');
+
+  /// Validation text for an allowed numeric range.
   String invalidRange(num min, num max) =>
       _fill('invalidRange', {'min': min, 'max': max});
   String get resultTitle => text('resultTitle');
@@ -127,6 +129,8 @@ class AppStrings {
   String get foodSearchTitle => text('foodSearchTitle');
   String get foodSearchHint => text('foodSearchHint');
   String get foodSearchMinChars => text('foodSearchMinChars');
+
+  /// Empty food-search result containing the entered [query].
   String foodNoResults(String query) =>
       _fill('foodNoResults', {'query': query});
   String get foodCreateCustom => text('foodCreateCustom');
@@ -151,6 +155,8 @@ class AppStrings {
   String get scanTitle => text('scanTitle');
   String get scanHint => text('scanHint');
   String get scanNotFoundTitle => text('scanNotFoundTitle');
+
+  /// Unknown-barcode explanation containing [code].
   String scanNotFoundText(String code) =>
       _fill('scanNotFoundText', {'code': code});
   String get scanAgain => text('scanAgain');
@@ -207,6 +213,8 @@ class AppStrings {
   String get openWeight => text('openWeight');
   String get kcalChartLabel => text('kcalChartLabel');
   String get weightChartLabel => text('weightChartLabel');
+
+  /// Current and target water amounts.
   String waterProgress(int value, int goal) =>
       _fill('waterProgress', {'value': value, 'goal': goal});
 
@@ -277,6 +285,35 @@ class AppStrings {
   String get statsRange12m => text('statsRange12m');
   String get statsEaten => text('statsEaten');
   String get statsSportAverage => text('statsSportAverage');
+
+  /// Consecutive-day label for streaks longer than one day.
+  String streakDays(int days) => _fill('streakDays', {'days': days});
+
+  /// Encouraging label for the first streak day.
+  String get streakOneDay => text('streakOneDay');
+
+  /// Neutral invitation shown before a streak starts.
+  String get streakStart => text('streakStart');
+
+  /// Reminder to add an entry today while yesterday's streak still counts.
+  String get streakKeepGoing => text('streakKeepGoing');
+
+  /// The user's longest diary streak.
+  String streakLongest(int days) => _fill('streakLongest', {'days': days});
+
+  /// Heading of the streak milestone card.
+  String get badgesTitle => text('badgesTitle');
+
+  /// Required days of one streak badge.
+  String badgeDays(int days) => _fill('badgeDays', {'days': days});
+
+  /// Date on which a streak badge was first earned.
+  String badgeEarnedOn(String date) => _fill('badgeEarnedOn', {'date': date});
+
+  /// Remaining days before an open streak badge.
+  String badgeOpen(int days) => _fill('badgeOpen', {'days': days});
+
+  /// Burned-energy text with the already formatted [value].
   String activityBurned(String value) =>
       _fill('activityBurned', {'value': value});
   String minutesValue(int value) => _fill('minutesValue', {'value': value});
@@ -317,6 +354,8 @@ class AppStrings {
   String get healthDisconnect => text('healthDisconnect');
   String get healthSyncNow => text('healthSyncNow');
   String get healthUnsupported => text('healthUnsupported');
+
+  /// Health-source explanation containing the platform [app] name.
   String healthConnectHint(String app) =>
       _fill('healthConnectHint', {'app': app});
   String healthLastSync(String time) => _fill('healthLastSync', {'time': time});

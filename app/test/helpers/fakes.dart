@@ -19,6 +19,7 @@ import 'package:tamra_app/features/onboarding/domain/profile.dart';
 import 'package:tamra_app/features/settings/data/file_sharer.dart';
 import 'package:tamra_app/features/stats/data/stats_repository.dart';
 import 'package:tamra_app/features/stats/domain/stats.dart';
+import 'package:tamra_app/features/stats/domain/streak.dart';
 import 'package:tamra_app/features/tracking/data/tracking_repository.dart';
 import 'package:tamra_app/features/tracking/domain/tracking.dart';
 
@@ -451,8 +452,11 @@ class FakeStatsRepository implements StatsRepository {
   FakeStatsRepository([this.result]);
 
   StatsSummary? result;
+  Streak? streakResult;
   Object? error;
+  Object? streakError;
   final List<String> calls = [];
+  final List<DateTime> streakCalls = [];
 
   @override
   Future<StatsSummary> summary(DateTime from, DateTime to,
@@ -469,6 +473,24 @@ class FakeStatsRepository implements StatsRepository {
               ),
           ],
           averages: const NutrientAmounts(),
+        );
+  }
+
+  @override
+  Future<Streak> streak(DateTime today) async {
+    streakCalls.add(dateOnly(today));
+    if (streakError != null) throw streakError!;
+    return streakResult ??
+        Streak(
+          date: dateOnly(today),
+          currentDays: 0,
+          longestDays: 0,
+          loggedToday: false,
+          badges: const [
+            StreakBadge(days: 7, earned: false),
+            StreakBadge(days: 30, earned: false),
+            StreakBadge(days: 100, earned: false),
+          ],
         );
   }
 }
