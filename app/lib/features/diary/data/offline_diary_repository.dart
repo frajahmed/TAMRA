@@ -122,8 +122,9 @@ class OfflineDiaryRepository implements DiaryRepository {
       try {
         await _send(operation);
       } on ApiError catch (error) {
-        if (error.isNetworkError)
+        if (error.isNetworkError) {
           return; // still offline: keep the rest for later
+        }
         // 400 "id already used" / 404 "not found": already done or no longer possible.
       }
       await outbox.removeFirst();

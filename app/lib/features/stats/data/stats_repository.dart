@@ -14,10 +14,14 @@ class StatsRepository {
   final ApiClient _api;
 
   /// Totals per day / week / month and averages from [from] to [to] (both included).
-  Future<StatsSummary> summary(DateTime from, DateTime to,
-          {String group = 'day'}) async =>
+  Future<StatsSummary> summary(
+    DateTime from,
+    DateTime to, {
+    String group = 'day',
+  }) async =>
       StatsSummary.fromJson(
-          await _api.statsSummary(dateKey(from), dateKey(to), group: group));
+        await _api.statsSummary(dateKey(from), dateKey(to), group: group),
+      );
 
   /// Current and longest diary streak for the user's local [today].
   Future<Streak> streak(DateTime today) async =>
@@ -55,7 +59,5 @@ final statsProvider = FutureProvider.autoDispose<StatsSummary>((ref) {
 final streakProvider = FutureProvider.autoDispose<Streak>((ref) async {
   final selectedDay = ref.watch(selectedDayProvider);
   await ref.watch(diaryDayProvider(selectedDay).future);
-  return ref
-      .watch(statsRepositoryProvider)
-      .streak(dateOnly(DateTime.now()));
+  return ref.watch(statsRepositoryProvider).streak(dateOnly(DateTime.now()));
 });

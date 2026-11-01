@@ -308,8 +308,7 @@ class AppStrings {
   String badgeDays(int days) => _fill('badgeDays', {'days': days});
 
   /// Date on which a streak badge was first earned.
-  String badgeEarnedOn(String date) =>
-      _fill('badgeEarnedOn', {'date': date});
+  String badgeEarnedOn(String date) => _fill('badgeEarnedOn', {'date': date});
 
   /// Remaining days before an open streak badge.
   String badgeOpen(int days) => _fill('badgeOpen', {'days': days});

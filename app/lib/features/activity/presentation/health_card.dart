@@ -36,8 +36,9 @@ class _HealthCardState extends ConsumerState<HealthCard> {
       ..invalidate(healthStatusProvider)
       ..invalidate(activityDayProvider)
       ..invalidate(diaryDayProvider);
-    if (message != null)
+    if (message != null) {
       messenger.showSnackBar(SnackBar(content: Text(message)));
+    }
   }
 
   @override

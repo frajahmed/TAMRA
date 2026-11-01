@@ -92,8 +92,9 @@ class ProfileScreen extends ConsumerWidget {
       context: context,
       builder: (dialogContext) => const _DeleteAccountDialog(),
     );
-    if (deleted == true)
+    if (deleted == true) {
       await ref.read(authControllerProvider.notifier).accountDeleted();
+    }
   }
 
   @override
